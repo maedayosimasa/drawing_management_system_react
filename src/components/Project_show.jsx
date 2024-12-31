@@ -15,32 +15,36 @@ export const Project_show = () => {
         bim_drawing_name: "",
         meeting_log_name: "",
     });
+
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState(null);
     const location = useLocation();
     const navigate = useNavigate();
-    const project_name = location.state?.project_name || {}; // stateからproject_nameを取り出す
+      // `project_name`の取得
+    const project_name = location.state?.project_name;
 
+    // データをログで確認
     useEffect(() => {
-        // ここでproject_nameが正しく渡されているかをログで確認
-        console.log("Received project_name:", project_name);
+      //  console.log("Received location.state:", location.state);
+       // console.log("Extracted project_name:", project_name);
 
-        if (project_name && Object.keys(project_name).length > 0) {
+        if (project_name && typeof project_name === "object") {
             setProjectData({
                 user_id: project_name.user_id || "",
                 project_name: project_name.project_name || "",
-                finishing_table_name: project_name.drawing.design_drawing?.finishing_table_name || "", // これもproject_nameの中にある場合
-                floor_plan_name: project_name.drawing.structural_diagram?.floor_plan_name || "", // 同様
-                machinery_equipment_diagram_all_name: project_name.drawing.equipment_diagram ?. machinery_equipment_diagram_all_name || "",
-                bim_drawing_name: project_name.drawing.bim_drawing?.bim_drawing_name || "", // drawingオブジェクト内のdesign_drawingにアクセス
-                meeting_log_name: project_name.meeting_log?.meeting_log_name || "", // meeting_log内にあるmeeting_log_nameにアクセス
+                finishing_table_name: project_name.drawing?.design_drawing?.finishing_table_name || "",
+                floor_plan_name: project_name.drawing?.structural_diagram?.floor_plan_name || "",
+                machinery_equipment_diagram_all_name: project_name.drawing?.equipment_diagram?.machinery_equipment_diagram_all_name || "",
+                bim_drawing_name: project_name.drawing?.bim_drawing?.bim_drawing_name || "",
+                meeting_log_name: project_name.meeting_log?.meeting_log_name || "",
             });
-            setLoading(false); // 読み込み終了
+            setLoading(false);
         } else {
-            setError("データが見つかりませんでした。");
-            setLoading(false); // 読み込み終了
+            setError("プロジェクトデータが存在しないか、形式が正しくありません。");
+            setLoading(false);
         }
-    }, [project_name]); // project_nameが変化したときに実行
+    }, [project_name, location.state]);
+
 
     const handleChange = (e) => {
         const { name, value } = e.target;

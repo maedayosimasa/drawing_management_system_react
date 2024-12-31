@@ -15,6 +15,7 @@ const Title = styled(Typography)`
   color: #b38b5d;
   margin-top: 40px;
   font-weight: bold;
+  
   letter-spacing: 3px;
   text-shadow: 3px 3px 6px rgba(184, 134, 11, 0.5);
   font-family: 'Garamond', serif;

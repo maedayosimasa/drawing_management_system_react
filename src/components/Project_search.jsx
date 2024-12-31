@@ -113,6 +113,7 @@ export const Project_search = () => {
                 <h3>search</h3>
                 <Link to="/">一覧表に移動する</Link><br />
                 <Link to="/Project_show">showに移動する</Link><br />
+                <Link to="/Project_download">downloadに移動する</Link><br />
                 <Link to="/Project_select">selectに移動する</Link>
             </div>
             <Container>

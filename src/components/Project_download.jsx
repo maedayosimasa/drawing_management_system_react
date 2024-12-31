@@ -172,7 +172,7 @@ export const Project_download = () => {
                     height={containerHeight}
                     axis="both"
                     minConstraints={[300, 200]} // 最小幅と最小高さ
-                    maxConstraints={[1200, 800]} // 最大幅と最大高さ
+                    maxConstraints={[1800, 800]} // 最大幅と最大高さ
                     onResizeStop={(e, data) => {
                         setContainerWidth(data.size.width);
                         setContainerHeight(data.size.height);
@@ -183,7 +183,7 @@ export const Project_download = () => {
                     }}
                 >
                     <div>
-                        <Title>画像スライダー</Title>
+                        {/* <Title>画像スライダー</Title> */}
                         <FormContainer>
                             <Slider ref={sliderRef} {...settings}>
                                 {images.map((image, index) => (

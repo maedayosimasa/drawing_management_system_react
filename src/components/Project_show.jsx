@@ -74,6 +74,7 @@ export const Project_show = () => {
                 <Link to="/Project_select">selectに移動する</Link><br />
                 <Link to="/Project_create">createに移動する</Link><br />
                 <Link to="/Project_search">searchに移動する</Link><br />
+                <Link to="/Project_download">downloadに移動する</Link><br />
                 <Link to="/">一覧表に移動する</Link>
             </div>
             <Container maxWidth="sm" sx={{ mt: 5, p: 3, boxShadow: 3, borderRadius: 2, bgcolor: "#faf1d7" }}>

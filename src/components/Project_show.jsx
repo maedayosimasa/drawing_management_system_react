@@ -8,7 +8,7 @@ import { useNavigate } from 'react-router-dom';
 
 export const Project_show = () => {
   const [projectData, setProjectData] = useState({
-    user_id: "",
+    id: "",
     project_name: "",
     finishing_table_name: "",
     floor_plan_name: "",
@@ -28,7 +28,7 @@ export const Project_show = () => {
   useEffect(() => {
     if (project_name && typeof project_name === "object") {
       setProjectData({
-        user_id: project_name.user_id || "",
+        id: project_name.id || "",
         project_name: project_name.project_name || "",
         finishing_table_name: project_name.drawing?.design_drawing?.finishing_table_name || "",
         floor_plan_name: project_name.drawing?.structural_diagram?.floor_plan_name || "",
@@ -45,6 +45,7 @@ export const Project_show = () => {
 
   const [files, setFiles] = useState({});
   const [isEditable, setIsEditable] = useState({
+    project_name: false,
     finishing_table_name: false,
     floor_plan_name: false,
     machinery_equipment_diagram_all_name: false,
@@ -60,12 +61,46 @@ export const Project_show = () => {
   };
 
   const handleSubmit = (e) => {
-    e.preventDefault();
-    setUploading(true);
+  e.preventDefault();
+  setUploading(true);
+
+  // PDFファイルのみを抽出
+  const filteredFiles = Object.keys(files).reduce((acc, key) => {
+    const pdfFiles = files[key]?.filter((file) => file.name.toLowerCase().endsWith(".pdf")) || [];
+    if (pdfFiles.length > 0) {
+      acc[key] = pdfFiles;
+    }
+    return acc;
+  }, {});
+
+  // ファイルを送信するデータに変換
+  const formData = new FormData();
+
+  // project_name.id を formData に追加
+  if (projectData.id) {
+    formData.append("id", projectData.id); // idを追加
+  } else {
+    console.error("project_name.id が存在しません");
+  }
+
+  Object.keys(filteredFiles).forEach((key) => {
+    filteredFiles[key].forEach((file) => {
+      formData.append(key, file);
+    });
+  });
+ // console.log( "project_name",project_name);
+  //console.log( "projectData",projectData);
+ 
     axios
-      .post(`http://127.0.0.1:8000/api/Project_name/upload`, projectData)
+      .post(`http://127.0.0.1:8000/api/Project_name/upload`, formData, {
+        headers: {
+          "Content-Type": "multipart/form-data",
+        },
+      })
       .then((response) => {
         alert("更新が成功しました！");
+        setUploading(false);
+        //console.log( "formData",formData);
       })
       .catch((error) => {
         console.error("更新エラー:", error);
@@ -83,6 +118,14 @@ export const Project_show = () => {
 
   if (loading) return <Typography>読み込み中...</Typography>;
   if (error) return <Typography color="error">{error}</Typography>;
+  const fieldLabels = {
+    project_name: "プロジェクト名",
+    finishing_table_name: "仕上げ表Name",
+    floor_plan_name: "平面図Name",
+    machinery_equipment_diagram_all_name: "機械設備設備図Name",
+    bim_drawing_name: "BIM図面Name",
+    meeting_log_name: "打合せ簿Name",
+  };
 
   return (
     <>
@@ -118,7 +161,7 @@ export const Project_show = () => {
               marginBottom: 4,
             }}
           >
-            プロジェクト新規作成
+            プロジェクト編集
           </Typography>
           <Box
             component="form"
@@ -128,11 +171,13 @@ export const Project_show = () => {
               flexDirection: "column",
               gap: 3,
             }}
-          >
+            >
             {projectData &&
               Object.keys(projectData).map((key) => (
                 <div key={key}>
-                  <Typography>{key}</Typography>
+                  <Typography variant="h6" gutterBottom>
+                    {fieldLabels[key] || key}
+                  </Typography>
                   <Container maxWidth="sm">
                     <Paper
                       elevation={12}

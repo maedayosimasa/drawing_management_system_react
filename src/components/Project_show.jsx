@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react";
 import axios from "axios";
 import { useDropzone } from "react-dropzone";
-import { Container, Button, Typography, Box, List, ListItem, ListItemText, Paper } from "@mui/material"; 
+import { Container, Button, Typography, Box, List, ListItem, ListItemText, Paper, AppBar, Toolbar, Link as MuiLink } from "@mui/material"; 
 import { Link } from "react-router-dom";
 import { useLocation } from 'react-router-dom';
 import { useNavigate } from 'react-router-dom';
@@ -61,36 +61,34 @@ export const Project_show = () => {
   };
 
   const handleSubmit = (e) => {
-  e.preventDefault();
-  setUploading(true);
+    e.preventDefault();
+    setUploading(true);
 
-  // PDFファイルのみを抽出
-  const filteredFiles = Object.keys(files).reduce((acc, key) => {
-    const pdfFiles = files[key]?.filter((file) => file.name.toLowerCase().endsWith(".pdf")) || [];
-    if (pdfFiles.length > 0) {
-      acc[key] = pdfFiles;
+    // PDFファイルのみを抽出
+    const filteredFiles = Object.keys(files).reduce((acc, key) => {
+      const pdfFiles = files[key]?.filter((file) => file.name.toLowerCase().endsWith(".pdf")) || [];
+      if (pdfFiles.length > 0) {
+        acc[key] = pdfFiles;
+      }
+      return acc;
+    }, {});
+
+    // ファイルを送信するデータに変換
+    const formData = new FormData();
+
+    // project_name.id を formData に追加
+    if (projectData.id) {
+      formData.append("id", projectData.id); // idを追加
+    } else {
+      console.error("project_name.id が存在しません");
     }
-    return acc;
-  }, {});
 
-  // ファイルを送信するデータに変換
-  const formData = new FormData();
-
-  // project_name.id を formData に追加
-  if (projectData.id) {
-    formData.append("id", projectData.id); // idを追加
-  } else {
-    console.error("project_name.id が存在しません");
-  }
-
-  Object.keys(filteredFiles).forEach((key) => {
-    filteredFiles[key].forEach((file) => {
-      formData.append(key, file);
+    Object.keys(filteredFiles).forEach((key) => {
+      filteredFiles[key].forEach((file) => {
+        formData.append(key, file);
+      });
     });
-  });
- // console.log( "project_name",project_name);
-  //console.log( "projectData",projectData);
- 
+
     axios
       .post(`http://127.0.0.1:8000/api/Project_name/upload`, formData, {
         headers: {
@@ -100,7 +98,6 @@ export const Project_show = () => {
       .then((response) => {
         alert("更新が成功しました！");
         setUploading(false);
-        //console.log( "formData",formData);
       })
       .catch((error) => {
         console.error("更新エラー:", error);
@@ -129,16 +126,27 @@ export const Project_show = () => {
 
   return (
     <>
-      <div>
-        <h3>update</h3>
-        <Link to="/Project_select">selectに移動する</Link><br />
-        <Link to="/Project_create">createに移動する</Link><br />
-        <Link to="/Project_search">searchに移動する</Link><br />
-        <Link to="/Project_download">downloadに移動する</Link><br />
-        <Link to="/">一覧表に移動する</Link>
-      </div>
+      <AppBar position="sticky" sx={{ bgcolor: "#d4af37" }}>
+        <Toolbar sx={{ display: "flex", justifyContent: "center" }}>
+          <MuiLink component={Link} to="/Project_select" sx={{ color: "#fff", margin: "0 20px" }}>
+            選 択
+          </MuiLink>
+          <MuiLink component={Link} to="/Project_create" sx={{ color: "#fff", margin: "0 20px" }}>
+            新規入力
+          </MuiLink>
+          <MuiLink component={Link} to="/Project_search" sx={{ color: "#fff", margin: "0 20px" }}>
+            検 索
+          </MuiLink>
+          <MuiLink component={Link} to="/Project_download" sx={{ color: "#fff", margin: "0 20px" }}>
+            download
+          </MuiLink>
+          <MuiLink component={Link} to="/" sx={{ color: "#fff", margin: "0 20px" }}>
+            一 覧 表
+          </MuiLink>
+        </Toolbar>
+      </AppBar>
 
-      <Container maxWidth="sm">
+      <Container maxWidth="sm" sx={{ mt: 5 }}>
         <Paper
           elevation={12}
           sx={{
@@ -171,7 +179,7 @@ export const Project_show = () => {
               flexDirection: "column",
               gap: 3,
             }}
-            >
+          >
             {projectData &&
               Object.keys(projectData).map((key) => (
                 <div key={key}>

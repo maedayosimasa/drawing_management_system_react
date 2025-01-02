@@ -50,7 +50,7 @@ import { Link } from 'react-router-dom';
 
     export const Project_detail = () => {
 
-      const url = 'http://localhost:8000/api/project_names';
+      const url = 'http://localhost:8000/api/project_name';
       const [projectNames, setProjectNames] = useState([]);
       const [windows, setWindows] = useState([]);
 

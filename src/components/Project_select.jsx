@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { Button, Card, CardContent, Typography, Container, Grid, Box } from '@mui/material';
+import { Button, Card, CardContent, Typography, Container, Grid, Box , AppBar, Toolbar, Link as MuiLink} from '@mui/material';
 import axios from 'axios';
 import { Link } from "react-router-dom";
 import { useLocation } from 'react-router-dom';
@@ -46,13 +46,34 @@ export const Project_select = () => {
 
     return (
         <>
-            <div>
+         <AppBar position="sticky" sx={{ bgcolor: "#d4af37", height: "40px" }}>
+                <Toolbar sx={{ display: "flex", justifyContent: "center" , height: "40px"}}>
+                  {/* <MuiLink component={Link} to="/Project_select" sx={{ color: "#fff", margin: "0 20px" }}>
+                    選 択
+                  </MuiLink> */}
+                  <MuiLink component={Link} to="/Project_create" sx={{ color: "#fff", margin: "0 30px", mt: 1, mb: 3}}>
+                    新規入力
+                  </MuiLink>
+                  <MuiLink component={Link} to="/Project_search" sx={{ color: "#fff",margin: "0 30px", mt: 1, mb: 3 }}>
+                    検 索
+                  </MuiLink>
+                  <MuiLink component={Link} to="/Project_download" sx={{ color: "#fff", margin: "0 30px", mt: 1, mb: 3 }}>
+                    download
+                  </MuiLink>
+                  <MuiLink component={Link} to="/" sx={{ color: "#fff",margin: "0 30px", mt: 1, mb: 3 }}>
+                    一 覧 表
+                  </MuiLink>
+                </Toolbar>
+              </AppBar>
+        
+              {/* <Container maxWidth="sm" sx={{ mt: 5 }}></Container> */}
+            {/* <div>
                 <h3>select</h3>
                 <Link to="/">一覧表に移動する</Link><br />
                 <Link to="/Project_search">searchに移動する</Link><br />
                 <Link to="/Project_download">downloadに移動する</Link><br />
                 <Link to="/Project_show">showに移動する</Link>
-            </div>
+            </div> */}
 
             <Container maxWidth="lg" sx={{ paddingTop: 5 }}>
                 <Typography variant="h2" align="center" gutterBottom sx={{ fontWeight: 'bold', color: '#b38b5d' }}>

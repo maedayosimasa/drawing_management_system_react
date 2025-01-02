@@ -6,7 +6,7 @@ import {
     Button,
     Typography,
     Paper,
-    Container,
+    Container, AppBar, Toolbar, Link as MuiLink 
 } from '@mui/material';
 import { Link } from "react-router-dom";
 
@@ -82,7 +82,7 @@ export const Project_create = () => {
         // alert('FormDataを確認しました。APIには送信されません。');
         // setUploading(false);
 
-        const url = 'http://127.0.0.1:8000/api/Project_name';
+        const url = 'http://127.0.0.1:8000/api/Project_name/upload';
         try {
             const response = await axios.post(url, data, {
                 headers: {
@@ -101,11 +101,30 @@ export const Project_create = () => {
 
     return (
         <>
-            <div>
+          <AppBar position="sticky" sx={{ bgcolor: "#d4af37" , height: "40px" }}>
+                <Toolbar sx={{ display: "flex", justifyContent: "center" , alignItems: "center",height: "40px", padding: "0 10px"}}>
+                  <MuiLink component={Link} to="/Project_select" sx={{ color: "#fff", margin: "0 30px" , mt: 1, mb: 3 }}>
+                    選 択
+                  </MuiLink>
+                  {/* <MuiLink component={Link} to="/Project_create" sx={{ color: "#fff", margin: "0 20px" }}>
+                    新規入力
+                  </MuiLink> */}
+                  <MuiLink component={Link} to="/Project_search" sx={{ color: "#fff", margin: "0 30px", mt: 1, mb: 3 }}>
+                    検 索
+                  </MuiLink>
+                  <MuiLink component={Link} to="/Project_download" sx={{ color: "#fff", margin: "0 30px", mt: 1, mb: 3 }}>
+                    download
+                  </MuiLink>
+                  <MuiLink component={Link} to="/" sx={{ color: "#fff", margin: "0 30px", mt: 1, mb: 3 }}>
+                    一 覧 表
+                  </MuiLink>
+                </Toolbar>
+              </AppBar>
+            {/* <div>
                 <h3>update</h3>
                 <Link to="/Project_search">searchに移動する</Link><br />
                 <Link to="/">一覧表 に移動する</Link>
-            </div>
+            </div> */}
 
         <Container maxWidth="sm">
             <Paper

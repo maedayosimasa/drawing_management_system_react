@@ -1,6 +1,6 @@
 import React, { useCallback, useState, useEffect, useRef ,memo} from 'react';
 import axios from 'axios';
-import { Container, Typography, Card, CardContent, Divider, Button } from '@mui/material';
+import { Container, Typography, Card, CardContent, Divider, Button , AppBar, Toolbar, Link as MuiLink } from '@mui/material';
 import Draggable from 'react-draggable';
 import { ResizableBox } from 'react-resizable';
 import { Link } from 'react-router-dom';
@@ -28,6 +28,7 @@ import { Link } from 'react-router-dom';
         </Draggable>
       );
     });
+    
 
     // ラベルとデータを1/4位置に配置するスタイル
     const dataRowStyle = {
@@ -50,7 +51,7 @@ import { Link } from 'react-router-dom';
 
     export const Project_detail = () => {
 
-      const url = 'http://localhost:8000/api/project_name';
+      const url = 'http://127.0.0.1:8000/api/Project_name/index';
       const [projectNames, setProjectNames] = useState([]);
       const [windows, setWindows] = useState([]);
 
@@ -59,14 +60,16 @@ import { Link } from 'react-router-dom';
         const getProjectNames = async () => {
           try {
             const response = await axios.get(url);
-            setProjectNames(response.data);
+            // console.log( "datadata.project_names",response.data.project_name);
+            setProjectNames(response.data.project_name);
           } catch (error) {
             console.error('Error fetching data:', error);
           }
         };
-        getProjectNames();
+        getProjectNames( "projectNames",projectNames);
       }, []);
-
+    
+      //console.log( "projectNames",projectNames);
     // openWindow関数をメモ化
       const openWindow = (project) => {
         setWindows((prevWindows) => [...prevWindows, { id: project.user_id, project }]);
@@ -78,12 +81,31 @@ import { Link } from 'react-router-dom';
       },[]);
   return(
   <>
-      <div>
+        <AppBar position="sticky" sx={{ bgcolor: "#d4af37" }}>
+        <Toolbar sx={{ display: "flex", justifyContent: "center" }}>
+          <MuiLink component={Link} to="/Project_select" sx={{ color: "#fff", margin: "0 20px" }}>
+            選 択
+          </MuiLink>
+          <MuiLink component={Link} to="/Project_create" sx={{ color: "#fff", margin: "0 20px" }}>
+            新規入力
+          </MuiLink>
+          <MuiLink component={Link} to="/Project_search" sx={{ color: "#fff", margin: "0 20px" }}>
+            検 索
+          </MuiLink>
+          <MuiLink component={Link} to="/Project_download" sx={{ color: "#fff", margin: "0 20px" }}>
+            download
+          </MuiLink>
+          <MuiLink component={Link} to="/Project_show" sx={{ color: "#fff", margin: "0 20px" }}>
+            編 集
+          </MuiLink>
+        </Toolbar>
+      </AppBar>
+      {/* <div>
         <h3>一覧表</h3>
         <Link to="/Project_create">createに移動する</Link><br />
         <Link to="/Project_search">searchに移動する</Link><br />
         <Link to="/Project_show">showに移動する</Link>
-      </div>
+      </div> */}
 
       <Container maxWidth="md" sx={{ marginTop: 5, backgroundColor: '#fcfbf8', borderRadius: 3, boxShadow: 3, padding: 4 }}>
         <Typography variant="h5" align="center" color="#b38b5d" gutterBottom>プロジェクト一覧</Typography>

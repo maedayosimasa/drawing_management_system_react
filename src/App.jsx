@@ -18,7 +18,19 @@ export const App = () => {
 
   return (
     <>
-      <h2>図面管理システム</h2>
+         <Typography 
+        variant="h5" 
+        align="center" 
+        sx={{
+          fontWeight: 'bold',
+          color: '#6b4f29',
+          fontFamily: '"Times New Roman", serif',
+          textShadow: "1px 1px 4px rgba(0, 0, 0, 0.3)",
+          marginBottom: 0, // タイトル下のスペースを最小に
+        }}
+      >
+        図面管理システム
+      </Typography>
       <BrowserRouter>
         <Routes>
           <Route path='/' element={<Project_detail />}/>

@@ -28,7 +28,7 @@ export const Project_show = () => {
   useEffect(() => {
     if (project_name && typeof project_name === "object") {
       setProjectData({
-        id: project_name.id || "",
+        // id: project_name.id || "",
         project_name: project_name.project_name || "",
         finishing_table_name: project_name.drawing?.design_drawing?.finishing_table_name || "",
         floor_plan_name: project_name.drawing?.structural_diagram?.floor_plan_name || "",
@@ -159,7 +159,7 @@ export const Project_show = () => {
           }}
         >
           <Typography
-            variant="h4"
+            variant="h5"
             align="center"
             gutterBottom
             sx={{
@@ -167,7 +167,7 @@ export const Project_show = () => {
               color: "#6b4f29",
               fontFamily: '"Times New Roman", serif',
               textShadow: "1px 1px 4px rgba(0, 0, 0, 0.3)",
-              marginBottom: 4,
+              marginBottom: 2,
             }}
           >
             プロジェクト編集

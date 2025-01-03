@@ -54,11 +54,12 @@ export const Project_show = () => {
   });
 
   const handleFileChange = (name, selectedFiles) => {
-    setFiles((prevFiles) => ({
+        setFiles((prevFiles) => ({
       ...prevFiles,
       [name]: selectedFiles,
     }));
   };
+ console.log(setFiles);
 
   const handleSubmit = (e) => {
     e.preventDefault();
@@ -183,7 +184,7 @@ export const Project_show = () => {
             {projectData &&
               Object.keys(projectData).map((key) => (
                 <div key={key}>
-                  <Typography variant="h6" gutterBottom>
+                  <Typography variant="h8" gutterBottom>
                     {fieldLabels[key] || key}
                   </Typography>
                   <Container maxWidth="sm">

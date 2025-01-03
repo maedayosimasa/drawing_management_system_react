@@ -1,18 +1,14 @@
 import React, { useState } from 'react';
+import { useDropzone } from "react-dropzone";
 import axios from 'axios';
-import {
-    Box,
-    TextField,
-    Button,
-    Typography,
-    Paper,
-    Container, AppBar, Toolbar, Link as MuiLink 
+import {Box, TextField, Button, Typography, Paper, List, ListItem,
+  ListItemText, Container, AppBar, Toolbar, Link as MuiLink 
 } from '@mui/material';
 import { Link } from "react-router-dom";
 
 export const Project_create = () => {
     const [formData, setFormData] = useState({
-        user_id: '',
+        // user_id: '',
         project_name: '',
         finishing_table_name: '',
         floor_plan_name: '',
@@ -21,8 +17,8 @@ export const Project_create = () => {
         meeting_log_name: '',
     });
 
-    const [file, setFile] = useState({
-        user_id: null,
+    const [files, setFiles] = useState({
+        // user_id: null,
         project_name: null,
         finishing_table_file: null,
         floor_plan_file: null,
@@ -30,58 +26,64 @@ export const Project_create = () => {
         bim_drawing_file: null,
         meeting_log_file: null,
     });
-    const [uploading, setUploading] = useState(false);
-
     // ファイル選択時のハンドラー 
     //ファイル選択時に、選択されたファイルをfileオブジェクトに保存します。
-    const handleFileChange = (e) => {
-        setFile((prevFile) => ({
-            ...prevFile,
-            [e.target.name]: e.target.files[0], // 選択されたファイルをセット
-        }));
-    };
+const handleFileChange = (name, selectedFiles) => {
+  setFiles((prevFiles) => ({
+    ...prevFiles,
+    [name]:selectedFiles, // 選択されたファイルを状態に反映
+  }));
+   console.log("更新されたファイル:", name, selectedFiles);
+};
+//console.log("受け入れたファイル:");
 
     // フォームデータ変更時のハンドラー
     // テキスト入力の値が変更された際に、formDataを更新します。
-    const handleChange = (e) => {
+   const handleChange = (e) => {
+   // console.log("フォームデータ:", formData);
+    const { name, value } = e.target; // e.targetからnameとvalueを分割代入
         setFormData((prevFormData) => ({
             ...prevFormData,
-            [e.target.name]: e.target.value,
+           [name]: value,
         }));
+        console.log("更新されたフォームデータ:", name, value);
     };
 
     // フォーム送信時のハンドラー 
     //フォームデータとファイルを収集し、サーバーに送信する処理
     const handleSubmit = async (e) => {
         e.preventDefault();  //ページのリロードを防ぎます。
+        setUploading(true);
 
-        console.log('Form Data:', formData); // フォームデータの確認
-        console.log('Files:', file); // ファイルデータの確認
+         console.log("送信時のフォームデータ:", formData); // フォームデータの確認
+         console.log('Files:', files); // ファイルデータの確認
+        
         //FormData オブジェクト作成:ブラウザのAPIで、キーと値のペアを簡単に送信できます。
         const data = new FormData();
 
-        // ファイルデータをFormDataに追加
-        //ファイルが選択されている場合のみFormDataに追加。
-        for (const key in file) {
-            if (file[key]) {
-                data.append(key, file[key] || '');// ファイルが空でも空文字を追加
-            }
-        }
+      // formData から FormData にデータを追加
+    Object.entries(formData).forEach(([key, value]) => {
+        data.append(key, value || ''); // 空の場合は空文字を設定
+    });
 
-        // 他のフォームデータもFormDataに追加
-        for (const key in formData) {
-            data.append(key, formData[key] || '');// 空でも空文字を追加
+    // files から FormData にファイルを追加
+    Object.entries(files).forEach(([key, fileArray]) => {
+        if (fileArray) {
+            fileArray.forEach((file) => {
+                data.append(key, file);
+            });
         }
+    });
 
-        // FormData内容をデバッグ用にコンソールに表示
-        for (let pair of data.entries()) {
-            console.log(pair[0] + ':', pair[1]);
-        }
-
-        // setUploading(true);
+    // デバッグ用
+    console.log('--- FormData Entries ---');
+    for (let [key, value] of data.entries()) {
+        console.log(`${key}:`, value);
+    }
+ // setUploading(true);
         // alert('FormDataを確認しました。APIには送信されません。');
         // setUploading(false);
-
+        console.log('data:', data); 
         const url = 'http://127.0.0.1:8000/api/Project_name/upload';
         try {
             const response = await axios.post(url, data, {
@@ -98,7 +100,43 @@ export const Project_create = () => {
         }
 
     };
+  //     const projects = [
+  //   {
+  //     プロジェクト名:"PDFファイルをドラッグ＆ドロップするか、クリックして選択してください",
+  //     仕上げ表: "PDFファイルをドラッグ＆ドロップするか、クリックして選択してください",
+  //     平面図: "PDFファイルをドラッグ＆ドロップするか、クリックして選択してください",
+  //     機械設備図ALL: "PDFファイルをドラッグ＆ドロップするか、クリックして選択してください",
+  //     BIM図面: "PDFファイルをドラッグ＆ドロップするか、クリックして選択してください",
+  //     打合せ簿: "PDFファイルをドラッグ＆ドロップするか、クリックして選択してください",
+  //   },
+  // ];
 
+  // // 初期値を設定
+   const [uploading, setUploading] = useState(false);
+  // //useState の初期値として projects[0] のデータを利用
+  // const [files, setFiles] = useState(
+  //   Object.fromEntries(
+  //     Object.entries(projects[0]).map(([key, value]) => [key, [{ name: value }]])
+  //   )
+  // );
+
+      const onDrop = (acceptedFiles) => {
+    setSelectedFiles(acceptedFiles);
+  };
+
+  const { getInputProps, getRootProps } = useDropzone({ onDrop });
+  //console.log(getInputProps());
+ 
+    const fieldLabels = {
+      project_name: "プロジェクト名",
+      finishing_table_name: "仕上げ表Name",
+      floor_plan_name: "平面図Name",
+      machinery_equipment_diagram_all_name: "機械設備設備図Name",
+      bim_drawing_name: "BIM図面Name",
+      meeting_log_name: "打合せ簿Name",
+    };
+  
+  
     return (
         <>
           <AppBar position="sticky" sx={{ bgcolor: "#d4af37" , height: "40px" }}>
@@ -120,105 +158,138 @@ export const Project_create = () => {
                   </MuiLink>
                 </Toolbar>
               </AppBar>
-            {/* <div>
-                <h3>update</h3>
-                <Link to="/Project_search">searchに移動する</Link><br />
-                <Link to="/">一覧表 に移動する</Link>
-            </div> */}
+          
 
         <Container maxWidth="sm">
-            <Paper
-                elevation={12}
-                sx={{
-                    p: 4,
-                    borderRadius: 8,
-                    bgcolor: '#faf1d7',
-                    border: '1px solid #d4af37',
-                    boxShadow: '0 8px 20px rgba(0, 0, 0, 0.3)',
-                }}
-            >
-                <Typography
-                    variant="h4"
-                    align="center"
-                    gutterBottom
-                    sx={{
-                        fontWeight: 'bold',
-                        color: '#6b4f29',
-                        fontFamily: '"Times New Roman", serif',
-                        textShadow: '1px 1px 4px rgba(0, 0, 0, 0.3)',
-                        marginBottom: 4,
-                    }}
+      <Paper
+        elevation={12}
+        sx={{
+          p: 4,
+          borderRadius: 8,
+          bgcolor: "#faf1d7",
+          border: "1px solid #d4af37",
+          boxShadow: "0 8px 20px rgba(0, 0, 0, 0.3)",
+        }}
+      >
+        <Typography
+          variant="h4"
+          align="center"
+          gutterBottom
+          sx={{
+            fontWeight: "bold",
+            color: "#6b4f29",
+            fontFamily: '"Times New Roman", serif',
+            textShadow: "1px 1px 4px rgba(0, 0, 0, 0.3)",
+            marginBottom: 4,
+          }}
+        >
+          プロジェクト新規作成
+        </Typography>
+        <Box
+          component="form"
+          onSubmit={handleSubmit}
+          sx={{
+            display: "flex",
+            flexDirection: "column",
+            gap: 3,
+          }}
+        >
+          {Object.keys(formData).map((key) => (
+            <div key={key}>
+             <Typography variant="h8" gutterBottom>
+                                 {fieldLabels[key] || key}
+                               </Typography>
+              <Container maxWidth="sm">
+                <Paper
+                  elevation={12}
+                  sx={{
+                    p: 1,
+                    borderRadius: 2,
+                    bgcolor: "#ffffff",
+                    border: "1px solid rgb(245, 244, 242)",
+                    boxShadow: "0 8px 20px rgba(0, 0, 0, 0.3)",
+                  }}
                 >
-                    プロジェクト新規作成
-                </Typography>
-                <Box
-                    component="form"
-                    onSubmit={handleSubmit}
-                    sx={{
-                        display: 'flex',
-                        flexDirection: 'column',
-                        gap: 3,
-                    }}
-                >
-                    {[
-                        //{ label: 'User ID', name: 'user_id' },
-                        { label: 'プロジェクト名', name: 'project_name' },
-                        { label: '仕上げ表 Name', name: 'finishing_table_name' },
-                        { label: '平面図 Name', name: 'floor_plan_name' },
-                        { label: '機械設備図 All Name', name: 'machinery_equipment_diagram_all_name' },
-                        { label: 'BIM Name', name: 'bim_drawing_name' },
-                        { label: '打合せ簿 Name', name: 'meeting_log_name' },
-                    ].map((field) => (
-                        <div key={field.name}>
-
-                            <Typography  >{field.label}</Typography>
-                            <Container maxWidth="sm">
-                                <Paper
-                                    elevation={12}
-                                    sx={{
-                                        p: 1,
-                                        borderRadius: 2,
-                                        bgcolor: '#ffffff',
-                                        border: '1px solidrgb(245, 244, 242)',
-                                        boxShadow: '0 8px 20px rgba(0, 0, 0, 0.3)',
-                                    }}
-                                >
-                                    <input
-                                        type="file"
-                                        name={field.name}
-                                        accept="application/pdf"
-                                        onChange={handleFileChange}
-                                        multiple
-                                        autoFocus
-                                        className="file-button block"
-                                        style={{
-                                            marginTop: '0px',
-                                            width: '100%',
-                                            color: '#b8860b',
-                                        }}
-                                    /></Paper></Container>
-                        </div>
-                    ))}
-                    <Button
-                        type="submit"
-                        fullWidth
-                        variant="contained"
-                        sx={{
-                            bgcolor: '#d4af37',
-                            '&:hover': { bgcolor: '#b8860b' },
-                            color: '#ffffff',
-                            fontWeight: 'bold',
-                            borderRadius: 3,
-                            boxShadow: '0 4px 10px rgba(0, 0, 0, 0.3)',
-                        }}
-                        disabled={uploading}
-                    >
-                        {uploading ? 'アップロード中...' : 'アップロード'}
-                    </Button>
-                </Box>
-            </Paper>
-        </Container>
+                  <DropzoneField
+                    name={key}
+                    onFileChange={handleFileChange}
+                    selectedFiles={files[key] || []}
+                  />
+                </Paper>
+              </Container>
+            </div>
+          ))}
+          <Button
+            type="submit"
+            fullWidth
+            variant="contained"
+            sx={{
+              bgcolor: "#d4af37",
+              "&:hover": { bgcolor: "#b8860b" },
+              color: "#ffffff",
+              fontWeight: "bold",
+              borderRadius: 3,
+              boxShadow: "0 4px 10px rgba(0, 0, 0, 0.3)",
+            }}
+            disabled={uploading}
+          >
+            {uploading ? "アップロード中..." : "アップロード"}
+          </Button>
+        </Box>
+      </Paper>
+    </Container>
         </>
     );
 };
 
+const DropzoneField = ({ name, onFileChange, selectedFiles }) => {
+  const { getRootProps, getInputProps, isDragActive } = useDropzone({
+    accept: { "application/pdf": [".pdf"] },
+    onDrop: (acceptedFiles) => {
+      const pdfFiles = acceptedFiles.filter((file) =>
+        file.name.toLowerCase().endsWith(".pdf")
+      );
+      onFileChange(name, pdfFiles);
+    },
+  });
+
+  return (
+    <Box
+      {...getRootProps()}
+      sx={{
+        border: "2px dashed #b8860b",
+        borderRadius: "8px",
+        padding: "8px",
+        textAlign: "center",
+        backgroundColor: isDragActive ? "#fff7e6" : "#f9f9f9",
+        color: "#b8860b",
+        cursor: "pointer",
+        "&:hover": { backgroundColor: "#fff4db" },
+        minHeight: "24px",
+      }}
+    >
+      <input {...getInputProps()} />
+      {selectedFiles.length === 0 ? (
+        <Typography
+          variant="body2"
+          sx={{
+            color: "#b8860b",
+            opacity: 0.6,
+            fontSize: "0.7rem",
+          }}
+        >
+          PDFファイルをドラッグ＆ドロップするか、クリックして選択してください
+        </Typography>
+      ) : (
+        <List sx={{ margin: 0, padding: 0 }}>
+          {selectedFiles.map((file, index) => (
+            <ListItem key={index} sx={{ padding: "4px 0" }}>
+              <ListItemText
+                primary={file.name} />
+            </ListItem>
+          ))}
+        </List>
+      )}
+    </Box>
+  );
+};

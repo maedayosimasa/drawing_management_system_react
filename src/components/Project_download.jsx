@@ -3,7 +3,7 @@ import React, { useEffect, useState, useRef } from "react";
 import Slider from "react-slick";
 import "slick-carousel/slick/slick.css";
 import "slick-carousel/slick/slick-theme.css";
-import { Box, Button, Typography } from '@mui/material';
+import { Box, Button, Typography, AppBar, Toolbar, Link as MuiLink  } from '@mui/material';
 import styled from 'styled-components';
 import { ResizableBox } from 'react-resizable';
 import 'react-resizable/css/styles.css';
@@ -15,6 +15,7 @@ const Title = styled(Typography)`
   color: #b38b5d;
   margin-top: 40px;
   font-weight: bold;
+  
   letter-spacing: 3px;
   text-shadow: 3px 3px 6px rgba(184, 134, 11, 0.5);
   font-family: 'Garamond', serif;
@@ -156,12 +157,31 @@ export const Project_download = () => {
     };
     return (
         <>
-<div>
+         <AppBar position="sticky" sx={{ bgcolor: "#d4af37" }}>
+                <Toolbar sx={{ display: "flex", justifyContent: "center" }}>
+                  <MuiLink component={Link} to="/Project_select" sx={{ color: "#fff", margin: "0 20px" }}>
+                    選 択
+                  </MuiLink>
+                  <MuiLink component={Link} to="/Project_create" sx={{ color: "#fff", margin: "0 20px" }}>
+                    新規入力
+                  </MuiLink>
+                  <MuiLink component={Link} to="/Project_search" sx={{ color: "#fff", margin: "0 20px" }}>
+                    検 索
+                  </MuiLink>
+                  <MuiLink component={Link} to="/Project_show" sx={{ color: "#fff", margin: "0 20px" }}>
+                    表 示
+                  </MuiLink>
+                  <MuiLink component={Link} to="/" sx={{ color: "#fff", margin: "0 20px" }}>
+                    一 覧 表
+                  </MuiLink>
+                </Toolbar>
+              </AppBar>
+{/* <div>
         <h3>一覧表</h3>
         <Link to="/Project_create">createに移動する</Link><br />
         <Link to="/Project_search">searchに移動する</Link><br />
         <Link to="/Project_show">showに移動する</Link>
-      </div>
+      </div> */}
 
         <div style={{ width: '100%' }}>
             {/* <Draggable position={position} onDrag={(e, data) => setPosition({ x: data.x, y: data.y })}> */}
@@ -171,7 +191,7 @@ export const Project_download = () => {
                     height={containerHeight}
                     axis="both"
                     minConstraints={[300, 200]} // 最小幅と最小高さ
-                    maxConstraints={[1200, 800]} // 最大幅と最大高さ
+                    maxConstraints={[1800, 800]} // 最大幅と最大高さ
                     onResizeStop={(e, data) => {
                         setContainerWidth(data.size.width);
                         setContainerHeight(data.size.height);
@@ -182,7 +202,7 @@ export const Project_download = () => {
                     }}
                 >
                     <div>
-                        <Title>画像スライダー</Title>
+                        {/* <Title>画像スライダー</Title> */}
                         <FormContainer>
                             <Slider ref={sliderRef} {...settings}>
                                 {images.map((image, index) => (

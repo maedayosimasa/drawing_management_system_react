@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import axios from 'axios';
-import { TextField, Button, Checkbox, FormControlLabel, Typography, Box, FormGroup } from '@mui/material';
+import { TextField, Button, Checkbox, FormControlLabel, Typography, Box, FormGroup , AppBar, Toolbar, Link as MuiLink } from '@mui/material';
 import { styled } from '@mui/system';
 import { Link } from "react-router-dom";
 import { useNavigate } from 'react-router-dom'; // useNavigate をインポート
@@ -109,13 +109,28 @@ export const Project_search = () => {
 
     return (
         <>
-            <div>
-                <h3>search</h3>
-                <Link to="/">一覧表に移動する</Link><br />
-                <Link to="/Project_show">showに移動する</Link><br />
-                <Link to="/Project_select">selectに移動する</Link>
-            </div>
-            <Container>
+        
+         <AppBar position="sticky" sx={{ bgcolor: "#d4af37", height: "40px"  }}>
+        <Toolbar sx={{ display: "flex", justifyContent: "center" ,height: "40px"}}>
+          <MuiLink component={Link} to="/Project_select" sx={{ color: "#fff", margin: "0 30px", mt: 1, mb: 3 }}>
+            選 択
+          </MuiLink>
+          <MuiLink component={Link} to="/Project_create" sx={{ color: "#fff",  margin: "0 30px", mt: 1, mb: 3}}>
+            新規入力
+          </MuiLink>
+          <MuiLink component={Link} to="/Project_show" sx={{ color: "#fff", margin: "0 30px", mt: 1, mb: 3}}>
+            表 示
+          </MuiLink>
+          <MuiLink component={Link} to="/Project_download" sx={{ color: "#fff", margin: "0 30px", mt: 1, mb: 3 }}>
+            download
+          </MuiLink>
+          <MuiLink component={Link} to="/" sx={{ color: "#fff",  margin: "0 30px", mt: 1, mb: 3 }}>
+            一 覧 表
+          </MuiLink>
+        </Toolbar>
+      </AppBar>
+
+      <Container maxWidth="lg" sx={{ mt: 5 }}>
                 <Title>プロジェクトの検索</Title>
 
                 <FormContainer>

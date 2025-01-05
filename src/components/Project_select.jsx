@@ -65,15 +65,6 @@ export const Project_select = () => {
                   </MuiLink>
                 </Toolbar>
               </AppBar>
-        
-              {/* <Container maxWidth="sm" sx={{ mt: 5 }}></Container> */}
-            {/* <div>
-                <h3>select</h3>
-                <Link to="/">一覧表に移動する</Link><br />
-                <Link to="/Project_search">searchに移動する</Link><br />
-                <Link to="/Project_download">downloadに移動する</Link><br />
-                <Link to="/Project_show">showに移動する</Link>
-            </div> */}
 
             <Container maxWidth="lg" sx={{ paddingTop: 5 }}>
                 <Typography variant="h2" align="center" gutterBottom sx={{ fontWeight: 'bold', color: '#b38b5d' }}>

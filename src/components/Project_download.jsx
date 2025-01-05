@@ -1,13 +1,13 @@
-
 import React, { useEffect, useState, useRef } from "react";
 import Slider from "react-slick";
 import "slick-carousel/slick/slick.css";
 import "slick-carousel/slick/slick-theme.css";
-import { Box, Button, Typography, AppBar, Toolbar, Link as MuiLink  } from '@mui/material';
+import { Box, Button, Typography, AppBar, Toolbar, Link as MuiLink } from '@mui/material';
 import styled from 'styled-components';
 import { ResizableBox } from 'react-resizable';
 import 'react-resizable/css/styles.css';
 import { Link } from "react-router-dom";
+import { useLocation } from "react-router-dom";
 
 const Title = styled(Typography)`
   text-align: center;
@@ -15,7 +15,6 @@ const Title = styled(Typography)`
   color: #b38b5d;
   margin-top: 40px;
   font-weight: bold;
-  
   letter-spacing: 3px;
   text-shadow: 3px 3px 6px rgba(184, 134, 11, 0.5);
   font-family: 'Garamond', serif;
@@ -52,32 +51,49 @@ const SubmitButton = styled(Button)`
     background-color: #b38b5d;
   }
 `;
-export const Project_download = () => {
-    const images = [
-        "/jpg/A_1階平面図.jpg",
-        "/jpg/A_2階平面図.jpg",
-        "/jpg/A_3階平面図.jpg",
-        "/jpg/A_配置図.jpg",
-        "/jpg/B_1階平面図.jpg",
-        "/jpg/B_2階平面図.jpg",
-        "/jpg/B_3階平面図.jpg",
-        "/jpg/B_配置図.jpg",
-        "/jpg/A_1階平面図.jpg",
-        "/jpg/A_2階平面図.jpg",
-        "/jpg/A_3階平面図.jpg",
-        "/jpg/A_配置図.jpg",
-        "/jpe/B_1階平面図.jpg",
-        "/jpg/B_2階平面図.jpg",
-        "/jpg/B_3階平面図.jpg",
-        "/jpg/B_配置図.jpg",
-    ];
-    const sliderRef = useRef(null);
-    const [autoSlide, setAutoSlide] = useState(true);
-    const [currentFileName, setCurrentFileName] = useState(images[0]);
-    const [currentIndex, setCurrentIndex] = useState(0);
+
+export const Project_download = ({ jsonFinalResult }) => {
+    const [projects, setProjects] = useState([]);
     const [selectedImages, setSelectedImages] = useState([]);
-    const [containerWidth, setContainerWidth] = useState(800); // 初期幅を設定
-    const [containerHeight, setContainerHeight] = useState(400); // 初期高さを設定
+    const [autoSlide, setAutoSlide] = useState(true);
+    const [currentFileName, setCurrentFileName] = useState('');
+    const [currentIndex, setCurrentIndex] = useState(0);
+    const [containerWidth, setContainerWidth] = useState(800);
+    const [containerHeight, setContainerHeight] = useState(400);
+    const sliderRef = useRef(null);
+    const { state } = useLocation(); // stateを受け取る
+    
+   useEffect(() => {
+        // jsonFinalResultとstate.jsonFinalResultが存在する場合、それに基づいてprojectsを設定
+        const finalResult = state?.jsonFinalResult || jsonFinalResult;
+        
+        if (finalResult) {
+            console.log("最終結果:", finalResult);
+            setProjects(finalResult); // jsonFinalResultまたはstateから取得したデータを設定
+        }
+    }, [state, jsonFinalResult]); // state と jsonFinalResult の変化に依存
+
+    // projectsが更新された後にログを出力
+    useEffect(() => {
+        console.log("Final Result:", projects);
+    }, [projects]); // projectsが更新される度に実行
+
+    // 取得したデータをコンソールに表示
+    console.log('jsonFinalResult:', jsonFinalResult);
+    console.log('state.jsonFinalResult:', state?.jsonFinalResult);
+
+    const images = projects; // imagesにprojectsを代入
+    console.log(images);
+    console.log(projects);
+
+     // 画像URIの配列を作成
+    const imageUris = images
+        .filter(item => item.key && item.key.includes('view_path')) // URIが含まれるアイテムのみフィルタリング
+        .map(item => item.value); // その中からvalue（URI）を抽出
+
+    console.log(imageUris);  // 確認のためにログに出力
+
+    
     const settings = {
         dots: true,
         infinite: true,
@@ -106,6 +122,7 @@ export const Project_download = () => {
             setCurrentIndex(current);
         },
     };
+
     useEffect(() => {
         let slideInterval;
         if (autoSlide && sliderRef.current) {
@@ -121,30 +138,25 @@ export const Project_download = () => {
             }
         };
     }, [autoSlide]);
-    const handleClick = (index) => {
-        if (sliderRef.current) {
-            sliderRef.current.slickGoTo(index);
-        }
-        setAutoSlide(false);
-        setTimeout(() => {
-            setAutoSlide(true);
-        }, 5000);
-    };
+
     const handlePrev = () => {
         if (sliderRef.current) {
             sliderRef.current.slickPrev();
         }
         setAutoSlide(false);
     };
+
     const handleNext = () => {
         if (sliderRef.current) {
             sliderRef.current.slickNext();
         }
         setAutoSlide(false);
     };
+
     const toggleAutoSlide = () => {
         setAutoSlide((prev) => !prev);
     };
+
     const handleImageSelect = (index) => {
         const selectedImage = images[index];
         setSelectedImages((prevImages) => {
@@ -155,43 +167,45 @@ export const Project_download = () => {
             }
         });
     };
+
+    const handleClick = (index) => {
+        if (sliderRef.current) {
+            sliderRef.current.slickGoTo(index);
+        }
+        setAutoSlide(false);
+        setTimeout(() => {
+            setAutoSlide(true);
+        }, 5000);
+    };
+
     return (
         <>
-         <AppBar position="sticky" sx={{ bgcolor: "#d4af37" }}>
+            <AppBar position="sticky" sx={{ bgcolor: "#d4af37" }}>
                 <Toolbar sx={{ display: "flex", justifyContent: "center" }}>
-                  <MuiLink component={Link} to="/Project_select" sx={{ color: "#fff", margin: "0 20px" }}>
-                    選 択
-                  </MuiLink>
-                  <MuiLink component={Link} to="/Project_create" sx={{ color: "#fff", margin: "0 20px" }}>
-                    新規入力
-                  </MuiLink>
-                  <MuiLink component={Link} to="/Project_search" sx={{ color: "#fff", margin: "0 20px" }}>
-                    検 索
-                  </MuiLink>
-                  <MuiLink component={Link} to="/Project_show" sx={{ color: "#fff", margin: "0 20px" }}>
-                    表 示
-                  </MuiLink>
-                  <MuiLink component={Link} to="/" sx={{ color: "#fff", margin: "0 20px" }}>
-                    一 覧 表
-                  </MuiLink>
+                    <MuiLink component={Link} to="/Project_select" sx={{ color: "#fff", margin: "0 20px" }}>
+                        選 択
+                    </MuiLink>
+                    <MuiLink component={Link} to="/Project_create" sx={{ color: "#fff", margin: "0 20px" }}>
+                        新規入力
+                    </MuiLink>
+                    <MuiLink component={Link} to="/Project_search" sx={{ color: "#fff", margin: "0 20px" }}>
+                        検 索
+                    </MuiLink>
+                    <MuiLink component={Link} to="/Project_show" sx={{ color: "#fff", margin: "0 20px" }}>
+                        表 示
+                    </MuiLink>
+                    <MuiLink component={Link} to="/" sx={{ color: "#fff", margin: "0 20px" }}>
+                        一 覧 表
+                    </MuiLink>
                 </Toolbar>
-              </AppBar>
-{/* <div>
-        <h3>一覧表</h3>
-        <Link to="/Project_create">createに移動する</Link><br />
-        <Link to="/Project_search">searchに移動する</Link><br />
-        <Link to="/Project_show">showに移動する</Link>
-      </div> */}
-
-        <div style={{ width: '100%' }}>
-            {/* <Draggable position={position} onDrag={(e, data) => setPosition({ x: data.x, y: data.y })}> */}
-            <div style={{ width: '100%' }}>
+            </AppBar>
+ <div style={{ width: '100%' }}>
                 <ResizableBox
                     width={containerWidth}
                     height={containerHeight}
                     axis="both"
-                    minConstraints={[300, 200]} // 最小幅と最小高さ
-                    maxConstraints={[1800, 800]} // 最大幅と最大高さ
+                    minConstraints={[300, 200]}
+                    maxConstraints={[1800, 800]}
                     onResizeStop={(e, data) => {
                         setContainerWidth(data.size.width);
                         setContainerHeight(data.size.height);
@@ -201,82 +215,72 @@ export const Project_download = () => {
                         setContainerHeight(data.size.height);
                     }}
                 >
-                    <div>
-                        {/* <Title>画像スライダー</Title> */}
-                        <FormContainer>
-                            <Slider ref={sliderRef} {...settings}>
-                                {images.map((image, index) => (
-                                    <div key={index}>
-                                        <img
-                                            src={image}
-                                            alt={`slide-${index}`}
-                                            style={{
-                                                width: "100%",
-                                                height: "auto",
-                                                borderRadius: "10px",
-                                                transition: "filter 0.3s ease, border 0.3s ease",
-                                                border: selectedImages.includes(image)
-                                                    ? "5px solid #9B4DFF"
-                                                    : "none",
-                                                filter: selectedImages.includes(image) ? "brightness(0.8)" : "none",
-                                            }}
-                                            onClick={() => handleImageSelect(index)}
-                                        />
-                                    </div>
-                                ))}
-                            </Slider>
-                            <div style={{ textAlign: 'center', marginTop: '20px' }}>
-                                <strong>ファイル名:</strong> {currentFileName.split('/').pop()}
-                            </div>
-                            <div style={{ textAlign: 'center', marginTop: '10px' }}>
-                                <strong>表示中:</strong> {currentIndex + 1} / {images.length}
-                            </div>
-                            <div style={{ textAlign: 'center', marginTop: '20px' }}>
-                                <button onClick={handlePrev}>前へ</button>
-                                <button onClick={handleNext}>次へ</button>
-                                <button onClick={toggleAutoSlide}>
-                                    {autoSlide ? "自動スライド終了" : "自動スライド開始"}
-                                </button>
-                            </div>
-                            <div style={{ display: "flex", justifyContent: "center", marginTop: '20px', flexWrap: "wrap" }}>
-                                {images.map((image, index) => (
-                                    <div
-                                        key={index}
-                                        onClick={() => {
-                                            handleClick(index);
-                                            handleImageSelect(index);
-                                        }}
+                    <FormContainer>
+                        <Slider ref={sliderRef} {...settings}>
+                            {images.map((imageURI, index) => (
+                                <div key={index}>
+                                    <img
+                                        src={imageURI}  // ここでURIをsrcに設定
+                                        alt={`slide-${index}`}
                                         style={{
-                                            margin: "5px",
-                                            cursor: "pointer",
-                                            textAlign: "center",
+                                            width: "100%",
+                                            height: "auto",
+                                            borderRadius: "10px",
+                                            transition: "filter 0.3s ease, border 0.3s ease",
+                                            border: selectedImages.includes(imageURI) ? "5px solid #9B4DFF" : "none",
+                                            filter: selectedImages.includes(imageURI) ? "brightness(0.8)" : "none",
                                         }}
-                                    >
-                                        <img
-                                            src={image}
-                                            alt={`thumbnail-${index}`}
-                                            style={{
-                                                width: "80px",
-                                                height: "auto",
-                                                borderRadius: "5px",
-                                                boxShadow: currentIndex === index ? "0 0 20px rgba(255, 77, 77, 0.7)" : "none",
-                                                filter: selectedImages.includes(image) ? "brightness(0.8)" : "none",
-                                                border: selectedImages.includes(image) ? "5px solid #9B4DFF" : "none",
-                                            }}
-                                        />
-                                        <div style={{ fontSize: "12px", color: "#555", marginTop: "5px" }}>
-                                            {image.split('/').pop()}
-                                        </div>
-                                    </div>
-                                ))}
-                            </div>
-                        </FormContainer>
-                    </div>
+                                        onClick={() => handleImageSelect(index)}
+                                    />
+                                </div>
+                            ))}
+                        </Slider>
+                        <div style={{ textAlign: 'center', marginTop: '20px' }}>
+                            <strong>ファイル名:</strong> {currentFileName.split('/').pop()}
+                        </div>
+                        <div style={{ textAlign: 'center', marginTop: '10px' }}>
+                            <strong>表示中:</strong> {currentIndex + 1} / {images.length}
+                        </div>
+                        <div style={{ textAlign: 'center', marginTop: '20px' }}>
+                            <button onClick={handlePrev}>前へ</button>
+                            <button onClick={handleNext}>次へ</button>
+                            <button onClick={toggleAutoSlide}>
+                                {autoSlide ? "自動スライド終了" : "自動スライド開始"}
+                            </button>
+                        </div>
+                        <div style={{ display: "flex", justifyContent: "center", marginTop: '20px', flexWrap: "wrap" }}>
+                            {images.map((imageURI, index) => (
+                                <div
+                                    key={index}
+                                    onClick={() => {
+                                        handleClick(index);
+                                        handleImageSelect(index);
+                                    }}
+                                    style={{
+                                        margin: "5px",
+                                        cursor: "pointer",
+                                        textAlign: "center",
+                                    }}
+                                >
+                                    <img
+                                        src={imageURI}  // ここでもURIをsrcに設定
+                                        alt={`thumbnail-${index}`}
+                                        style={{
+                                            width: "80px",
+                                            height: "auto",
+                                            borderRadius: "5px",
+                                            boxShadow: currentIndex === index ? "0 0 20px rgba(255, 77, 77, 0.7)" : "none",
+                                            filter: selectedImages.includes(imageURI) ? "brightness(0.8)" : "none",
+                                            border: selectedImages.includes(imageURI) ? "5px solid #9B4DFF" : "none",
+                                        }}
+                                    />
+                                    <div style={{ fontSize: "12px", color: "#555" }}>{imageURI.split('/').pop()}</div>
+                                </div>
+                            ))}
+                        </div>
+                    </FormContainer>
                 </ResizableBox>
             </div>
-            {/* </Draggable> */}
-        </div>
         </>
     );
 };
-

@@ -40,3 +40,9 @@
 .read-the-docs {
   color: #888;
 }
+@font-face {
+  font-family: 'slick';
+  src: url('/path/to/slick.woff2') format('woff2'),
+       url('/path/to/slick.woff') format('woff');
+  font-display: swap; /* 追加: フォント読み込みの遅延対策 */
+}

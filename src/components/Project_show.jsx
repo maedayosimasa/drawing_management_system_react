@@ -28,7 +28,7 @@ export const Project_show = () => {
   useEffect(() => {
     if (project_name && typeof project_name === "object") {
       setProjectData({
-        // id: project_name.id || "",
+         id: project_name.id || "",
         project_name: project_name.project_name || "",
         finishing_table_name: project_name.drawing?.design_drawing?.finishing_table_name || "",
         floor_plan_name: project_name.drawing?.structural_diagram?.floor_plan_name || "",
@@ -76,7 +76,7 @@ export const Project_show = () => {
 
     // ファイルを送信するデータに変換
     const formData = new FormData();
-
+console.log("projectData.id", projectData.id);
     // project_name.id を formData に追加
     if (projectData.id) {
       formData.append("id", projectData.id); // idを追加
@@ -113,6 +113,51 @@ export const Project_show = () => {
       [field]: true,
     }));
   };
+
+
+  const downloadFile = async () => {
+  try {
+    console.log("projectData.id:", projectData.id);
+
+    // プロジェクトIDの存在チェック
+    if (!projectData.id) {
+      alert("プロジェクトIDが存在しません。");
+      return;
+    }
+
+    // axiosを使用したAPIリクエスト
+   const response = await axios.get(
+      `http://127.0.0.1:8000/api/Project_name/extraction/${projectData.id}`,
+      { responseType: "json" } // レスポンスをJSONとして取得
+    );
+
+    // Blobを作成し、リンクを生成してダウンロード
+    // const blob = new Blob([response.data], { type: "application/pdf" });
+    // const link = document.createElement("a");
+    // link.href = URL.createObjectURL(blob);
+    // link.download = "project_file.pdf"; // ダウンロードするファイル名
+    // link.click();
+
+     // レスポンスの内容をログに出力して確認
+    console.log("Response Data:", response.data);
+ // リダイレクト情報がある場合はページ移動
+    if (response.data && response.data.redirect) {
+        console.log("リダイレクト先:", response.data.redirect);
+
+        // リダイレクト先に遷移
+        navigate(`/${response.data.redirect}`, {
+            state: { jsonFinalResult: response.data.jsonFinalResult },
+        });
+    } else {
+      console.log("リダイレクト情報がありません。");
+    }
+  } catch (error) {
+    console.error("ダウンロードエラー:", error);
+    alert("ダウンロードに失敗しました。");
+  }
+};
+
+
 
   if (loading) return <Typography>読み込み中...</Typography>;
   if (error) return <Typography color="error">{error}</Typography>;
@@ -159,7 +204,7 @@ export const Project_show = () => {
           }}
         >
           <Typography
-            variant="h5"
+            variant="h6"
             align="center"
             gutterBottom
             sx={{
@@ -235,6 +280,21 @@ export const Project_show = () => {
             >
               {uploading ? "アップロード中..." : "アップロード"}
             </Button>
+              <Button
+              variant="outlined"
+              fullWidth
+              sx={{
+                bgcolor: "#6b4f29",
+                color: "#fff",
+                marginTop: 3,
+                "&:hover": { bgcolor: "#4b3e29" },
+                fontWeight: "bold",
+                borderRadius: 3,
+              }}
+              onClick={downloadFile}
+            >
+              ダウンロード
+            </Button>
           </Box>
         </Paper>
       </Container>
@@ -290,5 +350,6 @@ const DropzoneField = ({ name, onFileChange, selectedFiles }) => {
         </List>
       )}
     </Box>
+    
   );
 };

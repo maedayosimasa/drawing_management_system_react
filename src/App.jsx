@@ -38,7 +38,7 @@ export const App = () => {
           <Route path='/Project_search' element={<Project_search />}/>
           <Route path="/Project_name/select" element={<Project_select />} />
           <Route path="/Project_name/show" element={<Project_show />} />
-          <Route path="/Project_download" element={<Project_download />} />
+          <Route path="/Project_name/download" element={<Project_download />} />
         </Routes>
       </BrowserRouter>
       

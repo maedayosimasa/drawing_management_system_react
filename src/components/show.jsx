@@ -15,11 +15,17 @@ export const Project_show = () => {
         bim_drawing_name: "",
         meeting_log_name: "",
     });
+<<<<<<< HEAD
+=======
 
+>>>>>>> 121caef91953cfd7f33f59af971e302ad424f724
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState(null);
     const location = useLocation();
     const navigate = useNavigate();
+<<<<<<< HEAD
+    const project_name = location.state?.project_name || {}; // stateからproject_nameを取り出す
+=======
       // `project_name`の取得
     const project_name = location.state?.project_name;
 
@@ -44,8 +50,32 @@ export const Project_show = () => {
             setLoading(false);
         }
     }, [project_name, location.state]);
+>>>>>>> 121caef91953cfd7f33f59af971e302ad424f724
 
+    useEffect(() => {
+        // ここでproject_nameが正しく渡されているかをログで確認
+        console.log("Received project_name:", project_name);
 
+<<<<<<< HEAD
+        if (project_name && Object.keys(project_name).length > 0) {
+            setProjectData({
+                user_id: project_name.user_id || "",
+                project_name: project_name.project_name || "",
+                finishing_table_name: project_name.drawing.design_drawing?.finishing_table_name || "", // これもproject_nameの中にある場合
+                floor_plan_name: project_name.drawing.structural_diagram?.floor_plan_name || "", // 同様
+                machinery_equipment_diagram_all_name: project_name.drawing.equipment_diagram?.machinery_equipment_diagram_all_name || "",
+                bim_drawing_name: project_name.drawing.bim_drawing?.bim_drawing_name || "", // drawingオブジェクト内のdesign_drawingにアクセス
+                meeting_log_name: project_name.meeting_log?.meeting_log_name || "", // meeting_log内にあるmeeting_log_nameにアクセス
+            });
+            setLoading(false); // 読み込み終了
+        } else {
+            setError("データが見つかりませんでした。");
+            setLoading(false); // 読み込み終了
+        }
+    }, [project_name]); // project_nameが変化したときに実行
+
+=======
+>>>>>>> 121caef91953cfd7f33f59af971e302ad424f724
     const handleChange = (e) => {
         const { name, value } = e.target;
         setProjectData((prevData) => ({ ...prevData, [name]: value }));
@@ -74,7 +104,10 @@ export const Project_show = () => {
                 <Link to="/Project_select">selectに移動する</Link><br />
                 <Link to="/Project_create">createに移動する</Link><br />
                 <Link to="/Project_search">searchに移動する</Link><br />
+<<<<<<< HEAD
+=======
                 <Link to="/Project_download">downloadに移動する</Link><br />
+>>>>>>> 121caef91953cfd7f33f59af971e302ad424f724
                 <Link to="/">一覧表に移動する</Link>
             </div>
             <Container maxWidth="sm" sx={{ mt: 5, p: 3, boxShadow: 3, borderRadius: 2, bgcolor: "#faf1d7" }}>

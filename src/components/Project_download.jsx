@@ -74,12 +74,14 @@ export const Project_download = ({ filteredData }) => {
     useEffect(() => {
         console.log(" projects:", projects);
     }, [projects]);
+    //配列に変換
+    const images = Object.entries(projects);
 
-    const images = Object.values(projects).map(project => {
-        const viewPath = Object.values(project).find(value => value.includes("view_path"));
-        return viewPath || null; // view_pathが見つかればそれを返す
-    }).filter(uri => uri); // 空の値を除外
-
+//     const images = Object.values(projects).map(project => {
+//         const viewPath = Object.values(project).find(value => value.includes("view_path"));
+//         return viewPath || null; // view_pathが見つかればそれを返す
+//     }).filter(uri => uri); // 空の値を除外
+ console.log("images",images );
     const settings = {
         dots: true,
         infinite: true,

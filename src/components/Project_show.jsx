@@ -146,7 +146,7 @@ console.log("projectData.id", projectData.id);
 
         // リダイレクト先に遷移
         navigate(`/${response.data.redirect}`, {
-            state: { jsonFinalResult: response.data.jsonFinalResult },
+            state: { filteredData: response.data.filteredData },
         });
     } else {
       console.log("リダイレクト情報がありません。");

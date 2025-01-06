@@ -9,6 +9,7 @@ import 'react-resizable/css/styles.css';
 import { Link } from "react-router-dom";
 import { useLocation } from "react-router-dom";
 
+// Styled components
 const Title = styled(Typography)`
   text-align: center;
   font-size: 2.5rem;
@@ -52,7 +53,7 @@ const SubmitButton = styled(Button)`
   }
 `;
 
-export const Project_download = ({ jsonFinalResult }) => {
+export const Project_download = ({ filteredData }) => {
     const [projects, setProjects] = useState([]);
     const [selectedImages, setSelectedImages] = useState([]);
     const [autoSlide, setAutoSlide] = useState(true);
@@ -63,37 +64,22 @@ export const Project_download = ({ jsonFinalResult }) => {
     const sliderRef = useRef(null);
     const { state } = useLocation(); // stateを受け取る
     
-   useEffect(() => {
-        // jsonFinalResultとstate.jsonFinalResultが存在する場合、それに基づいてprojectsを設定
-        const finalResult = state?.jsonFinalResult || jsonFinalResult;
-        
+    useEffect(() => {
+        const finalResult = state?.filteredData || filteredData;
         if (finalResult) {
-            console.log("最終結果:", finalResult);
             setProjects(finalResult); // jsonFinalResultまたはstateから取得したデータを設定
         }
-    }, [state, jsonFinalResult]); // state と jsonFinalResult の変化に依存
+    }, [state, filteredData]);
 
-    // projectsが更新された後にログを出力
     useEffect(() => {
-        console.log("Final Result:", projects);
-    }, [projects]); // projectsが更新される度に実行
+        console.log(" projects:", projects);
+    }, [projects]);
 
-    // 取得したデータをコンソールに表示
-    console.log('jsonFinalResult:', jsonFinalResult);
-    console.log('state.jsonFinalResult:', state?.jsonFinalResult);
+    const images = Object.values(projects).map(project => {
+        const viewPath = Object.values(project).find(value => value.includes("view_path"));
+        return viewPath || null; // view_pathが見つかればそれを返す
+    }).filter(uri => uri); // 空の値を除外
 
-    const images = projects; // imagesにprojectsを代入
-    console.log(images);
-    console.log(projects);
-
-     // 画像URIの配列を作成
-    const imageUris = images
-        .filter(item => item.key && item.key.includes('view_path')) // URIが含まれるアイテムのみフィルタリング
-        .map(item => item.value); // その中からvalue（URI）を抽出
-
-    console.log(imageUris);  // 確認のためにログに出力
-
-    
     const settings = {
         dots: true,
         infinite: true,
@@ -199,7 +185,7 @@ export const Project_download = ({ jsonFinalResult }) => {
                     </MuiLink>
                 </Toolbar>
             </AppBar>
- <div style={{ width: '100%' }}>
+            <div style={{ width: '100%' }}>
                 <ResizableBox
                     width={containerWidth}
                     height={containerHeight}
@@ -259,22 +245,20 @@ export const Project_download = ({ jsonFinalResult }) => {
                                     style={{
                                         margin: "5px",
                                         cursor: "pointer",
-                                        textAlign: "center",
+                                        border: selectedImages.includes(imageURI) ? "5px solid #9B4DFF" : "none",
                                     }}
                                 >
                                     <img
-                                        src={imageURI}  // ここでもURIをsrcに設定
-                                        alt={`thumbnail-${index}`}
+                                        src={imageURI}
+                                        alt={`thumb-${index}`}
                                         style={{
-                                            width: "80px",
-                                            height: "auto",
+                                            width: 100,
+                                            height: 100,
+                                            objectFit: "cover",
                                             borderRadius: "5px",
-                                            boxShadow: currentIndex === index ? "0 0 20px rgba(255, 77, 77, 0.7)" : "none",
-                                            filter: selectedImages.includes(imageURI) ? "brightness(0.8)" : "none",
-                                            border: selectedImages.includes(imageURI) ? "5px solid #9B4DFF" : "none",
+                                            transition: "border 0.3s ease",
                                         }}
                                     />
-                                    <div style={{ fontSize: "12px", color: "#555" }}>{imageURI.split('/').pop()}</div>
                                 </div>
                             ))}
                         </div>

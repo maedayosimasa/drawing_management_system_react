@@ -74,7 +74,7 @@ export const Project_download = ({ filteredData }) => {
     }, [state, filteredData]);
 
     useEffect(() => {
-        console.log(" projects:", projects);
+      //  console.log(" projects:", projects);
     }, [projects]);
     //配列に変換
     const images = Object.entries(projects);
@@ -83,7 +83,7 @@ export const Project_download = ({ filteredData }) => {
 //         const viewPath = Object.values(project).find(value => value.includes("view_path"));
 //         return viewPath || null; // view_pathが見つかればそれを返す
 //     }).filter(uri => uri); // 空の値を除外
- console.log("images",images );
+//    console.log("images",images );
     const settings = {
         dots: true,
         infinite: true,
@@ -135,7 +135,7 @@ export const Project_download = ({ filteredData }) => {
         }
         setAutoSlide(false);
     };
-        const handleClick = (index) => {
+        const handleClick = (index) => {    //クリックしたところに移動する
         if (sliderRef.current) {
             sliderRef.current.slickGoTo(index);
         }
@@ -156,17 +156,29 @@ export const Project_download = ({ filteredData }) => {
     const toggleAutoSlide = () => {
         setAutoSlide((prev) => !prev);
     };
-const handleImageSelect = (index) => {
-    const selectedImages = images[index];
-    const { currentFileName, imageURI } = selectedImages; // オブジェクトのプロパティを分ける
+
+const handleImageSelect = (index) => {   
+    const sImages = images[index];
+    const [currentFileName, imageURI] = sImages; // オブジェクトのプロパティを分ける
+    
+    // 各変数の値を確認
+    console.log("selected image index:", index);
+    console.log("currentFileName:", currentFileName);
+    console.log("imageURI:", imageURI);
+    
     setSelectedImages((prevImages) => {
-        if (prevImages.includes(currentFileName)) {
-            return prevImages.filter((img) => img !== currentFileName);
+        const isSelected = prevImages.some(img => img.imageURI === imageURI);
+        if (isSelected) {
+            // 選択されている場合は削除
+            return prevImages.filter(img => img.imageURI !== imageURI);
         } else {
-            return [...prevImages, currentFileName];
+            // 新しい選択を追加
+            return [...prevImages, { currentFileName, imageURI }];
         }
     });
 };
+
+
 
     return (
         <>
@@ -213,27 +225,28 @@ const handleImageSelect = (index) => {
                                 const [currentFileName, imageURI] = imageData;
 
                                 // currentFileName, imageURI の値をログに出力
-                                console.log("imageData:", imageData);
-                                console.log("currentFileName:", currentFileName);  // ファイル名
-                                console.log("imageURI:", imageURI);  // 画像URI
-                                console.log("indx:", index);
+                                // console.log("imageData:", imageData);
+                                // console.log("currentFileName:", currentFileName);  // ファイル名
+                                // console.log("imageURI:", imageURI);  // 画像URI
+                                // console.log("indx:", index);
 
                                 return (
                                     
                                     <div key={index}>
-                                        <img
-                                            src={imageURI}  // ここでURIをsrcに設定
-                                            alt={index}  // 画像のalt属性にファイル名を使用
-                                            style={{
-                                                width: "100%",
-                                                height: "auto",
-                                                borderRadius: "10px",
-                                                transition: "filter 0.3s ease, border 0.3s ease",
-                                                border: selectedImages.includes(imageURI) ? "5px solid #9B4DFF" : "none",
-                                                filter: selectedImages.includes(imageURI) ? "brightness(0.8)" : "none",
-                                            }}
-                                            onClick={() => handleImageSelect(index)}  // ファイル名で選択を処理
-                                        />
+                                      <img
+    src={imageURI}  // ここでURIをsrcに設定
+    alt={index}  // 画像のalt属性にファイル名を使用
+    style={{
+        width: "100%",
+        height: "auto",
+        borderRadius: "10px",
+        transition: "filter 0.3s ease, border 0.3s ease",
+        border: selectedImages.some(img => img.imageURI === imageURI) ? "5px solid #9B4DFF" : "none",  // 修正
+        filter: selectedImages.some(img => img.imageURI === imageURI) ? "brightness(0.8)" : "none", // 修正
+    }}
+    onClick={() => handleImageSelect(index)}  // ファイル名で選択を処理
+/>
+
                                     </div>
                                 );
                             })}
@@ -241,8 +254,9 @@ const handleImageSelect = (index) => {
 
                         {/* ファイル名の表示部分 */}
                         <div style={{ textAlign: 'center', marginTop: '20px' }}>
-                            <strong>ファイル名:</strong> {images[currentIndex]?.[0] || "未選択"}  {/* currentFileNameをここに表示 */}
-                        </div>
+    <strong>ファイル名:</strong> {images[currentIndex]?.[0] || "未選択"}  {/* currentFileNameをここに表示 */}
+</div>
+
 
                         <div style={{ textAlign: 'center', marginTop: '10px' }}>
                             <strong>表示中:</strong> {currentIndex + 1} / {images.length}
@@ -274,17 +288,18 @@ const handleImageSelect = (index) => {
                                       }}
                                      >
                                       <img
-                                           src={imageURI}
-                                                alt={`thumbnail-${index}`}
-                                           style={{
-                                                     width: "80px",
-                                                       height: "auto",
-                                                       borderRadius: "5px",
-                                                         boxShadow: currentIndex === index ? "0 0 20px rgba(255, 77, 77, 0.7)" : "none",
-                                                          filter: selectedImages.includes(imageURI) ? "brightness(0.8)" : "none",
-                                                          border: selectedImages.includes(imageURI) ? "5px solid #9B4DFF" : "none",
-                                                }}
+                                      src={imageURI}
+                                       alt={`thumbnail-${index}`}
+                                      style={{
+                                           width: "80px",
+                                           height: "auto",
+                                            borderRadius: "5px",
+                                             boxShadow: currentIndex === index ? "0 0 20px rgba(255, 77, 77, 0.7)" : "none",
+                                             filter: selectedImages.some(img => img.imageURI === imageURI) ? "brightness(0.8)" : "none",
+                                              border: selectedImages.some(img => img.imageURI === imageURI) ? "5px solid #9B4DFF" : "none",
+                                      }}
                                         />
+
                                           <div style={{ fontSize: "12px", color: "#555", marginTop: "5px" }}>
                                              {imageURI.split('/').pop()}
                                           </div>

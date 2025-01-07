@@ -93,6 +93,23 @@ const handleFileChange = (name, selectedFiles) => {
             console.log('Response:', response.data);
             alert(response.data.message || 'アップロードが成功しました！react');
           setUploading(false);
+          // アップロード成功時にフォームとファイルの状態をリセット
+          setFormData({
+            project_name: "",
+            finishing_table_name: "",
+            floor_plan_name: "",
+            machinery_equipment_diagram_all_name: "",
+            bim_drawing_name: "",
+            meeting_log_name: "",
+          });
+          setFiles({
+            project_name: null,
+            finishing_table_file: null,
+            floor_plan_file: null,
+            machinery_equipment_diagram_file: null,
+            bim_drawing_file: null,
+            meeting_log_file: null,
+          });
         } catch (error) {
             console.error('Error:', error.response || error.message);
             alert('プロジェクトの作成に失敗しました。react');

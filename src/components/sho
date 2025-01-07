@@ -187,7 +187,6 @@ export const Project_download = ({ filteredData }) => {
                     </MuiLink>
                 </Toolbar>
             </AppBar>
-
             <div style={{ width: '100%' }}>
                 <ResizableBox
                     width={containerWidth}
@@ -206,45 +205,30 @@ export const Project_download = ({ filteredData }) => {
                 >
                     <FormContainer>
                         <Slider ref={sliderRef} {...settings}>
-                            {images.map((imageData, index) => {
-                                // imageData をファイル名 (currentFileName) と画像URI (imageURI) に分解
-                                const [currentFileName, imageURI] = imageData;
-
-                                // currentFileName, imageURI の値をログに出力
-                                console.log("imageData:", imageData);
-                                console.log("currentFileName:", currentFileName);  // ファイル名
-                                console.log("imageURI:", imageURI);  // 画像URI
-                                console.log("indx:", index);
-
-                                return (
-                                    <div key={currentFileName}>
-                                        <img
-                                            src={imageURI}  // ここでURIをsrcに設定
-                                            alt={currentFileName}  // 画像のalt属性にファイル名を使用
-                                            style={{
-                                                width: "100%",
-                                                height: "auto",
-                                                borderRadius: "10px",
-                                                transition: "filter 0.3s ease, border 0.3s ease",
-                                                border: selectedImages.includes(imageURI) ? "5px solid #9B4DFF" : "none",
-                                                filter: selectedImages.includes(imageURI) ? "brightness(0.8)" : "none",
-                                            }}
-                                            onClick={() => handleImageSelect(currentFileName)}  // ファイル名で選択を処理
-                                        />
-                                    </div>
-                                );
-                            })}
+                            {images.map((imageURI, index) => (
+                                <div key={index}>
+                                    <img
+                                        src={imageURI}  // ここでURIをsrcに設定
+                                        alt={`slide-${index}`}
+                                        style={{
+                                            width: "100%",
+                                            height: "auto",
+                                            borderRadius: "10px",
+                                            transition: "filter 0.3s ease, border 0.3s ease",
+                                            border: selectedImages.includes(imageURI) ? "5px solid #9B4DFF" : "none",
+                                            filter: selectedImages.includes(imageURI) ? "brightness(0.8)" : "none",
+                                        }}
+                                        onClick={() => handleImageSelect(index)}
+                                    />
+                                </div>
+                            ))}
                         </Slider>
-
-                        {/* ファイル名の表示部分 */}
                         <div style={{ textAlign: 'center', marginTop: '20px' }}>
-                            <strong>ファイル名:</strong> {images[currentIndex]?.[0] || "未選択"}  {/* currentFileNameをここに表示 */}
+                            <strong>ファイル名:</strong> {currentFileName.split('/').pop()}
                         </div>
-
                         <div style={{ textAlign: 'center', marginTop: '10px' }}>
                             <strong>表示中:</strong> {currentIndex + 1} / {images.length}
                         </div>
-
                         <div style={{ textAlign: 'center', marginTop: '20px' }}>
                             <button onClick={handlePrev}>前へ</button>
                             <button onClick={handleNext}>次へ</button>
@@ -252,38 +236,33 @@ export const Project_download = ({ filteredData }) => {
                                 {autoSlide ? "自動スライド終了" : "自動スライド開始"}
                             </button>
                         </div>
-
                         <div style={{ display: "flex", justifyContent: "center", marginTop: '20px', flexWrap: "wrap" }}>
-                            {images.map((imageData, index) => {
-                                const [currentFileName, imageURI] = imageData; // ファイル名とURLを取得
-
-                                return (
-                                    <div
-                                        key={index}
-                                        onClick={() => {
-                                            handleClick(index);
-                                            handleImageSelect(index);  // currentFileNameを使用
-                                        }}
+                            {images.map((imageURI, index) => (
+                                <div
+                                    key={index}
+                                    onClick={() => {
+                                        handleClick(index);
+                                        handleImageSelect(index);
+                                    }}
+                                    style={{
+                                        margin: "5px",
+                                        cursor: "pointer",
+                                        border: selectedImages.includes(imageURI) ? "5px solid #9B4DFF" : "none",
+                                    }}
+                                >
+                                    <img
+                                        src={imageURI}
+                                        alt={`thumb-${index}`}
                                         style={{
-                                            margin: "5px",
-                                            cursor: "pointer",
-                                            border: selectedImages.includes(imageURI) ? "5px solid #9B4DFF" : "none",
+                                            width: 100,
+                                            height: 100,
+                                            objectFit: "cover",
+                                            borderRadius: "5px",
+                                            transition: "border 0.3s ease",
                                         }}
-                                    >
-                                        <img
-                                            src={imageURI}
-                                            alt={`thumb-${index}`}
-                                            style={{
-                                                width: 100,
-                                                height: 100,
-                                                objectFit: "cover",
-                                                borderRadius: "5px",
-                                                transition: "border 0.3s ease",
-                                            }}
-                                        />
-                                    </div>
-                                );
-                            })}
+                                    />
+                                </div>
+                            ))}
                         </div>
                     </FormContainer>
                 </ResizableBox>

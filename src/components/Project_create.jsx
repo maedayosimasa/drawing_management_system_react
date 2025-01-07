@@ -80,9 +80,7 @@ const handleFileChange = (name, selectedFiles) => {
     for (let [key, value] of data.entries()) {
         console.log(`${key}:`, value);
     }
- // setUploading(true);
-        // alert('FormDataを確認しました。APIには送信されません。');
-        // setUploading(false);
+
         console.log('data:', data); 
         const url = 'http://127.0.0.1:8000/api/Project_name/upload';
         try {
@@ -94,31 +92,18 @@ const handleFileChange = (name, selectedFiles) => {
             });
             console.log('Response:', response.data);
             alert(response.data.message || 'アップロードが成功しました！react');
+          setUploading(false);
         } catch (error) {
             console.error('Error:', error.response || error.message);
             alert('プロジェクトの作成に失敗しました。react');
         }
 
     };
-  //     const projects = [
-  //   {
-  //     プロジェクト名:"PDFファイルをドラッグ＆ドロップするか、クリックして選択してください",
-  //     仕上げ表: "PDFファイルをドラッグ＆ドロップするか、クリックして選択してください",
-  //     平面図: "PDFファイルをドラッグ＆ドロップするか、クリックして選択してください",
-  //     機械設備図ALL: "PDFファイルをドラッグ＆ドロップするか、クリックして選択してください",
-  //     BIM図面: "PDFファイルをドラッグ＆ドロップするか、クリックして選択してください",
-  //     打合せ簿: "PDFファイルをドラッグ＆ドロップするか、クリックして選択してください",
-  //   },
-  // ];
+
 
   // // 初期値を設定
    const [uploading, setUploading] = useState(false);
-  // //useState の初期値として projects[0] のデータを利用
-  // const [files, setFiles] = useState(
-  //   Object.fromEntries(
-  //     Object.entries(projects[0]).map(([key, value]) => [key, [{ name: value }]])
-  //   )
-  // );
+ 
 
       const onDrop = (acceptedFiles) => {
     setSelectedFiles(acceptedFiles);

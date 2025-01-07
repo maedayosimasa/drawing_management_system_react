@@ -53,14 +53,16 @@ const SubmitButton = styled(Button)`
   }
 `;
 
+
 export const Project_download = ({ filteredData }) => {
     const [projects, setProjects] = useState([]);
     const [selectedImages, setSelectedImages] = useState([]);
     const [autoSlide, setAutoSlide] = useState(true);
-    const [currentFileName, setCurrentFileName] = useState('');
+    //const [currentFileName, setCurrentFileName] = useState(images[0]);
+    const [currentFileName, setCurrentFileName] = useState([]);
     const [currentIndex, setCurrentIndex] = useState(0);
-    const [containerWidth, setContainerWidth] = useState(800);
-    const [containerHeight, setContainerHeight] = useState(400);
+    const [containerWidth, setContainerWidth] = useState(1000);// 初期幅を設定
+    const [containerHeight, setContainerHeight] = useState(400);// 初期高さを設定
     const sliderRef = useRef(null);
     const { state } = useLocation(); // stateを受け取る
     
@@ -133,6 +135,16 @@ export const Project_download = ({ filteredData }) => {
         }
         setAutoSlide(false);
     };
+        const handleClick = (index) => {
+        if (sliderRef.current) {
+            sliderRef.current.slickGoTo(index);
+        }
+        setAutoSlide(false);
+        setTimeout(() => {
+            setAutoSlide(true);
+        }, 5000);
+    };
+
 
     const handleNext = () => {
         if (sliderRef.current) {
@@ -144,27 +156,17 @@ export const Project_download = ({ filteredData }) => {
     const toggleAutoSlide = () => {
         setAutoSlide((prev) => !prev);
     };
-
-    const handleImageSelect = (index) => {
-        const selectedImage = images[index];
-        setSelectedImages((prevImages) => {
-            if (prevImages.includes(selectedImage)) {
-                return prevImages.filter((img) => img !== selectedImage);
-            } else {
-                return [...prevImages, selectedImage];
-            }
-        });
-    };
-
-    const handleClick = (index) => {
-        if (sliderRef.current) {
-            sliderRef.current.slickGoTo(index);
+const handleImageSelect = (index) => {
+    const selectedImages = images[index];
+    const { currentFileName, imageURI } = selectedImages; // オブジェクトのプロパティを分ける
+    setSelectedImages((prevImages) => {
+        if (prevImages.includes(currentFileName)) {
+            return prevImages.filter((img) => img !== currentFileName);
+        } else {
+            return [...prevImages, currentFileName];
         }
-        setAutoSlide(false);
-        setTimeout(() => {
-            setAutoSlide(true);
-        }, 5000);
-    };
+    });
+};
 
     return (
         <>
@@ -217,10 +219,11 @@ export const Project_download = ({ filteredData }) => {
                                 console.log("indx:", index);
 
                                 return (
-                                    <div key={currentFileName}>
+                                    
+                                    <div key={index}>
                                         <img
                                             src={imageURI}  // ここでURIをsrcに設定
-                                            alt={currentFileName}  // 画像のalt属性にファイル名を使用
+                                            alt={index}  // 画像のalt属性にファイル名を使用
                                             style={{
                                                 width: "100%",
                                                 height: "auto",
@@ -229,7 +232,7 @@ export const Project_download = ({ filteredData }) => {
                                                 border: selectedImages.includes(imageURI) ? "5px solid #9B4DFF" : "none",
                                                 filter: selectedImages.includes(imageURI) ? "brightness(0.8)" : "none",
                                             }}
-                                            onClick={() => handleImageSelect(currentFileName)}  // ファイル名で選択を処理
+                                            onClick={() => handleImageSelect(index)}  // ファイル名で選択を処理
                                         />
                                     </div>
                                 );
@@ -258,29 +261,33 @@ export const Project_download = ({ filteredData }) => {
                                 const [currentFileName, imageURI] = imageData; // ファイル名とURLを取得
 
                                 return (
-                                    <div
-                                        key={index}
-                                        onClick={() => {
-                                            handleClick(index);
-                                            handleImageSelect(index);  // currentFileNameを使用
-                                        }}
-                                        style={{
-                                            margin: "5px",
+                                 <div
+                                     key={index}
+                                       onClick={() => {
+                                        handleClick(index);
+                                       handleImageSelect(index);
+                                   }}
+                                     style={{
+                                           margin: "5px",
                                             cursor: "pointer",
-                                            border: selectedImages.includes(imageURI) ? "5px solid #9B4DFF" : "none",
-                                        }}
-                                    >
-                                        <img
-                                            src={imageURI}
-                                            alt={`thumb-${index}`}
-                                            style={{
-                                                width: 100,
-                                                height: 100,
-                                                objectFit: "cover",
-                                                borderRadius: "5px",
-                                                transition: "border 0.3s ease",
-                                            }}
+                                             textAlign: "center",
+                                      }}
+                                     >
+                                      <img
+                                           src={imageURI}
+                                                alt={`thumbnail-${index}`}
+                                           style={{
+                                                     width: "80px",
+                                                       height: "auto",
+                                                       borderRadius: "5px",
+                                                         boxShadow: currentIndex === index ? "0 0 20px rgba(255, 77, 77, 0.7)" : "none",
+                                                          filter: selectedImages.includes(imageURI) ? "brightness(0.8)" : "none",
+                                                          border: selectedImages.includes(imageURI) ? "5px solid #9B4DFF" : "none",
+                                                }}
                                         />
+                                          <div style={{ fontSize: "12px", color: "#555", marginTop: "5px" }}>
+                                             {imageURI.split('/').pop()}
+                                          </div>
                                     </div>
                                 );
                             })}

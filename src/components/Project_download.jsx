@@ -72,12 +72,13 @@ export const Project_download = ({ filteredData }) => {
             setProjects(finalResult); // jsonFinalResultまたはstateから取得したデータを設定
         }
     }, [state, filteredData]);
-
+    
     useEffect(() => {
-      //  console.log(" projects:", projects);
+        console.log(" projects:", projects);
     }, [projects]);
     //配列に変換
     const images = Object.entries(projects);
+    console.log(" images 配列に変換:", images);
 
 //     const images = Object.values(projects).map(project => {
 //         const viewPath = Object.values(project).find(value => value.includes("view_path"));
@@ -162,9 +163,10 @@ const handleImageSelect = (index) => {
     const [currentFileName, imageURI] = sImages; // オブジェクトのプロパティを分ける
     
     // 各変数の値を確認
-    console.log("selected image index:", index);
-    console.log("currentFileName:", currentFileName);
-    console.log("imageURI:", imageURI);
+    console.log(" sImages", sImages);
+    console.log("sImages image index:", index);
+    console.log("sImages currentFileName:", currentFileName);
+    console.log("sImages imageURI:", imageURI);
     
     setSelectedImages((prevImages) => {
         const isSelected = prevImages.some(img => img.imageURI === imageURI);
@@ -220,32 +222,40 @@ const handleImageSelect = (index) => {
                 >
                     <FormContainer>
                         <Slider ref={sliderRef} {...settings}>
-                            {images.map((imageData, index) => {
+                            {images.map((imageData, index_main) => {
                                 // imageData をファイル名 (currentFileName) と画像URI (imageURI) に分解
-                                const [currentFileName, imageURI] = imageData;
-
-                                // currentFileName, imageURI の値をログに出力
-                                // console.log("imageData:", imageData);
-                                // console.log("currentFileName:", currentFileName);  // ファイル名
-                                // console.log("imageURI:", imageURI);  // 画像URI
-                                // console.log("indx:", index);
-
+                                const [datas, index] = imageData;
+                                
+                                const [id, sub_id, currentFileName, thmbnal, pdfURI, created_at, update_t] = datas;
+                                //currentFileName, imageURI の値をログに出力
+                                console.log("imageData:", imageData);
+                                console.log("id:", id);
+                                console.log("sub_id:", sub_id);
+                                console.log("currentFileName:", currentFileName);  // ファイル名
+                                console.log("thmbnal:", thmbnal);
+                                console.log("index:", index);
+                                console.log("datas:", datas);
+                                const baseUrl = "https://storage/thumbnails/logs";
+                                // 日本語をそのまま組み込んでURLを生成
+                                const imageURI = `${baseUrl}${thmbnal}`;
+                                //const imageURI = thmbnal;
+                                console.log("imageURI:", imageURI);  // 画像URI
                                 return (
                                     
                                     <div key={index}>
-                                      <img
-    src={imageURI}  // ここでURIをsrcに設定
-    alt={index}  // 画像のalt属性にファイル名を使用
-    style={{
-        width: "100%",
-        height: "auto",
-        borderRadius: "10px",
-        transition: "filter 0.3s ease, border 0.3s ease",
-        border: selectedImages.some(img => img.imageURI === imageURI) ? "5px solid #9B4DFF" : "none",  // 修正
-        filter: selectedImages.some(img => img.imageURI === imageURI) ? "brightness(0.8)" : "none", // 修正
-    }}
-    onClick={() => handleImageSelect(index)}  // ファイル名で選択を処理
-/>
+                                     <img
+                                    src={imageURI}  // ここでURIをsrcに設定
+                                      alt={currentFileName}  // 画像のalt属性にファイル名を使用
+                                      style={{
+                                      width: "100%",
+                                      height: "auto",
+                                      borderRadius: "10px",
+                                      transition: "filter 0.3s ease, border 0.3s ease",
+                                      border: selectedImages.some(img => img.imageURI === imageURI) ? "5px solid #9B4DFF" : "none",  // 修正
+                                      filter: selectedImages.some(img => img.imageURI === imageURI) ? "brightness(0.8)" : "none", // 修正
+                                         }}
+                                      onClick={() => handleImageSelect(index)}  // ファイル名で選択を処理
+                                  />
 
                                     </div>
                                 );
@@ -253,22 +263,69 @@ const handleImageSelect = (index) => {
                         </Slider>
 
                         {/* ファイル名の表示部分 */}
-                        <div style={{ textAlign: 'center', marginTop: '20px' }}>
-    <strong>ファイル名:</strong> {images[currentIndex]?.[0] || "未選択"}  {/* currentFileNameをここに表示 */}
-</div>
+                        <div style={{ textAlign: 'center', marginTop: '20px', color: "#d4af37" }}>
+                         <strong>ファイル名:</strong> {images[currentIndex]?.[0] || "未選択"}  {/* currentFileNameをここに表示 */}
+                        </div>
 
 
-                        <div style={{ textAlign: 'center', marginTop: '10px' }}>
+                        <div style={{ textAlign: 'center', marginTop: '5px', color: "#d4af37" }}>
                             <strong>表示中:</strong> {currentIndex + 1} / {images.length}
                         </div>
 
-                        <div style={{ textAlign: 'center', marginTop: '20px' }}>
-                            <button onClick={handlePrev}>前へ</button>
-                            <button onClick={handleNext}>次へ</button>
-                            <button onClick={toggleAutoSlide}>
+                        <Box
+                            sx={{
+                                display: 'flex',
+                                justifyContent: 'center',
+                                gap: 2, // ボタン間の間隔
+                                marginTop: 2, // 上部の余白
+                            }}
+                        >
+                            <Button
+                                variant="contained"
+                                color="#d4af37"
+                                size="small"
+                                sx={{
+                                    fontWeight: 'bold',
+                                    boxShadow: 3, // 重厚感のある影
+                                    '&:hover': {
+                                        boxShadow: 6, // ホバー時に影を強調
+                                    },
+                                }}
+                                onClick={handlePrev}
+                            >
+                                前へ
+                            </Button>
+                            <Button
+                                variant="contained"
+                                color="#d4af37"
+                                size="small"
+                                sx={{
+                                    fontWeight: 'bold',
+                                    boxShadow: 3,
+                                    '&:hover': {
+                                        boxShadow: 6,
+                                    },
+                                }}
+                                onClick={handleNext}
+                            >
+                                次へ
+                            </Button>
+                            <Button
+                                variant="#d4af37"
+                                color={autoSlide ? "error" : "success"} // 自動スライドの状態で色を変える
+                                size="small"
+                                sx={{
+                                    fontWeight: 'bold',
+                                    boxShadow: 3,
+                                    '&:hover': {
+                                        boxShadow: 6,
+                                    },
+                                }}
+                                onClick={toggleAutoSlide}
+                            >
                                 {autoSlide ? "自動スライド終了" : "自動スライド開始"}
-                            </button>
-                        </div>
+                            </Button>
+                        </Box>
 
                         <div style={{ display: "flex", justifyContent: "center", marginTop: '20px', flexWrap: "wrap" }}>
                             {images.map((imageData, index) => {
@@ -289,7 +346,7 @@ const handleImageSelect = (index) => {
                                      >
                                       <img
                                       src={imageURI}
-                                       alt={`thumbnail-${index}`}
+                                            alt={currentFileName}
                                       style={{
                                            width: "80px",
                                            height: "auto",
@@ -299,9 +356,9 @@ const handleImageSelect = (index) => {
                                               border: selectedImages.some(img => img.imageURI === imageURI) ? "5px solid #9B4DFF" : "none",
                                       }}
                                         />
-
-                                          <div style={{ fontSize: "12px", color: "#555", marginTop: "5px" }}>
-                                             {imageURI.split('/').pop()}
+                                                 {/* サムネイル画像の名前   currentFileNameの真ん中の文字*/}
+                                        <div style={{ fontSize: "14px", color: "#d4af37", marginTop: "5px" }}>
+                                            {currentFileName.split('/').pop().split('.')[1]}  
                                           </div>
                                     </div>
                                 );

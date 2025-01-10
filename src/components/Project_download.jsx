@@ -297,12 +297,12 @@ export const Project_download = ({ filteredData }) => {
                                         const sub_id = Array.isArray(imageData) ? imageData[0] : index;
 
                                         // ログの出力
-                                        console.log("imageData:", imageData);
-                                        console.log("id:", id);
-                                        console.log("sub_id:", sub_id);
-                                        console.log("currentFileName:", currentFileName);
-                                        console.log("thmbnal:", thmbnal);
-                                        console.log("index:", index);
+                                        // console.log("imageData:", imageData);
+                                        // console.log("id:", id);
+                                        // console.log("sub_id:", sub_id);
+                                        // console.log("currentFileName:", currentFileName);
+                                        // console.log("thmbnal:", thmbnal);
+                                        // console.log("index:", index);
 
                                         const baseUrl = "http://127.0.0.1:8000/storage/";
                                         const imageURI = `${baseUrl}${thmbnal}`;
@@ -330,7 +330,7 @@ export const Project_download = ({ filteredData }) => {
                                                     ? "brightness(0.8)"
                                                     : "none",
                                                 }}
-                                                onClick={() => handleImageSelect(index)} // ファイル名で選択を処理
+                                                onClick={() => handleImageSelect(index, currentFileName, imageURI)} // ファイル名で選択を処理
                                             />
                                             </div>
                                         );

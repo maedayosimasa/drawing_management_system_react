@@ -74,10 +74,13 @@ export const Project_download = ({ filteredData }) => {
     }, [state, filteredData]);
     
     useEffect(() => {
-        console.log(" projects:", projects);
+    console.log(" projects:", projects);
     }, [projects]);
     //配列に変換
     const images = Object.entries(projects);
+    // const imeg_origin = Object.entries(projects);
+    // const [index, images] = imeg_origin;
+    //console.log(" index 配列に変換:", index);
     console.log(" images 配列に変換:", images);
 
 //     const images = Object.values(projects).map(project => {
@@ -109,11 +112,15 @@ export const Project_download = ({ filteredData }) => {
             },
         ],
         afterChange: (current) => {
-            setCurrentFileName(images[current]);
+            const fileName = images[current][1].finishing_table_name || images[current][1].
+            floor_plan_name || images[current][1].machinery_equipment_diagram_all_name || images[current][1].
+            bim_drawing_name || images[current][1].meeting_log_name;
+            setCurrentFileName(fileName);
+            //setCurrentFileName(images[current]);
             setCurrentIndex(current);
         },
     };
-
+    console.log("setCurrentFileName",setCurrentFileName);
     useEffect(() => {
         let slideInterval;
         if (autoSlide && sliderRef.current) {
@@ -158,12 +165,7 @@ export const Project_download = ({ filteredData }) => {
         setAutoSlide((prev) => !prev);
     };
 
-const handleImageSelect = (index) => {   
-    const sImages = images[index];
-    const [currentFileName, imageURI] = sImages; // オブジェクトのプロパティを分ける
-    
-    // 各変数の値を確認
-    console.log(" sImages", sImages);
+    const handleImageSelect = (index, currentFileName, imageURI) => {
     console.log("sImages image index:", index);
     console.log("sImages currentFileName:", currentFileName);
     console.log("sImages imageURI:", imageURI);
@@ -179,6 +181,27 @@ const handleImageSelect = (index) => {
         }
     });
 };
+// const handleImageSelect = (index) => {   
+//     const sImages = images[index];
+//     const [currentFileName, imageURI] = sImages; // オブジェクトのプロパティを分ける
+    
+//     // 各変数の値を確認
+//     console.log(" sImages", sImages);
+//     console.log("sImages image index:", index);
+//     console.log("sImages currentFileName:", currentFileName);
+//     console.log("sImages imageURI:", imageURI);
+    
+//     setSelectedImages((prevImages) => {
+//         const isSelected = prevImages.some(img => img.imageURI === imageURI);
+//         if (isSelected) {
+//             // 選択されている場合は削除
+//             return prevImages.filter(img => img.imageURI !== imageURI);
+//         } else {
+//             // 新しい選択を追加
+//             return [...prevImages, { currentFileName, imageURI }];
+//         }
+//     });
+// };
 
 
 
@@ -222,49 +245,102 @@ const handleImageSelect = (index) => {
                 >
                     <FormContainer>
                         <Slider ref={sliderRef} {...settings}>
-                            {images.map((imageData, index_main) => {
-                                // imageData をファイル名 (currentFileName) と画像URI (imageURI) に分解
-                                const [datas, index] = imageData;
-                                
-                                const [id, sub_id, currentFileName, thmbnal, pdfURI, created_at, update_t] = datas;
-                                //currentFileName, imageURI の値をログに出力
-                                console.log("imageData:", imageData);
-                                console.log("id:", id);
-                                console.log("sub_id:", sub_id);
-                                console.log("currentFileName:", currentFileName);  // ファイル名
-                                console.log("thmbnal:", thmbnal);
-                                console.log("index:", index);
-                                console.log("datas:", datas);
-                                const baseUrl = "https://storage/thumbnails/logs";
-                                // 日本語をそのまま組み込んでURLを生成
-                                const imageURI = `${baseUrl}${thmbnal}`;
-                                //const imageURI = thmbnal;
-                                console.log("imageURI:", imageURI);  // 画像URI
-                                return (
-                                    
-                                    <div key={index}>
-                                     <img
-                                    src={imageURI}  // ここでURIをsrcに設定
-                                      alt={currentFileName}  // 画像のalt属性にファイル名を使用
-                                      style={{
-                                      width: "100%",
-                                      height: "auto",
-                                      borderRadius: "10px",
-                                      transition: "filter 0.3s ease, border 0.3s ease",
-                                      border: selectedImages.some(img => img.imageURI === imageURI) ? "5px solid #9B4DFF" : "none",  // 修正
-                                      filter: selectedImages.some(img => img.imageURI === imageURI) ? "brightness(0.8)" : "none", // 修正
-                                         }}
-                                      onClick={() => handleImageSelect(index)}  // ファイル名で選択を処理
-                                  />
+                     {Array.isArray(images) &&images.map((imageData, index) => {
+                                        // imageDataが配列の場合、内容を取り出す
+                                        const imageContent = Array.isArray(imageData) ? imageData[1] : imageData;
 
-                                    </div>
-                                );
-                            })}
-                        </Slider>
+                                        // 分割代入
+                                        const {
+                                            id,
+                                            created_at,
+                                            updated_at,
+                                            finishing_table_name,
+                                            finishing_table_view_path,
+                                            finishing_table_pdf_path,
+                                            floor_plan_name,
+                                            floor_plan_view_path,
+                                            floor_plan_pdf_path,
+                                            machinery_equipment_diagram_all_name,
+                                            machinery_equipment_diagram_all_view_path,
+                                            machinery_equipment_diagram_all_pdf_path,
+                                            bim_drawing_name,
+                                            bim_drawing_view_path,
+                                            bim_drawing_pdf_path,
+                                            meeting_log_name,
+                                            meeting_log_view_path,
+                                            meeting_log_pdf_path,
+                                        } = imageContent;
+
+                                        // 必要な値を選択  ＊＊順序注意＊＊
+                                        const currentFileName =
+                                            finishing_table_name ||
+                                            floor_plan_name ||
+                                            machinery_equipment_diagram_all_name ||
+                                            bim_drawing_name ||
+                                            meeting_log_name;
+
+                                        const thmbnal =
+                                            finishing_table_view_path ||
+                                            floor_plan_view_path ||
+                                            machinery_equipment_diagram_all_view_path ||
+                                            bim_drawing_view_path ||
+                                            meeting_log_view_path;
+
+                                        const pdfURI =
+                                            finishing_table_pdf_path ||
+                                            floor_plan_pdf_path ||
+                                            machinery_equipment_diagram_all_pdf_path ||
+                                            bim_drawing_pdf_path ||
+                                            meeting_log_pdf_path;
+
+                                        // sub_idの取得
+                                        const sub_id = Array.isArray(imageData) ? imageData[0] : index;
+
+                                        // ログの出力
+                                        console.log("imageData:", imageData);
+                                        console.log("id:", id);
+                                        console.log("sub_id:", sub_id);
+                                        console.log("currentFileName:", currentFileName);
+                                        console.log("thmbnal:", thmbnal);
+                                        console.log("index:", index);
+
+                                        const baseUrl = "http://127.0.0.1:8000/storage/";
+                                        const imageURI = `${baseUrl}${thmbnal}`;
+
+                                        console.log("imageURI:", imageURI);
+
+                                        return (
+                                            <div key={index}>
+                                            <img
+                                                src={imageURI} // ここでURIをsrcに設定
+                                                alt={currentFileName} // 画像のalt属性にファイル名を使用
+                                                style={{
+                                                width: "100%",
+                                                height: "auto",
+                                                borderRadius: "10px",
+                                                transition: "filter 0.3s ease, border 0.3s ease",
+                                                border: selectedImages.some(
+                                                    (img) => img.imageURI === imageURI
+                                                )
+                                                    ? "5px solid #9B4DFF"
+                                                    : "none",
+                                                filter: selectedImages.some(
+                                                    (img) => img.imageURI === imageURI
+                                                )
+                                                    ? "brightness(0.8)"
+                                                    : "none",
+                                                }}
+                                                onClick={() => handleImageSelect(index)} // ファイル名で選択を処理
+                                            />
+                                            </div>
+                                        );
+                                        })}
+                                    </Slider>
+
 
                         {/* ファイル名の表示部分 */}
                         <div style={{ textAlign: 'center', marginTop: '20px', color: "#d4af37" }}>
-                         <strong>ファイル名:</strong> {images[currentIndex]?.[0] || "未選択"}  {/* currentFileNameをここに表示 */}
+                         <strong>ファイル名:</strong> {currentFileName|| "未選択"}  {/* currentFileNameをここに表示 */}
                         </div>
 
 
@@ -328,16 +404,80 @@ const handleImageSelect = (index) => {
                         </Box>
 
                         <div style={{ display: "flex", justifyContent: "center", marginTop: '20px', flexWrap: "wrap" }}>
-                            {images.map((imageData, index) => {
-                                const [currentFileName, imageURI] = imageData; // ファイル名とURLを取得
+                           {Array.isArray(images) &&images.map((imageData, index) => {
+                                        // imageDataが配列の場合、内容を取り出す
+                                        const imageContent = Array.isArray(imageData) ? imageData[1] : imageData;
+
+                                        // 分割代入
+                                        const {
+                                            id,
+                                            created_at,
+                                            updated_at,
+                                            finishing_table_name,
+                                            finishing_table_view_path,
+                                            finishing_table_pdf_path,
+                                            floor_plan_name,
+                                            floor_plan_view_path,
+                                            floor_plan_pdf_path,
+                                            machinery_equipment_diagram_all_name,
+                                            machinery_equipment_diagram_all_view_path,
+                                            machinery_equipment_diagram_all_pdf_path,
+                                            bim_drawing_name,
+                                            bim_drawing_view_path,
+                                            bim_drawing_pdf_path,
+                                            meeting_log_name,
+                                            meeting_log_view_path,
+                                            meeting_log_pdf_path,
+                                        } = imageContent;
+
+                                        // 必要な値を選択  ＊＊順序注意＊＊
+                                        const currentFileName =
+                                            finishing_table_name ||
+                                            floor_plan_name ||
+                                            machinery_equipment_diagram_all_name ||
+                                            bim_drawing_name ||
+                                            meeting_log_name;
+
+                                        const thmbnal =
+                                            finishing_table_view_path ||
+                                            floor_plan_view_path ||
+                                            machinery_equipment_diagram_all_view_path ||
+                                            bim_drawing_view_path ||
+                                            meeting_log_view_path;
+
+                                        const pdfURI =
+                                            finishing_table_pdf_path ||
+                                            floor_plan_pdf_path ||
+                                            machinery_equipment_diagram_all_pdf_path ||
+                                            bim_drawing_pdf_path ||
+                                            meeting_log_pdf_path;
+
+                                        // sub_idの取得
+                                        const sub_id = Array.isArray(imageData) ? imageData[0] : index;
+
+                                        // ログの出力
+                                        // console.log("imageData:", imageData);
+                                        // console.log("id:", id);
+                                        // console.log("sub_id:", sub_id);
+                                        // console.log("currentFileName:", currentFileName);
+                                        // console.log("thmbnal:", thmbnal);
+                                        // console.log("index:", index);
+
+                                        const baseUrl = "http://127.0.0.1:8000/storage/";
+                                        const imageURI = `${baseUrl}${thmbnal}`;
+
+                                        console.log("imageURI:", imageURI);
+
 
                                 return (
                                  <div
                                      key={index}
-                                       onClick={() => {
-                                        handleClick(index);
-                                       handleImageSelect(index);
-                                   }}
+                                     // onClickでcurrentFileNameとimageURIを渡す
+                                        onClick={() => handleImageSelect(index, currentFileName, imageURI)
+                                    //    onClick={() => {
+                                    //     handleClick(index);
+                                    //    handleImageSelect(index);
+                                   }
                                      style={{
                                            margin: "5px",
                                             cursor: "pointer",
@@ -358,7 +498,7 @@ const handleImageSelect = (index) => {
                                         />
                                                  {/* サムネイル画像の名前   currentFileNameの真ん中の文字*/}
                                         <div style={{ fontSize: "14px", color: "#d4af37", marginTop: "5px" }}>
-                                            {currentFileName.split('/').pop().split('.')[1]}  
+                                            {currentFileName.split('/').pop().split('.')[0]}  
                                           </div>
                                     </div>
                                 );

@@ -3,9 +3,7 @@ import axios from 'axios';
 import { Container, Typography, Card, CardContent, Divider, Button } from '@mui/material';
 import Draggable from 'react-draggable';
 import { ResizableBox } from 'react-resizable';
-
 import { BrowserRouter, Routes, Route } from 'react-router-dom';
-
 import { Project_detail } from './components/Project_details';
 //import { Project_create, Project_update } from './components/Project_create';
 import { Project_create } from './components/Project_create';
@@ -13,11 +11,14 @@ import { Project_search } from './components/Project_search';
 import { Project_select } from './components/Project_select';
 import { Project_show } from './components/Project_show';
 import { Project_download } from './components/Project_download';
+//import { something } from 'https://example.com/some-module.js';
 
 export const App = () => {
+  
 
   return (
     <>
+    
          <Typography 
         variant="h5" 
         align="center" 
@@ -42,6 +43,7 @@ export const App = () => {
         </Routes>
       </BrowserRouter>
       
+      
       {/* Provider を追加 */}
       {/* <ProjectProvider>
         <Router>
@@ -56,4 +58,14 @@ export const App = () => {
   );
 };
 
-export default App;
+ export default App;
+
+
+function MyComponent() {
+  console.log(something);
+  return (
+    <div>
+      <h1>Module Import in React</h1>
+    </div>
+  );
+}

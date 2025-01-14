@@ -58,6 +58,7 @@ const SubmitButton = styled(Button)`
 
 export const Project_download = ({ filteredData }) => {
     const [projects, setProjects] = useState([]);
+    const [projectsPartition, setProjectsPartition] = useState([]);
     const [selectedImages, setSelectedImages] = useState([]);
     const [autoSlide, setAutoSlide] = useState(true);
     //const [currentFileName, setCurrentFileName] = useState(images[0]);
@@ -75,17 +76,20 @@ export const Project_download = ({ filteredData }) => {
             setProjects(finalResult); // jsonFinalResultまたはstateから取得したデータを設定
         }
     }, [state, filteredData]);
-<<<<<<< HEAD
 
      // 子コンポーネントからデータを受け取る
     const handleProjectData = (index, id, id_sub, name, imageURI, pdfURL, created_at, updated_at) => {
         // 必要に応じてプロジェクトデータを更新または処理
-        const updatedProjects = [...projects];
+        const updatedProjects = [...projectsPartition];
         updatedProjects[index] = {
             index, id, id_sub, name, imageURI, pdfURL, created_at, updated_at
         };
-        setProjects(updatedProjects);  // 更新されたプロジェクトデータを設定
+        setProjectsPartition(updatedProjects);  // 更新されたプロジェクトデータを設定
     };
+    
+    useEffect(() => {
+        console.log("Updated projectsPartition:", projectsPartition);
+    }, [projectsPartition]);
     
     useEffect(() => {
     console.log(" projects:", projects);
@@ -95,14 +99,6 @@ export const Project_download = ({ filteredData }) => {
     // const imeg_origin = Object.entries(projects);
     // const [index, images] = imeg_origin;
     //console.log(" index 配列に変換:", index);
-=======
-    
-    useEffect(() => {
-        console.log(" projects:", projects);
-    }, [projects]);
-    //配列に変換
-    const images = Object.entries(projects);
->>>>>>> 845ab9605ac1ce57ea5ccf423921796e2ef50165
     console.log(" images 配列に変換:", images);
 
 //     const images = Object.values(projects).map(project => {
@@ -192,20 +188,10 @@ export const Project_download = ({ filteredData }) => {
     // console.log("sImages currentFileName:", currentFileName);
     // console.log("sImages imageURI:", imageURI);
     
-<<<<<<< HEAD
     setSelectedImages((prevImages) => {   //prevImages（前の画像のリスト）を取得
         //isSelected は現在選択されている画像かどうかをチェックするためのブール値
         //some メソッドは、配列内に1つでも条件に合致する要素
         //img.imageURI === imageURI で、現在選択した画像と同じ画像URIが存在するかどうかを調べます
-=======
-    // 各変数の値を確認
-    console.log(" sImages", sImages);
-    console.log("sImages image index:", index);
-    console.log("sImages currentFileName:", currentFileName);
-    console.log("sImages imageURI:", imageURI);
-    
-    setSelectedImages((prevImages) => {
->>>>>>> 845ab9605ac1ce57ea5ccf423921796e2ef50165
         const isSelected = prevImages.some(img => img.imageURI === imageURI);
         if (isSelected) {
             // 選択されている場合は削除
@@ -266,6 +252,7 @@ const handleDownload = async () => {
                 // pdfURLからファイルを取得
                 const response = await axios.get(file.pdfURL, {
                     responseType: 'blob',  // Blobとしてレスポンスを受け取る
+                    withCredentials: false, // Cookieを送信しない
                 });
 
                 // Blob URLを生成
@@ -312,7 +299,7 @@ const handleDownload = async () => {
                     </MuiLink>
                 </Toolbar>
             </AppBar>
-            //
+           
 
             <div style={{ width: '100%' }}>
                 <ResizableBox
@@ -332,35 +319,28 @@ const handleDownload = async () => {
                 >
                     <FormContainer>
                         <Slider ref={sliderRef} {...settings}>
-<<<<<<< HEAD
-                                    {/* <div>
-            <h1>Project Download</h1>
-            {projects.map(([index, projectData]) => (
-                <div key={index}>
-                    <ProjectArray
-                        index={index}
-                        projectData={projectData}
-                        onProjectData={handleProjectData}
-                    />
-                   
-                    {projectData && (
-                        <div>
-                            <p>Index: {index}</p>
-                            <p>ID: {projectData.id}</p>
-                            <p>Sub ID: {projectData.drawing_id || projectData.project_id}</p>
-                            <p>Name: {projectData.name}</p>
-                            <p>Image URI: {projectData.imageURI}</p>
-                            <p>PDF URL: {projectData.pdfURL}</p>
-                            <p>Created At: {projectData.created_at}</p>
-                            <p>Updated At: {projectData.updated_at}</p>
-                        </div>
-                    )}
-                </div>
-            ))}
-        </div> */}
+                            {/* 子コンポーネントに props を渡す */}
+                            <ProjectArray projects={projects} onProjectData={handleProjectData} />
+      
+                                        
+                            <h1>Project Download</h1>
+                            {projectsPartition.map((projectData, index) => (
+                                <div key={index}>
+                                    <div>
+                                        <p>Index: {index}</p>
+                                        <p>ID: {projectData.id}</p>
+                                        <p>Sub ID: {projectData.id_sub || 'N/A'}</p>
+                                        <p>Name: {projectData.name}</p>
+                                        <p>Image URI: {projectData.imageURI}</p>
+                                        <p>PDF URL: {projectData.pdfURL}</p>
+                                        <p>Created At: {projectData.created_at}</p>
+                                        <p>Updated At: {projectData.updated_at}</p>
+                                    </div>
+                                </div>
+                            ))}
 
 
-                     {Array.isArray(images) &&images.map((imageData, index) => {
+                     {/* {Array.isArray(images) &&images.map((imageData, index) => {
                                         // imageDataが配列の場合、内容を取り出す
                                         const imageContent = Array.isArray(imageData) ? imageData[1] : imageData;
 
@@ -427,6 +407,8 @@ const handleDownload = async () => {
                                         // console.log("pdfURI:", pdfURL);
 
                                         return (
+
+
                                             <div key={index}>
                                             <img
                                                 src={imageURI} // ここでURIをsrcに設定
@@ -451,54 +433,15 @@ const handleDownload = async () => {
                                             />
                                             </div>
                                         );
-                                        })
                                         }
+                                    )
+                                        } */}
                                     </Slider>
-=======
-                            {images.map((imageData, index_main) => {
-                                // imageData をファイル名 (currentFileName) と画像URI (imageURI) に分解
-                                const [datas, index] = imageData;
-                                
-                                const [id, sub_id, currentFileName, thmbnal, pdfURI, created_at, update_t] = datas;
-                                //currentFileName, imageURI の値をログに出力
-                                console.log("imageData:", imageData);
-                                console.log("id:", id);
-                                console.log("sub_id:", sub_id);
-                                console.log("currentFileName:", currentFileName);  // ファイル名
-                                console.log("thmbnal:", thmbnal);
-                                console.log("index:", index);
-                                console.log("datas:", datas);
-                                const baseUrl = "https://storage/thumbnails/logs";
-                                // 日本語をそのまま組み込んでURLを生成
-                                const imageURI = `${baseUrl}${thmbnal}`;
-                                //const imageURI = thmbnal;
-                                console.log("imageURI:", imageURI);  // 画像URI
-                                return (
-                                    
-                                    <div key={index}>
-                                     <img
-                                    src={imageURI}  // ここでURIをsrcに設定
-                                      alt={currentFileName}  // 画像のalt属性にファイル名を使用
-                                      style={{
-                                      width: "100%",
-                                      height: "auto",
-                                      borderRadius: "10px",
-                                      transition: "filter 0.3s ease, border 0.3s ease",
-                                      border: selectedImages.some(img => img.imageURI === imageURI) ? "5px solid #9B4DFF" : "none",  // 修正
-                                      filter: selectedImages.some(img => img.imageURI === imageURI) ? "brightness(0.8)" : "none", // 修正
-                                         }}
-                                      onClick={() => handleImageSelect(index)}  // ファイル名で選択を処理
-                                  />
->>>>>>> 845ab9605ac1ce57ea5ccf423921796e2ef50165
 
 
                         {/* ファイル名の表示部分 */}
                         <div style={{ textAlign: 'center', marginTop: '20px', color: "#d4af37" }}>
-<<<<<<< HEAD
                          <strong>ファイル名:</strong> {currentFileName|| "未選択"}  {/* currentFileNameをここに表示 */}
-=======
-                         <strong>ファイル名:</strong> {images[currentIndex]?.[0] || "未選択"}  {/* currentFileNameをここに表示 */}
->>>>>>> 845ab9605ac1ce57ea5ccf423921796e2ef50165
                         </div>
 
 
@@ -559,7 +502,6 @@ const handleDownload = async () => {
                             >
                                 {autoSlide ? "自動スライド終了" : "自動スライド開始"}
                             </Button>
-<<<<<<< HEAD
                             <Button
                                 variant="contained"
                                 color="primary"
@@ -570,8 +512,6 @@ const handleDownload = async () => {
                                 ダウンロード
                             </Button>
 
-=======
->>>>>>> 845ab9605ac1ce57ea5ccf423921796e2ef50165
                         </Box>
 
                         <div style={{ display: "flex", justifyContent: "center", marginTop: '20px', flexWrap: "wrap" }}>
@@ -672,11 +612,7 @@ const handleDownload = async () => {
                                         />
                                                  {/* サムネイル画像の名前   currentFileNameの真ん中の文字*/}
                                         <div style={{ fontSize: "14px", color: "#d4af37", marginTop: "5px" }}>
-<<<<<<< HEAD
                                             {currentFileName.split('/').pop().split('.')[0]}  
-=======
-                                            {currentFileName.split('/').pop().split('.')[1]}  
->>>>>>> 845ab9605ac1ce57ea5ccf423921796e2ef50165
                                           </div>
                                     </div>
                                 );

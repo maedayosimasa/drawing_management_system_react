@@ -130,10 +130,16 @@ export const Project_search = () => {
         </Toolbar>
       </AppBar>
 
-      <Container maxWidth="lg" sx={{ mt: 5 }}>
+            <Container maxWidth="lg" sx={{ mt: 5 }}>
                 <Title>プロジェクトの検索</Title>
 
                 <FormContainer>
+                    <Typography
+                        variant="h6"
+                        sx={{ marginBottom: '10px', color: '#333' }}
+                    >
+                        プロジェクト名
+                    </Typography>
                     <TextField
                         label="検索項目"
                         variant="outlined"
@@ -161,6 +167,7 @@ export const Project_search = () => {
                     />
                     <SubmitButton onClick={handleSearch}>検索</SubmitButton>
                 </FormContainer>
+
 
                 {projectNames.length > 0 && (
                     <ResultContainer>

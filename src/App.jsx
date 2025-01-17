@@ -11,6 +11,7 @@ import { Project_search } from './components/Project_search';
 import { Project_select } from './components/Project_select';
 import { Project_show } from './components/Project_show';
 import { Project_download } from './components/Project_download';
+import { Test } from './components/Test';
 //import { something } from 'https://example.com/some-module.js';
 
 export const App = () => {
@@ -40,6 +41,7 @@ export const App = () => {
           <Route path="/Project_name/select" element={<Project_select />} />
           <Route path="/Project_name/show" element={<Project_show />} />
           <Route path="/Project_name/download" element={<Project_download />} />
+          <Route path="/Test" element={<Test/>} />
         </Routes>
       </BrowserRouter>
       

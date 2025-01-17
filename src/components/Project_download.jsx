@@ -1,4 +1,4 @@
-import React, { useEffect, useState, useRef } from "react";
+import React, { useEffect, useState, useRef, useCallback } from "react";
 import Slider from "react-slick";
 import "slick-carousel/slick/slick.css";
 import "slick-carousel/slick/slick-theme.css";
@@ -77,15 +77,47 @@ export const Project_download = ({ filteredData }) => {
         }
     }, [state, filteredData]);
 
+    
+    // // 子コンポーネントからデータを受け取る
+    // const handleProjectData = useCallback((projectsPartitionData) => {
+    //     // ログ出力を追加
+    //     console.log("Received data from child component:", projectsPartitionData);
+
+    //     // 配列としてセット
+    //     setProjectsPartition(projectsPartitionData.ProjectsPartition);
+    // }, []);
+
+
      // 子コンポーネントからデータを受け取る
-    const handleProjectData = (index, id, id_sub, name, imageURI, pdfURL, created_at, updated_at) => {
-        // 必要に応じてプロジェクトデータを更新または処理
-        const updatedProjects = [...projectsPartition];
+  const handleProjectData = useCallback((index, id, id_sub, name, imageURI, pdfURL, created_at, updated_at) => {
+      // ログ出力を追加
+      console.log("Received data子コンポーネントから受け取り:", {
+          index,
+          id,
+          id_sub,
+          name,
+          imageURI,
+          pdfURL,
+          created_at,
+          updated_at,
+      });
+
+    setProjectsPartition((prevProjects) => {
+        const updatedProjects = [...prevProjects];
         updatedProjects[index] = {
-            index, id, id_sub, name, imageURI, pdfURL, created_at, updated_at
+            index,
+            id,
+            id_sub,
+            name,
+            imageURI,
+            pdfURL,
+            created_at,
+            updated_at,
         };
-        setProjectsPartition(updatedProjects);  // 更新されたプロジェクトデータを設定
-    };
+        return updatedProjects;
+    });
+}, []);
+
     
     useEffect(() => {
         console.log("Updated projectsPartition:", projectsPartition);
@@ -245,35 +277,64 @@ export const Project_download = ({ filteredData }) => {
 //     link.download = url.split("/").pop();     // 3. ファイル名を取得して設定
 //     link.click();                             // 4. クリックイベントを発生させ、ダウンロードを開始
 // };
-const handleDownload = async () => {
-    selectedFiles.forEach(async (file) => {
-        if (file.currentFileName && file.pdfURL) {
-            try {
-                // pdfURLからファイルを取得
-                const response = await axios.get(file.pdfURL, {
-                    responseType: 'blob',  // Blobとしてレスポンスを受け取る
-                    withCredentials: false, // Cookieを送信しない
-                });
 
-                // Blob URLを生成
-                const url = window.URL.createObjectURL(new Blob([response.data]));
-                
-                // ダウンロード用のリンクを作成
-                const link = document.createElement('a');
-                link.href = url;
-                link.setAttribute('download', file.currentFileName);  // ダウンロードするファイル名
-                document.body.appendChild(link);
-                link.click();  // ダウンロードを実行
-                document.body.removeChild(link);  // 一時的に作成したリンクを削除
-            } catch (error) {
-                console.error('Download failed:', error);
-                alert('ダウンロードに失敗しました');
+    const handleDownload = async () => {
+        for (const file of selectedFiles) {
+            if (file.currentFileName && file.pdfURL) {
+                try {
+                    console.log('response前----------------------');
+                    const response = await axios.get(file.pdfURL, {
+                        responseType: 'blob', // Blobとしてレスポンスを受け取る
+                    });
+                    console.log('response後----------------------');
+                    const url = window.URL.createObjectURL(new Blob([response.data]));
+                    const link = document.createElement('a');
+                    link.href = url;
+                    link.setAttribute('download', file.currentFileName); // ダウンロードするファイル名
+                    document.body.appendChild(link);
+                    link.click();
+                    document.body.removeChild(link);
+                } catch (error) {
+                    console.error('Download failed:', error);
+                    alert('ダウンロードに失敗しました');
+                }
+            } else {
+                console.warn('No valid file name or URL found for download', file);
             }
-        } else {
-            console.warn('No valid file name or URL found for download', file);
         }
-    });
-};
+    };
+
+
+// const handleDownload = async () => {
+//     selectedFiles.forEach(async (file) => {
+//         if (file.currentFileName && file.pdfURL) {
+//             try {
+//                 console.log('response前----------------------')
+//                 // pdfURLからファイルを取得
+//                 const response = await axios.get(file.pdfURL, {
+//                     responseType: 'blob',  // Blobとしてレスポンスを受け取る
+//                     withCredentials: false, // Cookieを送信しない
+//                 });
+//                 console.log('response後----------------------')
+//                 // Blob URLを生成
+//                 const url = window.URL.createObjectURL(new Blob([response.data]));
+                
+//                 // ダウンロード用のリンクを作成
+//                 const link = document.createElement('a');
+//                 link.href = url;
+//                 link.setAttribute('download', file.currentFileName);  // ダウンロードするファイル名
+//                 document.body.appendChild(link);
+//                 link.click();  // ダウンロードを実行
+//                 document.body.removeChild(link);  // 一時的に作成したリンクを削除
+//             } catch (error) {
+//                 console.error('Download failed:', error);
+//                 alert('ダウンロードに失敗しました');
+//             }
+//         } else {
+//             console.warn('No valid file name or URL found for download', file);
+//         }
+//     });
+// };
 
 
 
@@ -297,6 +358,9 @@ const handleDownload = async () => {
                     <MuiLink component={Link} to="/" sx={{ color: "#fff", margin: "0 20px" }}>
                         一 覧 表
                     </MuiLink>
+                                        <MuiLink component={Link} to="/Test" sx={{ color: "#fff", margin: "0 20px" }}>
+                        Test
+                    </MuiLink>
                 </Toolbar>
             </AppBar>
            
@@ -319,12 +383,25 @@ const handleDownload = async () => {
                 >
                     <FormContainer>
                         <Slider ref={sliderRef} {...settings}>
+                            
                             {/* 子コンポーネントに props を渡す */}
-                            <ProjectArray projects={projects} onProjectData={handleProjectData} />
+                            {/* <ProjectArray projects={projects} onProjectData={handleProjectData} />
       
                                         
                             <h1>Project Download</h1>
                             {projectsPartition.map((projectData, index) => (
+                                           // 分割代入
+                                        const {
+                                index,            
+                                id,
+                                id_sub,
+                                name,
+                                imagURI,
+                                pdfURI,
+                                created_at,
+                                updated_at,
+                                                                   } = imageContent;
+
                                 <div key={index}>
                                     <div>
                                         <p>Index: {index}</p>
@@ -337,10 +414,10 @@ const handleDownload = async () => {
                                         <p>Updated At: {projectData.updated_at}</p>
                                     </div>
                                 </div>
-                            ))}
+                            ))} */}
 
 
-                     {/* {Array.isArray(images) &&images.map((imageData, index) => {
+                     {Array.isArray(images) &&images.map((imageData, index) => {
                                         // imageDataが配列の場合、内容を取り出す
                                         const imageContent = Array.isArray(imageData) ? imageData[1] : imageData;
 
@@ -429,13 +506,13 @@ const handleDownload = async () => {
                                                     ? "brightness(0.8)"
                                                     : "none",
                                                 }}
-                                                onClick={() => handleImageSelect(index, currentFileName, imageURI, pdfURL)} // ファイル名で選択を処理
+                                                  
                                             />
                                             </div>
                                         );
                                         }
                                     )
-                                        } */}
+                                        }
                                     </Slider>
 
 

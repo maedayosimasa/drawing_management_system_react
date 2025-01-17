@@ -98,6 +98,9 @@ import { Link } from 'react-router-dom';
           <MuiLink component={Link} to="/Project_show" sx={{ color: "#fff", margin: "0 20px" }}>
             編 集
           </MuiLink>
+          <MuiLink component={Link} to="/Test" sx={{ color: "#fff", margin: "0 20px" }}>
+                                  Test
+                              </MuiLink>
         </Toolbar>
       </AppBar>
       {/* <div>

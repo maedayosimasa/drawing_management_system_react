@@ -4,56 +4,77 @@ const ProjectArray = ({ projects, onProjectData }) => {
     const baseUrl = "http://127.0.0.1:8000/storage/";
 
     useEffect(() => {
-        //console.log("Received projects:", projects);
+        console.log("Received projects:", projects);
         if (!Array.isArray(projects)) return;
 
+        // 各プロジェクトのデータを適切に整形
         const updatedProjects = projects.map((project, index) => {
+            // imageDataが配列の場合、内容を取り出す
+            const imageContent = Array.isArray(project) ? project[1] : project;
+
+            // 分割代入で必要なデータを取得
+            const {
+                id,
+                created_at,
+                updated_at,
+                finishing_table_name,
+                finishing_table_view_path,
+                finishing_table_pdf_path,
+                floor_plan_name,
+                floor_plan_view_path,
+                floor_plan_pdf_path,
+                machinery_equipment_diagram_all_name,
+                machinery_equipment_diagram_all_view_path,
+                machinery_equipment_diagram_all_pdf_path,
+                bim_drawing_name,
+                bim_drawing_view_path,
+                bim_drawing_pdf_path,
+                meeting_log_name,
+                meeting_log_view_path,
+                meeting_log_pdf_path,
+            } = imageContent; // ここで分割代入
+
             const currentFileName =
-                project.finishing_table_name ||
-                project.floor_plan_name ||
-                project.machinery_equipment_diagram_all_name ||
-                project.bim_drawing_name ||
-                project.meeting_log_name;
+                finishing_table_name ||
+                floor_plan_name ||
+                machinery_equipment_diagram_all_name ||
+                bim_drawing_name ||
+                meeting_log_name;
 
             const thmbnal =
-                project.finishing_table_view_path ||
-                project.floor_plan_view_path ||
-                project.machinery_equipment_diagram_all_view_path ||
-                project.bim_drawing_view_path ||
-                project.meeting_log_view_path;
+                finishing_table_view_path ||
+                floor_plan_view_path ||
+                machinery_equipment_diagram_all_view_path ||
+                bim_drawing_view_path ||
+                meeting_log_view_path;
 
             const pdf_path =
-                project.finishing_table_pdf_path ||
-                project.floor_plan_pdf_path ||
-                project.machinery_equipment_diagram_all_pdf_path ||
-                project.bim_drawing_pdf_path ||
-                project.meeting_log_pdf_path;
+                finishing_table_pdf_path ||
+                floor_plan_pdf_path ||
+                machinery_equipment_diagram_all_pdf_path ||
+                bim_drawing_pdf_path ||
+                meeting_log_pdf_path;
 
             const imageURI = thmbnal ? `${baseUrl}${thmbnal}` : null;
             const pdfURL = pdf_path ? `${baseUrl}${pdf_path}` : null;
 
-            // console.log("Sending data:", {
-            //     index,
-            //     id: project.id,
-            //     name: currentFileName,
-            //     imageURI,
-            //     pdfURL,
-            //     created_at: project.created_at,
-            //     updated_at: project.updated_at,
-            // });
+            // sub_idの取得
+            const sub_id = Array.isArray(project) ? project[0] : index;
 
+            // 各データを整形して返す
             return {
-                index,
-                id: project.id,
-                id_sub: null,
+                index,          // 配列のインデックスを格納
+                id,
+                id_sub: sub_id, // sub_idの格納
                 name: currentFileName,
                 imageURI,
                 pdfURL,
-                created_at: project.created_at,
-                updated_at: project.updated_at,
+                created_at,
+                updated_at,
             };
         });
 
+        // 更新されたprojectsをonProjectDataに渡す
         onProjectData(updatedProjects);
     }, [projects, onProjectData]);
 

@@ -4,12 +4,28 @@ import axios from 'axios';
 import {Box, TextField, Button, Typography, Paper, List, ListItem,
   ListItemText, Container, AppBar, Toolbar, Link as MuiLink 
 } from '@mui/material';
+import Grid from "@mui/material/Grid";
+// import { LocalizationProvider, DatePicker } from "@mui/x-date-pickers";
+// import { AdapterDateFns } from "@mui/x-date-pickers/AdapterDateFns";
 import { Link } from "react-router-dom";
 
 export const Project_create = () => {
     const [formData, setFormData] = useState({
         // user_id: '',
         project_name: '',
+        address: '',
+        client: '',
+        construction_period_start: '',
+        construction_period_end: '',
+        completion_date: '',
+        contract_amount: '',
+        use: '',
+        site_area:'',
+        building_area: '',
+        total_floor_area: '',
+        strural: '',
+        floor_number_underground: '',
+        floor_number_ground:'',
         finishing_table_name: '',
         floor_plan_name: '',
         machinery_equipment_diagram_all_name: '',
@@ -20,6 +36,19 @@ export const Project_create = () => {
     const [files, setFiles] = useState({
         // user_id: null,
         project_name: null,
+        address: null,
+        client: null,
+        construction_period_start: null,
+        construction_period_end: null,
+        completion_date: null,
+        contract_amount: null,
+        use: null,
+        site_area:null,
+        building_area: null,
+        total_floor_area: null,
+        strural: null,
+        floor_number_underground: null,
+        floor_number_ground:null,
         finishing_table_file: null,
         floor_plan_file: null,
         machinery_equipment_diagram_file: null,
@@ -35,6 +64,19 @@ const handleFileChange = (name, selectedFiles) => {
   }));
    console.log("更新されたファイル:", name, selectedFiles);
 };
+  // 日付が変更されたときのハンドラ
+  const handleDateChange = (event) => {
+    setFiles(event.target.value);
+  };
+  //文字数字が入力されたときのハンドラ
+    const handleInputChange = (e, key) => {
+    const { value } = e.target;
+    setFiles((prev) => ({
+      ...prev,
+      [key]: value,
+    }));
+  };
+
 //console.log("受け入れたファイル:");
 
     // フォームデータ変更時のハンドラー
@@ -96,6 +138,19 @@ const handleFileChange = (name, selectedFiles) => {
           // アップロード成功時にフォームとファイルの状態をリセット
           setFormData({
             project_name: "",
+            address: "",
+            client: "",
+            construction_period_start: "",
+            construction_period_end: "",
+            completion_date: "",
+            contract_amount: "",
+            use: "",
+            site_area:"",
+            building_area: "",
+            total_floor_area: "",
+            strural: "",
+            floor_number_underground: "",
+            floor_number_ground:"",
             finishing_table_name: "",
             floor_plan_name: "",
             machinery_equipment_diagram_all_name: "",
@@ -104,6 +159,19 @@ const handleFileChange = (name, selectedFiles) => {
           });
           setFiles({
             project_name: null,
+            address: null,
+            client: null,
+            construction_period_start: null,
+            construction_period_end: null,
+            completion_date: null,
+            contract_amount: null,
+            use: null,
+            site_area:null,
+            building_area: null,
+            total_floor_area: null,
+            strural: null,
+            floor_number_underground: null,
+            floor_number_ground:null,
             finishing_table_file: null,
             floor_plan_file: null,
             machinery_equipment_diagram_file: null,
@@ -127,10 +195,22 @@ const handleFileChange = (name, selectedFiles) => {
   };
 
   const { getInputProps, getRootProps } = useDropzone({ onDrop });
-  //console.log(getInputProps());
- 
+
     const fieldLabels = {
       project_name: "プロジェクト名",
+      address: "住 所",
+      client: "施 主",
+      construction_period_start: "工期 開始年月日",
+      construction_period_end: "工期 終了年月日",
+      completion_date: "完成年月日",
+      contract_amount: "請負金額",
+      use: "用 途",
+      site_area:"敷地面積㎡",
+      building_area: "建築面積 (㎡)",
+      total_floor_area: "延べ床面積 (㎡)",
+      strural: "構 造 (W,S,RC,SRC,その他)",
+      floor_number_underground: "階数  地下   ( 階)",
+      floor_number_ground:"階数  地上   ( 階)",
       finishing_table_name: "仕上げ表Name",
       floor_plan_name: "平面図Name",
       machinery_equipment_diagram_all_name: "機械設備設備図Name",
@@ -161,46 +241,569 @@ const handleFileChange = (name, selectedFiles) => {
                 </Toolbar>
               </AppBar>
           
+<Container maxWidth={false} disableGutters>
+  {/* アップロードボタン部分 */}
+  <Paper
+    elevation={12}  
+    sx={{
+      p: 2,
+      borderRadius: 8,
+      bgcolor: "#faf1d7",
+      border: "1px solidrgb(180, 156, 80)",
+      boxShadow: "0 8px 20px rgba(0, 0, 0, 0.3)",
+      marginBottom: 2,
+      display: "flex", justifyContent: "center", width: "100%"
+    }}
+  >
+    <Button
+      type="submit"
+      variant="contained"
+      sx={{
+        bgcolor: "#e6b422",
+        "&:hover": { bgcolor: "#b8860b" },
+        color: "#ffffff",
+        fontWeight: "bold",
+        borderRadius: 3,
+        boxShadow: "0 4px 10px rgba(0, 0, 0, 0.3)",
+         width: "40%", // ボタンの幅を40%に設定,
+      }}
+      disabled={uploading}
+    >
+      {uploading ? "アップロード中..." : "アップロード"}
+    </Button>
+  </Paper>
 
-        <Container maxWidth="sm">
-      <Paper
-        elevation={12}
+  {/* 並列表示のフォーム部分 */}
+  <Grid container spacing={2} sx={{ width: "100%", margin: "0 auto" }}>
+ 
+  {/* プロジェクト新規作成 */}
+  <Grid item xs={3}>
+      <Box sx={{ width: "100%", height: "100%" }}>
+    <Paper
+      elevation={12}
+      sx={{
+        p: 4,
+        borderRadius: 8,
+        bgcolor: "#faf1d7",
+        border: "1px solid #d4af37",
+        boxShadow: "0 8px 20px rgba(0, 0, 0, 0.3)",
+      }}
+    >
+      <Typography
+        variant="h6"
+        align="center"
+        gutterBottom
         sx={{
-          p: 4,
-          borderRadius: 8,
-          bgcolor: "#faf1d7",
-          border: "1px solid #d4af37",
-          boxShadow: "0 8px 20px rgba(0, 0, 0, 0.3)",
+          fontWeight: "bold",
+          color: "#6b4f29",
+          fontFamily: '"Times New Roman", serif',
+          textShadow: "1px 1px 4px rgba(0, 0, 0, 0.3)",
+          marginBottom: 4,
         }}
       >
-        <Typography
-          variant="h4"
-          align="center"
-          gutterBottom
-          sx={{
-            fontWeight: "bold",
-            color: "#6b4f29",
-            fontFamily: '"Times New Roman", serif',
-            textShadow: "1px 1px 4px rgba(0, 0, 0, 0.3)",
-            marginBottom: 4,
-          }}
-        >
-          プロジェクト新規作成
-        </Typography>
-        <Box
-          component="form"
-          onSubmit={handleSubmit}
-          sx={{
-            display: "flex",
-            flexDirection: "column",
-            gap: 3,
-          }}
-        >
-          {Object.keys(formData).map((key) => (
+        プロジェクト新規作成
+      </Typography>
+         <Box component="form" onSubmit={handleSubmit} sx={{ display: "flex", flexDirection: "column", gap: 3 }}>
+ 
+  <div>
+    <Typography variant="h8" gutterBottom>
+      {fieldLabels[Object.keys(formData)[0]] || Object.keys(formData)[0]}
+    </Typography>
+    {/* プロジェクト名入力 */}
+      <Container maxWidth="sm">
+                <Paper
+                  elevation={12}
+                  sx={{
+                    p: 1,
+                    borderRadius: 2,
+                    bgcolor: "#ffffff",
+                    border: "1px solid rgb(245, 244, 242)",
+                    boxShadow: "0 8px 20px rgba(0, 0, 0, 0.3)",
+                  }}
+                >
+                  <TextField
+                    //name={key}
+                    //value={values[key] || ""} // 初期値または既存の値
+                    onChange={(e) => handleDateChange(e, key)} // 値を更新する関数
+                    fullWidth
+                    variant="outlined"
+                    label="プロジェクト名入力"
+                    type="text" // または "number"（数値専用の場合）
+                    />
+                     </Paper>
+              </Container>
+  </div>
+  <div>
+    <Typography variant="h8" gutterBottom>
+      {fieldLabels[Object.keys(formData)[1]] || Object.keys(formData)[1]}
+    </Typography>
+    {/* 住所入力 */}
+      <Container maxWidth="sm">
+                <Paper
+                  elevation={12}
+                  sx={{
+                    p: 1,
+                    borderRadius: 2,
+                    bgcolor: "#ffffff",
+                    border: "1px solid rgb(245, 244, 242)",
+                    boxShadow: "0 8px 20px rgba(0, 0, 0, 0.3)",
+                  }}
+                >
+                  <TextField
+                   // name={key}
+                    //value={values[key] || ""} // 初期値または既存の値
+                    onChange={(e) => handleDateChange(e, key)} // 値を更新する関数
+                    fullWidth
+                    variant="outlined"
+                    label="住所入力"
+                    type="text" // または "number"（数値専用の場合）
+                    />
+                     </Paper>
+              </Container>
+  </div>
+  <div>
+    <Typography variant="h8" gutterBottom>
+      {fieldLabels[Object.keys(formData)[2]] || Object.keys(formData)[2]}
+    </Typography>
+     {/* 施主入力 */}
+      <Container maxWidth="sm">
+                <Paper
+                  elevation={12}
+                  sx={{
+                    p: 1,
+                    borderRadius: 2,
+                    bgcolor: "#ffffff",
+                    border: "1px solid rgb(245, 244, 242)",
+                    boxShadow: "0 8px 20px rgba(0, 0, 0, 0.3)",
+                  }}
+                >
+                  <TextField
+                    //name={key}
+                    //value={values[key] || ""} // 初期値または既存の値
+                    onChange={(e) => handleDateChange(e, key)} // 値を更新する関数
+                    fullWidth
+                    variant="outlined"
+                    label="施主入力"
+                    type="text" // または "number"（数値専用の場合）
+                    />
+                     </Paper>
+              </Container>
+  </div>
+  <div>
+    <Typography variant="h8" gutterBottom>
+      {fieldLabels[Object.keys(formData)[3]] || Object.keys(formData)[3]}
+    </Typography>
+     {/* 工期開始入力 */}
+     <Container maxWidth="sm">
+                <Paper
+                  elevation={12}
+                  sx={{
+                    p: 1,
+                    borderRadius: 2,
+                    bgcolor: "#ffffff",
+                    border: "1px solid rgb(245, 244, 242)",
+                    boxShadow: "0 8px 20px rgba(0, 0, 0, 0.3)",
+                  }}
+                >
+                   <TextField
+                   // name={key}
+                   label="Choose a Date" // ラベルを設定
+                   type="date" // カレンダー入力フォーム
+                   value={files} // 状態と連動
+                   onChange={handleDateChange} // 日付変更時の処理
+                   fullWidth // フル幅に設定
+                   InputLabelProps={{
+                   shrink: true, // ラベルが入力欄に重ならないよう設定
+                  }}
+                  />
+                   </Paper>
+              </Container>
+  </div>
+  <div>
+    <Typography variant="h8" gutterBottom>
+      {fieldLabels[Object.keys(formData)[4]] || Object.keys(formData)[4]}
+    </Typography>
+         {/*工期終了 */}
+     <Container maxWidth="sm">
+                <Paper
+                  elevation={12}
+                  sx={{
+                    p: 1,
+                    borderRadius: 2,
+                    bgcolor: "#ffffff",
+                    border: "1px solid rgb(245, 244, 242)",
+                    boxShadow: "0 8px 20px rgba(0, 0, 0, 0.3)",
+                  }}
+                >
+                   <TextField
+                    //name={key}
+                   label="Choose a Date" // ラベルを設定
+                   type="date" // カレンダー入力フォーム
+                   value={files} // 状態と連動
+                   onChange={handleDateChange} // 日付変更時の処理
+                   fullWidth // フル幅に設定
+                   InputLabelProps={{
+                   shrink: true, // ラベルが入力欄に重ならないよう設定
+                  }}
+                  />
+                   </Paper>
+              </Container>
+  </div>
+  <div>
+    <Typography variant="h8" gutterBottom>
+      {fieldLabels[Object.keys(formData)[5]] || Object.keys(formData)[5]}
+    </Typography>
+         {/*完成年月日 */}
+     <Container maxWidth="sm">
+                <Paper
+                  elevation={12}
+                  sx={{
+                    p: 1,
+                    borderRadius: 2,
+                    bgcolor: "#ffffff",
+                    border: "1px solid rgb(245, 244, 242)",
+                    boxShadow: "0 8px 20px rgba(0, 0, 0, 0.3)",
+                  }}
+                >
+                   <TextField
+                  //  name={key}
+                   label="Choose a Date" // ラベルを設定
+                   type="date" // カレンダー入力フォーム
+                   value={files} // 状態と連動
+                   onChange={handleDateChange} // 日付変更時の処理
+                   fullWidth // フル幅に設定
+                   InputLabelProps={{
+                   shrink: true, // ラベルが入力欄に重ならないよう設定
+                  }}
+                  />
+                   </Paper>
+              </Container>
+  </div>
+  <div>
+    <Typography variant="h8" gutterBottom>
+      {fieldLabels[Object.keys(formData)[6]] || Object.keys(formData)[6]}
+    </Typography>
+    {/* 請負金額入力 */}
+      <Container maxWidth="sm">
+                <Paper
+                  elevation={12}
+                  sx={{
+                    p: 1,
+                    borderRadius: 2,
+                    bgcolor: "#ffffff",
+                    border: "1px solid rgb(245, 244, 242)",
+                    boxShadow: "0 8px 20px rgba(0, 0, 0, 0.3)",
+                  }}
+                >
+                  <TextField
+                   // name={key}
+                    //value={values[key] || ""} // 初期値または既存の値
+                    onChange={(e) => handleDateChange(e, key)} // 値を更新する関数
+                    fullWidth
+                    variant="outlined"
+                    label="請負金額入力"
+                    type="text" // または "number"（数値専用の場合）
+                    />
+                     </Paper>
+              </Container>
+  </div>
+  <div>
+    <Typography variant="h8" gutterBottom>
+      {fieldLabels[Object.keys(formData)[7]] || Object.keys(formData)[7]}
+    </Typography>
+     {/* 用途入力 */}
+      <Container maxWidth="sm">
+                <Paper
+                  elevation={12}
+                  sx={{
+                    p: 1,
+                    borderRadius: 2,
+                    bgcolor: "#ffffff",
+                    border: "1px solid rgb(245, 244, 242)",
+                    boxShadow: "0 8px 20px rgba(0, 0, 0, 0.3)",
+                  }}
+                >
+                  <TextField
+                   // name={key}
+                    //value={values[key] || ""} // 初期値または既存の値
+                    onChange={(e) => handleDateChange(e, key)} // 値を更新する関数
+                    fullWidth
+                    variant="outlined"
+                    label="用途入力"
+                    type="text" // または "number"（数値専用の場合）
+                    />
+                     </Paper>
+              </Container>
+  </div>
+  <div>
+    <Typography variant="h8" gutterBottom>
+      {fieldLabels[Object.keys(formData)[8]] || Object.keys(formData)[8]}
+    </Typography>
+    {/* 敷地面積入力 */}
+      <Container maxWidth="sm">
+                <Paper
+                  elevation={12}
+                  sx={{
+                    p: 1,
+                    borderRadius: 2,
+                    bgcolor: "#ffffff",
+                    border: "1px solid rgb(245, 244, 242)",
+                    boxShadow: "0 8px 20px rgba(0, 0, 0, 0.3)",
+                  }}
+                >
+                  <TextField
+                   // name={key}
+                    //value={values[key] || ""} // 初期値または既存の値
+                    onChange={(e) => handleDateChange(e, key)} // 値を更新する関数
+                    fullWidth
+                    variant="outlined"
+                    label="敷地面積入力"
+                    type="text" // または "number"（数値専用の場合）
+                    />
+                     </Paper>
+              </Container>
+  </div>
+  <div>
+    <Typography variant="h8" gutterBottom>
+      {fieldLabels[Object.keys(formData)[9]] || Object.keys(formData)[9]}
+    </Typography>
+     {/* 建築面積入力 */}
+      <Container maxWidth="sm">
+                <Paper
+                  elevation={12}
+                  sx={{
+                    p: 1,
+                    borderRadius: 2,
+                    bgcolor: "#ffffff",
+                    border: "1px solid rgb(245, 244, 242)",
+                    boxShadow: "0 8px 20px rgba(0, 0, 0, 0.3)",
+                  }}
+                >
+                  <TextField
+                   // name={key}
+                    //value={values[key] || ""} // 初期値または既存の値
+                    onChange={(e) => handleDateChange(e, key)} // 値を更新する関数
+                    fullWidth
+                    variant="outlined"
+                    label="建築面積入力 "
+                    type="text" // または "number"（数値専用の場合）
+                    />
+                     </Paper>
+              </Container>
+  </div>
+  <div>
+    <Typography variant="h8" gutterBottom>
+      {fieldLabels[Object.keys(formData)[10]] || Object.keys(formData)[10]}
+    </Typography>
+     {/* 延べ床面積入力 */}
+      <Container maxWidth="sm">
+                <Paper
+                  elevation={12}
+                  sx={{
+                    p: 1,
+                    borderRadius: 2,
+                    bgcolor: "#ffffff",
+                    border: "1px solid rgb(245, 244, 242)",
+                    boxShadow: "0 8px 20px rgba(0, 0, 0, 0.3)",
+                  }}
+                >
+                  <TextField
+                   // name={key}
+                    //value={values[key] || ""} // 初期値または既存の値
+                    onChange={(e) => handleDateChange(e, key)} // 値を更新する関数
+                    fullWidth
+                    variant="outlined"
+                    label="延べ床面積入力"
+                    type="text" // または "number"（数値専用の場合）
+                    />
+                     </Paper>
+              </Container>
+  </div>
+  <div>
+    <Typography variant="h8" gutterBottom>
+      {fieldLabels[Object.keys(formData)[11]] || Object.keys(formData)[11]}
+    </Typography>
+    {/* 構造入力 */}
+      <Container maxWidth="sm">
+                <Paper
+                  elevation={12}
+                  sx={{
+                    p: 1,
+                    borderRadius: 2,
+                    bgcolor: "#ffffff",
+                    border: "1px solid rgb(245, 244, 242)",
+                    boxShadow: "0 8px 20px rgba(0, 0, 0, 0.3)",
+                  }}
+                >
+                  <TextField
+                    //name={key}
+                    //value={values[key] || ""} // 初期値または既存の値
+                    onChange={(e) => handleDateChange(e, key)} // 値を更新する関数
+                    fullWidth
+                    variant="outlined"
+                    label="構造入力"
+                    type="text" // または "number"（数値専用の場合）
+                    />
+                     </Paper>
+              </Container>
+  </div> <div>
+    <Typography variant="h8" gutterBottom>
+      {fieldLabels[Object.keys(formData)[12]] || Object.keys(formData)[12]}
+    </Typography>
+    {/* 階数　地下入力 */}
+      <Container maxWidth="sm">
+                <Paper
+                  elevation={12}
+                  sx={{
+                    p: 1,
+                    borderRadius: 2,
+                    bgcolor: "#ffffff",
+                    border: "1px solid rgb(245, 244, 242)",
+                    boxShadow: "0 8px 20px rgba(0, 0, 0, 0.3)",
+                  }}
+                >
+                  <TextField
+                   // name={key}
+                    //value={values[key] || ""} // 初期値または既存の値
+                    onChange={(e) => handleDateChange(e, key)} // 値を更新する関数
+                    fullWidth
+                    variant="outlined"
+                    label="階数　地下入力"
+                    type="text" // または "number"（数値専用の場合）
+                    />
+                     </Paper>
+              </Container>
+  </div>
+   <div>
+    <Typography variant="h8" gutterBottom>
+      {fieldLabels[Object.keys(formData)[13]] || Object.keys(formData)[13]}
+    </Typography>
+    {/* 階数地上入力 */}
+      <Container maxWidth="sm">
+                <Paper
+                  elevation={12}
+                  sx={{
+                    p: 1,
+                    borderRadius: 2,
+                    bgcolor: "#ffffff",
+                    border: "1px solid rgb(245, 244, 242)",
+                    boxShadow: "0 8px 20px rgba(0, 0, 0, 0.3)",
+                  }}
+                >
+                  <TextField
+                   // name={key}
+                    //value={values[key] || ""} // 初期値または既存の値
+                    onChange={(e) => handleDateChange(e, key)} // 値を更新する関数
+                    fullWidth
+                    variant="outlined"
+                    label="階数地上入力"
+                    type="text" // または "number"（数値専用の場合）
+                    />
+                     </Paper>
+              </Container>
+  </div>
+</Box>
+
+
+
+
+      {/* <Box component="form" onSubmit={handleSubmit} sx={{ display: "flex", flexDirection: "column", gap: 3 }}>
+        {Object.keys(formData)
+          .slice(0, 13)  // 1〜14個目のキー（インデックス0〜13）
+        //  .filter((_, index) => ![3, 4, 5, 6, 10].includes(index)) // インデックス3, 4, 5, 6, 10を除外
+          .map((key) => ( */}
+
+
+
+            
+            {/* <div key={key}>
+              <Typography variant="h8" gutterBottom>
+                {fieldLabels[key] || key}
+              </Typography>
+              <Container maxWidth="sm">
+                <Paper
+                  elevation={12}
+                  sx={{
+                    p: 1,
+                    borderRadius: 2,
+                    bgcolor: "#ffffff",
+                    border: "1px solid rgb(245, 244, 242)",
+                    boxShadow: "0 8px 20px rgba(0, 0, 0, 0.3)",
+                  }}
+                >
+                  <TextField
+                    name={key}
+                    //value={values[key] || ""} // 初期値または既存の値
+                    onChange={(e) => handleDateChange(e, key)} // 値を更新する関数
+                    fullWidth
+                    variant="outlined"
+                    label="入力してください"
+                    type="text" // または "number"（数値専用の場合）
+                    /> */}
+                  {/* カレンダー入力 */}
+                   {/* <TextField
+                    name={key}
+                   label="Choose a Date" // ラベルを設定
+                   type="date" // カレンダー入力フォーム
+                   value={files} // 状態と連動
+                   onChange={handleDateChange} // 日付変更時の処理
+                   fullWidth // フル幅に設定
+                   InputLabelProps={{
+                   shrink: true, // ラベルが入力欄に重ならないよう設定
+                  }}
+                  /> */}
+                  {/* <DropzoneField
+                    name={key}
+                    onFileChange={handleFileChange}
+                    selectedFiles={files[key] || []}
+                  /> */}
+{/*                    
+                      </Paper>
+              </Container>
+            </div> */}
+          {/* ))} */}
+      {/* </Box> */}
+    </Paper>
+    </Box>
+  </Grid>
+   {/* <Grid container spacing={4} sx={{ display: "flex", flexDirection: "row", flexWrap: "wrap", width: "100%" }}> */}
+<Grid item xs={9}>
+   <Grid container spacing={2} wrap="wrap" sx={{ display: 'flex', flexWrap: 'wrap' }}>
+  {/* 建築図新規作成 */}
+  <Grid item xs={12} sm={6} md={4}>
+     <Box sx={{ width: "100%", minHeight: 100 }}>
+    <Paper
+      elevation={12}
+      sx={{
+        p: 4,
+        borderRadius: 8,
+        bgcolor: "#faf1d7",
+        border: "1px solid #d4af37",
+        boxShadow: "0 8px 20px rgba(0, 0, 0, 0.3)",
+      }}
+    >
+      <Typography
+        variant="h6"
+        align="center"
+        gutterBottom
+        sx={{
+          fontWeight: "bold",
+          color: "#6b4f29",
+          fontFamily: '"Times New Roman", serif',
+          textShadow: "1px 1px 4px rgba(0, 0, 0, 0.3)",
+          marginBottom: 4,
+        }}
+      >
+        建築図新規作成
+      </Typography>
+      <Box component="form" onSubmit={handleSubmit} sx={{ display: "flex", flexDirection: "column", gap: 3 }}>
+        {Object.keys(formData)
+          .slice(13, 14)  // 14〜15個目のキー（インデックス14〜15）
+          .map((key) => (
             <div key={key}>
-             <Typography variant="h8" gutterBottom>
-                                 {fieldLabels[key] || key}
-                               </Typography>
+              <Typography variant="h8" gutterBottom>
+                {fieldLabels[key] || key}
+              </Typography>
               <Container maxWidth="sm">
                 <Paper
                   elevation={12}
@@ -221,25 +824,256 @@ const handleFileChange = (name, selectedFiles) => {
               </Container>
             </div>
           ))}
-          <Button
-            type="submit"
-            fullWidth
-            variant="contained"
-            sx={{
-              bgcolor: "#d4af37",
-              "&:hover": { bgcolor: "#b8860b" },
-              color: "#ffffff",
-              fontWeight: "bold",
-              borderRadius: 3,
-              boxShadow: "0 4px 10px rgba(0, 0, 0, 0.3)",
-            }}
-            disabled={uploading}
-          >
-            {uploading ? "アップロード中..." : "アップロード"}
-          </Button>
-        </Box>
-      </Paper>
-    </Container>
+      </Box>
+    </Paper>
+    </Box>
+  </Grid>
+
+   {/* 構造図新規作成 */}
+  <Grid item xs={12} sm={6} md={4}>
+    <Box sx={{ width: "100%", minHeight: 100 }}>
+    <Paper
+      elevation={12}
+      sx={{
+        p: 4,
+        borderRadius: 8,
+        bgcolor: "#faf1d7",
+        border: "1px solid #d4af37",
+        boxShadow: "0 8px 20px rgba(0, 0, 0, 0.3)",
+      }}
+    >
+      <Typography
+        variant="h6"
+        align="center"
+        gutterBottom
+        sx={{
+          fontWeight: "bold",
+          color: "#6b4f29",
+          fontFamily: '"Times New Roman", serif',
+          textShadow: "1px 1px 4px rgba(0, 0, 0, 0.3)",
+          marginBottom: 4,
+        }}
+      >
+        構造図新規作成
+      </Typography>
+      <Box component="form" onSubmit={handleSubmit} sx={{ display: "flex", flexDirection: "column", gap: 3 }}>
+        {Object.keys(formData)
+          .slice(14, 15)  // 9〜11個目のキー（インデックス8〜10）
+          .map((key) => (
+            <div key={key}>
+              <Typography variant="h8" gutterBottom>
+                {fieldLabels[key] || key}
+              </Typography>
+              <Container maxWidth="sm">
+                <Paper
+                  elevation={12}
+                  sx={{
+                    p: 1,
+                    borderRadius: 2,
+                    bgcolor: "#ffffff",
+                    border: "1px solid rgb(245, 244, 242)",
+                    boxShadow: "0 8px 20px rgba(0, 0, 0, 0.3)",
+                  }}
+                >
+                  <DropzoneField
+                    name={key}
+                    onFileChange={handleFileChange}
+                    selectedFiles={files[key] || []}
+                  />
+                </Paper>
+              </Container>
+            </div>
+          ))}
+      </Box>
+    </Paper>
+    </Box>
+  </Grid>
+    {/* 機械設備電気設備図新規作成 */}
+  <Grid item xs={12} sm={6} md={4}>
+    <Box sx={{ width: "100%",minHeight: 100}}>
+    <Paper
+      elevation={12}
+      sx={{
+        p: 4,
+        borderRadius: 8,
+        bgcolor: "#faf1d7",
+        border: "1px solid #d4af37",
+        boxShadow: "0 8px 20px rgba(0, 0, 0, 0.3)",
+      }}
+    >
+      <Typography
+        variant="h6"
+        align="center"
+        gutterBottom
+        sx={{
+          fontWeight: "bold",
+          color: "#6b4f29",
+          fontFamily: '"Times New Roman", serif',
+          textShadow: "1px 1px 4px rgba(0, 0, 0, 0.3)",
+          marginBottom: 4,
+        }}
+      >
+        機械・電気設備図新規作成
+      </Typography>
+      <Box component="form" onSubmit={handleSubmit} sx={{ display: "flex", flexDirection: "column", gap: 3 }}>
+        {Object.keys(formData)
+          .slice(15, 16)  // 9〜11個目のキー（インデックス8〜10）
+          .map((key) => (
+            <div key={key}>
+              <Typography variant="h8" gutterBottom>
+                {fieldLabels[key] || key}
+              </Typography>
+              <Container maxWidth="sm">
+                <Paper
+                  elevation={12}
+                  sx={{
+                    p: 1,
+                    borderRadius: 2,
+                    bgcolor: "#ffffff",
+                    border: "1px solid rgb(245, 244, 242)",
+                    boxShadow: "0 8px 20px rgba(0, 0, 0, 0.3)",
+                  }}
+                >
+                  <DropzoneField
+                    name={key}
+                    onFileChange={handleFileChange}
+                    selectedFiles={files[key] || []}
+                  />
+                </Paper>
+              </Container>
+            </div>
+          ))}
+      </Box>
+    </Paper>
+    </Box>
+  </Grid>
+   {/* BIM図新規作成 */}
+  <Grid item xs={12} sm={6} md={4}>
+    <Box sx={{ width: "100%", minHeight: 100 }}>
+    <Paper
+      elevation={12}
+      sx={{
+        p: 4,
+        borderRadius: 8,
+        bgcolor: "#faf1d7",
+        border: "1px solid #d4af37",
+        boxShadow: "0 8px 20px rgba(0, 0, 0, 0.3)",
+      }}
+    >
+      <Typography
+        variant="h6"
+        align="center"
+        gutterBottom
+        sx={{
+          fontWeight: "bold",
+          color: "#6b4f29",
+          fontFamily: '"Times New Roman", serif',
+          textShadow: "1px 1px 4px rgba(0, 0, 0, 0.3)",
+          marginBottom: 4,
+        }}
+      >
+         BIM図新規作成
+      </Typography>
+      <Box component="form" onSubmit={handleSubmit} sx={{ display: "flex", flexDirection: "column", gap: 3 }}>
+        {Object.keys(formData)
+          .slice(16, 17)  // 9〜11個目のキー（インデックス8〜10）
+          .map((key) => (
+            <div key={key}>
+              <Typography variant="h8" gutterBottom>
+                {fieldLabels[key] || key}
+              </Typography>
+              <Container maxWidth="sm">
+                <Paper
+                  elevation={12}
+                  sx={{
+                    p: 1,
+                    borderRadius: 2,
+                    bgcolor: "#ffffff",
+                    border: "1px solid rgb(245, 244, 242)",
+                    boxShadow: "0 8px 20px rgba(0, 0, 0, 0.3)",
+                  }}
+                >
+                  <DropzoneField
+                    name={key}
+                    onFileChange={handleFileChange}
+                    selectedFiles={files[key] || []}
+                  />
+                </Paper>
+              </Container>
+            </div>
+          ))}
+      </Box>
+    </Paper>
+    </Box>
+  </Grid>
+ {/* 打合せ簿図新規作成 */}
+  <Grid item xs={12} sm={6} md={4}>
+    <Box sx={{ width: "100%",minHeight: 100 }}>
+    <Paper
+      elevation={12}
+      sx={{
+        p: 4,
+        borderRadius: 8,
+        bgcolor: "#faf1d7",
+        border: "1px solid #d4af37",
+        boxShadow: "0 8px 20px rgba(0, 0, 0, 0.3)",
+      }}
+    >
+      <Typography
+        variant="h6"
+        align="center"
+        gutterBottom
+        sx={{
+          fontWeight: "bold",
+          color: "#6b4f29",
+          fontFamily: '"Times New Roman", serif',
+          textShadow: "1px 1px 4px rgba(0, 0, 0, 0.3)",
+          marginBottom: 4,
+        }}
+      >
+        打合せ簿新規作成
+      </Typography>
+      <Box component="form" onSubmit={handleSubmit} sx={{ display: "flex", flexDirection: "column", gap: 3 }}>
+        {Object.keys(formData)
+          .slice(17, 18)  // 9〜11個目のキー（インデックス8〜10）
+          .map((key) => (
+            <div key={key}>
+              <Typography variant="h8" gutterBottom>
+                {fieldLabels[key] || key}
+              </Typography>
+              <Container maxWidth="sm">
+                <Paper
+                  elevation={12}
+                  sx={{
+                    p: 1,
+                    borderRadius: 2,
+                    bgcolor: "#ffffff",
+                    border: "1px solid rgb(245, 244, 242)",
+                    boxShadow: "0 8px 20px rgba(0, 0, 0, 0.3)",
+                  }}
+                >
+                  <DropzoneField
+                    name={key}
+                    onFileChange={handleFileChange}
+                    selectedFiles={files[key] || []}
+                  />
+                </Paper>
+              </Container>
+            </div>
+          ))}
+      </Box>
+    </Paper>
+    </Box>
+  </Grid>
+</Grid>
+
+</Grid>
+   
+
+  </Grid>
+</Container>
+
+
         </>
     );
 };

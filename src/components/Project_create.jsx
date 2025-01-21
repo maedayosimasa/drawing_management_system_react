@@ -2,11 +2,10 @@ import React, { useState } from 'react';
 import { useDropzone } from "react-dropzone";
 import axios from 'axios';
 import {Box, TextField, Button, Typography, Paper, List, ListItem,
-  ListItemText, Container, AppBar, Toolbar, Link as MuiLink 
+  ListItemText, Container, AppBar, Toolbar, Link as MuiLink, FormControl, InputLabel,
+  Select, MenuItem
 } from '@mui/material';
 import Grid from "@mui/material/Grid";
-// import { LocalizationProvider, DatePicker } from "@mui/x-date-pickers";
-// import { AdapterDateFns } from "@mui/x-date-pickers/AdapterDateFns";
 import { Link } from "react-router-dom";
 
 export const Project_create = () => {
@@ -68,6 +67,7 @@ const handleFileChange = (name, selectedFiles) => {
   const handleDateChange = (event) => {
     setFiles(event.target.value);
   };
+  
   //文字数字が入力されたときのハンドラ
     const handleInputChange = (e, key) => {
     const { value } = e.target;
@@ -246,6 +246,9 @@ const handleFileChange = (name, selectedFiles) => {
   <Paper
     elevation={12}  
     sx={{
+      position: "sticky", // AppBarの直後に固定されるように設定
+      top: "40px", // AppBarの高さに応じた位置を設定
+      zIndex: 1000, // AppBarのzIndexより小さめに設定（AppBarが1200の場合）
       p: 2,
       borderRadius: 8,
       bgcolor: "#faf1d7",
@@ -329,6 +332,9 @@ const handleFileChange = (name, selectedFiles) => {
                     variant="outlined"
                     label="プロジェクト名入力"
                     type="text" // または "number"（数値専用の場合）
+                  // InputLabelProps={{
+                  //   style: { fontSize: '0.75rem' } // フォントサイズを小さくする
+                   // }}
                     />
                      </Paper>
               </Container>
@@ -353,6 +359,7 @@ const handleFileChange = (name, selectedFiles) => {
                    // name={key}
                     //value={values[key] || ""} // 初期値または既存の値
                     onChange={(e) => handleDateChange(e, key)} // 値を更新する関数
+                    //value={files[key] || ""} // 状態の値を表示
                     fullWidth
                     variant="outlined"
                     label="住所入力"
@@ -383,7 +390,7 @@ const handleFileChange = (name, selectedFiles) => {
                     onChange={(e) => handleDateChange(e, key)} // 値を更新する関数
                     fullWidth
                     variant="outlined"
-                    label="施主入力"
+                    label="施主名入力"
                     type="text" // または "number"（数値専用の場合）
                     />
                      </Paper>
@@ -502,7 +509,7 @@ const handleFileChange = (name, selectedFiles) => {
                     fullWidth
                     variant="outlined"
                     label="請負金額入力"
-                    type="text" // または "number"（数値専用の場合）
+                            type="number" // または "text" （数値専用の場合）
                     />
                      </Paper>
               </Container>
@@ -558,7 +565,7 @@ const handleFileChange = (name, selectedFiles) => {
                     fullWidth
                     variant="outlined"
                     label="敷地面積入力"
-                    type="text" // または "number"（数値専用の場合）
+                            type="number" // または "text"（数値専用の場合）
                     />
                      </Paper>
               </Container>
@@ -586,7 +593,7 @@ const handleFileChange = (name, selectedFiles) => {
                     fullWidth
                     variant="outlined"
                     label="建築面積入力 "
-                    type="text" // または "number"（数値専用の場合）
+                            type="number" // または "text"（数値専用の場合）
                     />
                      </Paper>
               </Container>
@@ -635,15 +642,22 @@ const handleFileChange = (name, selectedFiles) => {
                     boxShadow: "0 8px 20px rgba(0, 0, 0, 0.3)",
                   }}
                 >
-                  <TextField
-                    //name={key}
-                    //value={values[key] || ""} // 初期値または既存の値
-                    onChange={(e) => handleDateChange(e, key)} // 値を更新する関数
-                    fullWidth
-                    variant="outlined"
-                    label="構造入力"
-                    type="text" // または "number"（数値専用の場合）
-                    />
+                          <FormControl fullWidth>
+                            <InputLabel id="structure-select-label">構造入力</InputLabel>
+                            <Select
+                              labelId="structure-select-label"
+                              id="structure-select"
+                              //value={formData[key] || ""} // 初期値または既存の値
+                              onChange={(e) => handleDateChange(e, key)} // 値を更新する関数
+                              label="構造入力"
+                            >
+                              <MenuItem value="W造">W造</MenuItem>
+                              <MenuItem value="S造">S造</MenuItem>
+                              <MenuItem value="RC造">RC造</MenuItem>
+                              <MenuItem value="SRC造">SRC造</MenuItem>
+                              <MenuItem value="その他">その他</MenuItem>
+                            </Select>
+                          </FormControl>
                      </Paper>
               </Container>
   </div> <div>
@@ -668,8 +682,8 @@ const handleFileChange = (name, selectedFiles) => {
                     onChange={(e) => handleDateChange(e, key)} // 値を更新する関数
                     fullWidth
                     variant="outlined"
-                    label="階数　地下入力"
-                    type="text" // または "number"（数値専用の場合）
+                    label="階数  地下入力"
+                            type="number" // または "text"（数値専用の場合）
                     />
                      </Paper>
               </Container>
@@ -697,7 +711,7 @@ const handleFileChange = (name, selectedFiles) => {
                     fullWidth
                     variant="outlined"
                     label="階数地上入力"
-                    type="text" // または "number"（数値専用の場合）
+                            type="number"// または "text" （数値専用の場合）
                     />
                      </Paper>
               </Container>
@@ -798,7 +812,7 @@ const handleFileChange = (name, selectedFiles) => {
       </Typography>
       <Box component="form" onSubmit={handleSubmit} sx={{ display: "flex", flexDirection: "column", gap: 3 }}>
         {Object.keys(formData)
-          .slice(13, 14)  // 14〜15個目のキー（インデックス14〜15）
+          .slice(14, 15)  // 14〜15個目のキー（インデックス14〜15）
           .map((key) => (
             <div key={key}>
               <Typography variant="h8" gutterBottom>
@@ -858,7 +872,7 @@ const handleFileChange = (name, selectedFiles) => {
       </Typography>
       <Box component="form" onSubmit={handleSubmit} sx={{ display: "flex", flexDirection: "column", gap: 3 }}>
         {Object.keys(formData)
-          .slice(14, 15)  // 9〜11個目のキー（インデックス8〜10）
+          .slice(15, 16)  // 16〜17個目のキー（インデックス15〜16）
           .map((key) => (
             <div key={key}>
               <Typography variant="h8" gutterBottom>
@@ -917,7 +931,7 @@ const handleFileChange = (name, selectedFiles) => {
       </Typography>
       <Box component="form" onSubmit={handleSubmit} sx={{ display: "flex", flexDirection: "column", gap: 3 }}>
         {Object.keys(formData)
-          .slice(15, 16)  // 9〜11個目のキー（インデックス8〜10）
+          .slice(16, 17)  // 17〜18個目のキー（インデックス16〜17）
           .map((key) => (
             <div key={key}>
               <Typography variant="h8" gutterBottom>
@@ -976,7 +990,7 @@ const handleFileChange = (name, selectedFiles) => {
       </Typography>
       <Box component="form" onSubmit={handleSubmit} sx={{ display: "flex", flexDirection: "column", gap: 3 }}>
         {Object.keys(formData)
-          .slice(16, 17)  // 9〜11個目のキー（インデックス8〜10）
+          .slice(17, 18)  // 18〜19個目のキー（インデックス17〜18）
           .map((key) => (
             <div key={key}>
               <Typography variant="h8" gutterBottom>
@@ -1035,7 +1049,7 @@ const handleFileChange = (name, selectedFiles) => {
       </Typography>
       <Box component="form" onSubmit={handleSubmit} sx={{ display: "flex", flexDirection: "column", gap: 3 }}>
         {Object.keys(formData)
-          .slice(17, 18)  // 9〜11個目のキー（インデックス8〜10）
+          .slice(18, 19)  // 17〜18個目のキー（インデックス18〜19）
           .map((key) => (
             <div key={key}>
               <Typography variant="h8" gutterBottom>

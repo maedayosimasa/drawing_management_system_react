@@ -63,11 +63,11 @@ const handleFileChange = (name, selectedFiles) => {
     ...prevFiles,
     [name]:selectedFiles, // 選択されたファイルを状態に反映
   }));
-   console.log("更新されたファイル:", name, selectedFiles);
+   console.log("更新されたファイルpdf:", name, selectedFiles);
 };
 
 //console.log("受け入れたファイル:");
-
+ // 使用されていない・・・要確認
     // フォームデータ変更時のハンドラー
     // テキスト入力の値が変更された際に、formDataを更新します。
    const handleChange = (e) => {
@@ -82,13 +82,13 @@ const handleFileChange = (name, selectedFiles) => {
 
   // 日付が変更されたときのハンドラ
   const handleDateChange = (event, key) => {
-   // const { name, value } = event.target; // イベントからnameとvalueを取得
     const inputDate = event.target.value; // 入力された日付
-    console.log(`Updated ${key} to`, inputDate); // 変更された日付をログに出力
+   // console.log(`Updated日付 ${key} to`, inputDate); // 変更された日付をログに出力
     setFormData((prevDate) => ({
       ...prevDate, // 既存の値を保持
       [key]: inputDate, // nameに基づいて値を更新
     }));
+    //console.log("更新されたフォーム日付:", key, inputDate);
   };
 
   //文字数字が入力されたときのハンドラ
@@ -98,6 +98,7 @@ const handleFileChange = (name, selectedFiles) => {
       ...prev,
       [key]: value,
     }));
+    //console.log("更新されたフォーム文字:", key, value);
   };
   //Emterで次のフィールドにフォーカスが移動
   const handleKeyDown = (e, nextFieldId) => {
@@ -125,6 +126,7 @@ const handleFileChange = (name, selectedFiles) => {
 
       // formData から FormData にデータを追加
     Object.entries(formData).forEach(([key, value]) => {
+      console.log(`キー: ${key}, 値: ${value}`); // 各キーと値をログに出力
         data.append(key, value || ''); // 空の場合は空文字を設定
     });
 
@@ -278,8 +280,10 @@ const handleFileChange = (name, selectedFiles) => {
       display: "flex", justifyContent: "center", width: "100%"
     }}
   >
+            <Box sx={{ display: "flex", flexDirection: "column", gap: 3 }}>
     <Button
-      type="submit"
+     type="button"
+                onClick={handleSubmit} // 発火点をButtonに限定
       variant="contained"
       sx={{
         bgcolor: "#e6b422",
@@ -288,12 +292,13 @@ const handleFileChange = (name, selectedFiles) => {
         fontWeight: "bold",
         borderRadius: 3,
         boxShadow: "0 4px 10px rgba(0, 0, 0, 0.3)",
-         width: "40%", // ボタンの幅を40%に設定,
+         width: "100%", // ボタンの幅を40%に設定,
       }}
       disabled={uploading}
     >
       {uploading ? "アップロード中..." : "アップロード"}
     </Button>
+            </Box>
   </Paper>
 
   {/* 並列表示のフォーム部分 */}

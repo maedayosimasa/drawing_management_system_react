@@ -456,37 +456,27 @@ export const Project_download = ({ filteredData }) => {
                                         console.log("imageURI:", imageURI);
                                         console.log("pdfURI:", pdfURL);
                                         
-
-                                        return (
                                         
+      return (
+                                    
+                                    <div key={index}>
+                                     <img
+                                    src={imageURI}  // ここでURIをsrcに設定
+                                      alt={currentFileName}  // 画像のalt属性にファイル名を使用
+                                      style={{
+                                      width: "100%",
+                                      height: "auto",
+                                      borderRadius: "10px",
+                                      transition: "filter 0.3s ease, border 0.3s ease",
+                                      border: selectedImages.some(img => img.imageURI === imageURI) ? "5px solid #9B4DFF" : "none",  // 修正
+                                      filter: selectedImages.some(img => img.imageURI === imageURI) ? "brightness(0.8)" : "none", // 修正
+                                         }}
+                                      onClick={() => handleImageSelect(index, currentFileName, imageURI, pdfURL)}  // ファイル名で選択を処理
+                                  />
 
-                                            <div key={index}>
-                                            <img
-                                                src={imageURI} // ここでURIをsrcに設定
-                                                alt={currentFileName} // 画像のalt属性にファイル名を使用
-                                                style={{
-                                                width: "100%",
-                                                height: "auto",
-                                                borderRadius: "10px",
-                                                transition: "filter 0.3s ease, border 0.3s ease",
-                                                border: selectedImages.some(
-                                                    (img) => img.imageURI === imageURI
-                                                )
-                                                    ? "5px solid #9B4DFF"
-                                                    : "none",
-                                                filter: selectedImages.some(
-                                                    (img) => img.imageURI === imageURI
-                                                )
-                                                    ? "brightness(0.8)"
-                                                    : "none",
-                                                }}
-                                                  
-                                            />
-                                            </div>
-                                        );
-                                        }
-                                    )
-                                        }
+                                    </div>
+                                );
+                            })}
                                     </Slider>
 
 

@@ -281,13 +281,20 @@ export const Project_download = ({ filteredData }) => {
     const handleDownload = async () => {
         for (const file of selectedFiles) {
             if (file.currentFileName && file.pdfURL) {
+
+                const fileName = encodeURIComponent(file.pdfURL);
+                const fileURL = `http://127.0.0.1:8000/api/Project_name/downloadpdf/${fileName}`;
+
                 try {
-                    console.log('response前----------------------');
-                    const response = await axios.get(file.pdfURL, {
+                    // const response = await axios.get(file.pdfURL, {
+                    //     responseType: 'blob', // Blobとしてレスポンスを受け取る
+                    // });
+                    const response = await axios.get(fileURL, {
                         responseType: 'blob', // Blobとしてレスポンスを受け取る
                     });
-                    console.log('response後----------------------');
+                    console.log("ファイルを取得しました");
                     const url = window.URL.createObjectURL(new Blob([response.data]));
+                    // ダウンロードリンクを作成
                     const link = document.createElement('a');
                     link.href = url;
                     link.setAttribute('download', file.currentFileName); // ダウンロードするファイル名
@@ -303,40 +310,6 @@ export const Project_download = ({ filteredData }) => {
             }
         }
     };
-
-
-// const handleDownload = async () => {
-//     selectedFiles.forEach(async (file) => {
-//         if (file.currentFileName && file.pdfURL) {
-//             try {
-//                 console.log('response前----------------------')
-//                 // pdfURLからファイルを取得
-//                 const response = await axios.get(file.pdfURL, {
-//                     responseType: 'blob',  // Blobとしてレスポンスを受け取る
-//                     withCredentials: false, // Cookieを送信しない
-//                 });
-//                 console.log('response後----------------------')
-//                 // Blob URLを生成
-//                 const url = window.URL.createObjectURL(new Blob([response.data]));
-                
-//                 // ダウンロード用のリンクを作成
-//                 const link = document.createElement('a');
-//                 link.href = url;
-//                 link.setAttribute('download', file.currentFileName);  // ダウンロードするファイル名
-//                 document.body.appendChild(link);
-//                 link.click();  // ダウンロードを実行
-//                 document.body.removeChild(link);  // 一時的に作成したリンクを削除
-//             } catch (error) {
-//                 console.error('Download failed:', error);
-//                 alert('ダウンロードに失敗しました');
-//             }
-//         } else {
-//             console.warn('No valid file name or URL found for download', file);
-//         }
-//     });
-// };
-
-
 
 
     return (
@@ -478,13 +451,13 @@ export const Project_download = ({ filteredData }) => {
 
                                         const baseUrl = "http://127.0.0.1:8000/storage/";
                                         const imageURI = `${baseUrl}${thmbnal}`;
-                                        const pdfURL = `${baseUrl}${pdf_path}`;
+                                       const pdfURL = `${currentFileName}`;
 
-                                        // console.log("imageURI:", imageURI);
-                                        // console.log("pdfURI:", pdfURL);
+                                        console.log("imageURI:", imageURI);
+                                        console.log("pdfURI:", pdfURL);
 
                                         return (
-
+                                        
 
                                             <div key={index}>
                                             <img
@@ -653,7 +626,7 @@ export const Project_download = ({ filteredData }) => {
 
                                            const baseUrl = "http://127.0.0.1:8000/storage/";
                                         const imageURI = `${baseUrl}${thmbnal}`;
-                                        const pdfURL = `${baseUrl}${pdf_path}`;
+                                        const pdfURL = `${currentFileName}`;
 
                                         // console.log("imageURI:", imageURI);
                                         // console.log("pdfURI:", pdfURL);

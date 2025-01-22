@@ -54,6 +54,8 @@ export const Project_create = () => {
         bim_drawing_file: null,
         meeting_log_file: null,
     });
+  //console.log(Object.keys(formData)[0]);
+
     // ファイル選択時のハンドラー 
     //ファイル選択時に、選択されたファイルをfileオブジェクトに保存します。
 const handleFileChange = (name, selectedFiles) => {
@@ -63,19 +65,6 @@ const handleFileChange = (name, selectedFiles) => {
   }));
    console.log("更新されたファイル:", name, selectedFiles);
 };
-  // 日付が変更されたときのハンドラ
-  const handleDateChange = (event) => {
-    setFiles(event.target.value);
-  };
-  
-  //文字数字が入力されたときのハンドラ
-    const handleInputChange = (e, key) => {
-    const { value } = e.target;
-    setFiles((prev) => ({
-      ...prev,
-      [key]: value,
-    }));
-  };
 
 //console.log("受け入れたファイル:");
 
@@ -90,6 +79,37 @@ const handleFileChange = (name, selectedFiles) => {
         }));
         console.log("更新されたフォームデータ:", name, value);
     };
+
+  // 日付が変更されたときのハンドラ
+  const handleDateChange = (event, key) => {
+   // const { name, value } = event.target; // イベントからnameとvalueを取得
+    const inputDate = event.target.value; // 入力された日付
+    console.log(`Updated ${key} to`, inputDate); // 変更された日付をログに出力
+    setFormData((prevDate) => ({
+      ...prevDate, // 既存の値を保持
+      [key]: inputDate, // nameに基づいて値を更新
+    }));
+  };
+
+  //文字数字が入力されたときのハンドラ
+  const handleInputChange = (e, key) => {
+    const { value } = e.target;
+    setFormData((prev) => ({
+      ...prev,
+      [key]: value,
+    }));
+  };
+  //Emterで次のフィールドにフォーカスが移動
+  const handleKeyDown = (e, nextFieldId) => {
+    if (e.key === 'Enter') {
+      e.preventDefault(); // Enterキーでフォーム送信や他のデフォルト動作を防ぐ
+      const nextField = document.getElementById(nextFieldId); // 次のフィールドID
+      if (nextField) {
+        nextField.focus(); // フォーカスを次のフィールドに移動
+      }
+    }
+  };
+
 
     // フォーム送信時のハンドラー 
     //フォームデータとファイルを収集し、サーバーに送信する処理
@@ -325,9 +345,10 @@ const handleFileChange = (name, selectedFiles) => {
                   }}
                 >
                   <TextField
-                    //name={key}
-                    //value={values[key] || ""} // 初期値または既存の値
-                    onChange={(e) => handleDateChange(e, key)} // 値を更新する関数
+                            id="field1" // フィールドに移動するためのID
+                    value={formData[Object.keys(formData)[0]] || ""} // formDataの最初のキーを使って表示
+                    onChange={(e) => handleInputChange(e, Object.keys(formData)[0])} // 値を更新する関数
+                      onKeyDown={(e) => handleKeyDown(e, 'field2')}  // Enterで次のフィールド（field〇）に移動
                     fullWidth
                     variant="outlined"
                     label="プロジェクト名入力"
@@ -356,10 +377,11 @@ const handleFileChange = (name, selectedFiles) => {
                   }}
                 >
                   <TextField
-                   // name={key}
-                    //value={values[key] || ""} // 初期値または既存の値
-                    onChange={(e) => handleDateChange(e, key)} // 値を更新する関数
+                            id="field2"  // 次のフィールドに移動するためのID
+                    value={formData[Object.keys(formData)[1]] || ""} // formDataの最初のキーを使って表示
+                    onChange={(e) => handleInputChange(e, Object.keys(formData)[1])} // 値を更新する関数
                     //value={files[key] || ""} // 状態の値を表示
+                            onKeyDown={(e) => handleKeyDown(e, 'field3')}  // Enterで次のフィールド（field〇）に移動
                     fullWidth
                     variant="outlined"
                     label="住所入力"
@@ -385,9 +407,10 @@ const handleFileChange = (name, selectedFiles) => {
                   }}
                 >
                   <TextField
-                    //name={key}
-                    //value={values[key] || ""} // 初期値または既存の値
-                    onChange={(e) => handleDateChange(e, key)} // 値を更新する関数
+                            id="field3"  // 次のフィールドに移動するためのID
+                    value={formData[Object.keys(formData)[2]] || ""} // formDataの最初のキーを使って表示
+                    onChange={(e) => handleInputChange(e, Object.keys(formData)[2])} // 値を更新する関数
+                            onKeyDown={(e) => handleKeyDown(e, 'field4')}  // Enterで次のフィールド（field〇）に移動
                     fullWidth
                     variant="outlined"
                     label="施主名入力"
@@ -413,11 +436,11 @@ const handleFileChange = (name, selectedFiles) => {
                   }}
                 >
                    <TextField
-                   // name={key}
+                   //name={[Object.keys(formData)[0]]}
                    label="Choose a Date" // ラベルを設定
                    type="date" // カレンダー入力フォーム
-                   value={files} // 状態と連動
-                   onChange={handleDateChange} // 日付変更時の処理
+                    value={formData[Object.keys(formData)[3]] !== undefined ? formData[Object.keys(formData)[3]] : ""} // 初期値が""に設定
+                   onChange={(event) => handleDateChange(event, Object.keys(formData)[3])} // 日付変更時の処理
                    fullWidth // フル幅に設定
                    InputLabelProps={{
                    shrink: true, // ラベルが入力欄に重ならないよう設定
@@ -443,11 +466,11 @@ const handleFileChange = (name, selectedFiles) => {
                   }}
                 >
                    <TextField
-                    //name={key}
+                    //name={[Object.keys(formData)[0]]}
                    label="Choose a Date" // ラベルを設定
                    type="date" // カレンダー入力フォーム
-                   value={files} // 状態と連動
-                   onChange={handleDateChange} // 日付変更時の処理
+                   value={formData[Object.keys(formData)[4]] !== undefined ? formData[Object.keys(formData)[4]] : ""} // 初期値が""に設定
+                   onChange={(event) => handleDateChange(event, Object.keys(formData)[4])} // 日付変更時の処理
                    fullWidth // フル幅に設定
                    InputLabelProps={{
                    shrink: true, // ラベルが入力欄に重ならないよう設定
@@ -473,11 +496,11 @@ const handleFileChange = (name, selectedFiles) => {
                   }}
                 >
                    <TextField
-                  //  name={key}
+                  //  name={[Object.keys(formData)[0]]}
                    label="Choose a Date" // ラベルを設定
                    type="date" // カレンダー入力フォーム
-                   value={files} // 状態と連動
-                   onChange={handleDateChange} // 日付変更時の処理
+                   value={formData[Object.keys(formData)[5]] !== undefined ? formData[Object.keys(formData)[5]] : ""} // 初期値が""に設定
+                   onChange={(event) => handleDateChange(event, Object.keys(formData)[5])} // 日付変更時の処理
                    fullWidth // フル幅に設定
                    InputLabelProps={{
                    shrink: true, // ラベルが入力欄に重ならないよう設定
@@ -503,13 +526,23 @@ const handleFileChange = (name, selectedFiles) => {
                   }}
                 >
                   <TextField
-                   // name={key}
-                    //value={values[key] || ""} // 初期値または既存の値
-                    onChange={(e) => handleDateChange(e, key)} // 値を更新する関数
+                            id="field4"  // 次のフィールドに移動するためのID
+                            value={formData[Object.keys(formData)[6]] || ""} // formDataの最初のキーを使って表示
+                            onChange={(e) => {
+                              // 数字のみ入力、マイナス禁止の条件を追加
+                              const inputValue = e.target.value;
+                              const numericValue = inputValue.replace(/[^0-9]/g, ''); // 数字以外を除去
+                              // 数字が入力されている場合にのみ、桁表示を行う
+                              if (numericValue !== inputValue) {
+                                return; // 数字以外が入力された場合は更新しない
+                              }
+                              handleInputChange(e, Object.keys(formData)[6]);
+                            }} // 値を更新する関数
+                            onKeyDown={(e) => handleKeyDown(e, 'field5')}  // Enterで次のフィールド（field〇）に移動
                     fullWidth
                     variant="outlined"
                     label="請負金額入力"
-                            type="number" // または "text" （数値専用の場合）
+                            type="text" // または "text" （数値専用の場合）
                     />
                      </Paper>
               </Container>
@@ -531,9 +564,10 @@ const handleFileChange = (name, selectedFiles) => {
                   }}
                 >
                   <TextField
-                   // name={key}
-                    //value={values[key] || ""} // 初期値または既存の値
-                    onChange={(e) => handleDateChange(e, key)} // 値を更新する関数
+                            id="field5"  // 次のフィールドに移動するためのID
+                    value={formData[Object.keys(formData)[7]] || ""} // formDataの最初のキーを使って表示
+                    onChange={(e) => handleInputChange(e, Object.keys(formData)[7])} // 値を更新する関数
+                            onKeyDown={(e) => handleKeyDown(e, 'field6')}  // Enterで次のフィールド（field〇）に移動
                     fullWidth
                     variant="outlined"
                     label="用途入力"
@@ -559,13 +593,22 @@ const handleFileChange = (name, selectedFiles) => {
                   }}
                 >
                   <TextField
-                   // name={key}
-                    //value={values[key] || ""} // 初期値または既存の値
-                    onChange={(e) => handleDateChange(e, key)} // 値を更新する関数
+                            id="field6"  // 次のフィールドに移動するためのID
+                    value={formData[Object.keys(formData)[8]] || ""} // formDataの最初のキーを使って表示
+                            onChange={(e) => {
+                              // 数字のみ入力、マイナス禁止の条件を追加
+                              const inputValue = e.target.value;
+                              const numericValue = inputValue.replace(/[^0-9]/g, ''); // 数字以外を除去
+                              // 数字が入力されている場合にのみ、桁表示を行う
+                              if (numericValue !== inputValue) {
+                                return; // 数字以外が入力された場合は更新しない
+                              }
+                      handleInputChange(e, Object.keys(formData)[8]);}} // 値を更新する関数
+                            onKeyDown={(e) => handleKeyDown(e, 'field7')}  // Enterで次のフィールド（field〇）に移動
                     fullWidth
                     variant="outlined"
                     label="敷地面積入力"
-                            type="number" // または "text"（数値専用の場合）
+                    type="text" // または "text"（数値専用の場合）
                     />
                      </Paper>
               </Container>
@@ -587,13 +630,23 @@ const handleFileChange = (name, selectedFiles) => {
                   }}
                 >
                   <TextField
-                   // name={key}
-                    //value={values[key] || ""} // 初期値または既存の値
-                    onChange={(e) => handleDateChange(e, key)} // 値を更新する関数
+                            id="field7"  // 次のフィールドに移動するためのID
+                            value={formData[Object.keys(formData)[9]] || ""} // formDataの最初のキーを使って表示
+                            onChange={(e) => {
+                              // 数字のみ入力、マイナス禁止の条件を追加
+                              const inputValue = e.target.value;
+                              const numericValue = inputValue.replace(/[^0-9]/g, ''); // 数字以外を除去
+                              // 数字が入力されている場合にのみ、桁表示を行う
+                              if (numericValue !== inputValue) {
+                                return; // 数字以外が入力された場合は更新しない
+                              }
+                              handleInputChange(e, Object.keys(formData)[9]);
+                            }} // 値を更新する関数
+                            onKeyDown={(e) => handleKeyDown(e, 'field8')}  // Enterで次のフィールド（field〇）に移動
                     fullWidth
                     variant="outlined"
                     label="建築面積入力 "
-                            type="number" // または "text"（数値専用の場合）
+                            type="text" // または "text"（数値専用の場合）
                     />
                      </Paper>
               </Container>
@@ -615,9 +668,19 @@ const handleFileChange = (name, selectedFiles) => {
                   }}
                 >
                   <TextField
-                   // name={key}
-                    //value={values[key] || ""} // 初期値または既存の値
-                    onChange={(e) => handleDateChange(e, key)} // 値を更新する関数
+                            id="field8"  // 次のフィールドに移動するためのID
+                            value={formData[Object.keys(formData)[10]] || ""} // formDataの最初のキーを使って表示
+                            onChange={(e) => {
+                              // 数字のみ入力、マイナス禁止の条件を追加
+                              const inputValue = e.target.value;
+                              const numericValue = inputValue.replace(/[^0-9]/g, ''); // 数字以外を除去
+                              // 数字が入力されている場合にのみ、桁表示を行う
+                              if (numericValue !== inputValue) {
+                                return; // 数字以外が入力された場合は更新しない
+                              }
+                              handleInputChange(e, Object.keys(formData)[10]);
+                            }} // 値を更新する関数
+                            onKeyDown={(e) => handleKeyDown(e, 'field9')}  // Enterで次のフィールド（field〇）に移動
                     fullWidth
                     variant="outlined"
                     label="延べ床面積入力"
@@ -647,8 +710,8 @@ const handleFileChange = (name, selectedFiles) => {
                             <Select
                               labelId="structure-select-label"
                               id="structure-select"
-                              //value={formData[key] || ""} // 初期値または既存の値
-                              onChange={(e) => handleDateChange(e, key)} // 値を更新する関数
+                              value={formData[Object.keys(formData)[11]] || ""} // formDataの最初のキーを使って表示
+                              onChange={(e) => handleInputChange(e, Object.keys(formData)[11])} // 値を更新する関数
                               label="構造入力"
                             >
                               <MenuItem value="W造">W造</MenuItem>
@@ -677,13 +740,23 @@ const handleFileChange = (name, selectedFiles) => {
                   }}
                 >
                   <TextField
-                   // name={key}
-                    //value={values[key] || ""} // 初期値または既存の値
-                    onChange={(e) => handleDateChange(e, key)} // 値を更新する関数
+                            id="field9"  // 次のフィールドに移動するためのID
+                            value={formData[Object.keys(formData)[12]] || ""} // formDataの最初のキーを使って表示
+                            onChange={(e) => {
+                              // 数字のみ入力、マイナス禁止の条件を追加
+                              const inputValue = e.target.value;
+                              const numericValue = inputValue.replace(/[^0-9]/g, ''); // 数字以外を除去
+                              // 数字が入力されている場合にのみ、桁表示を行う
+                              if (numericValue !== inputValue) {
+                                return; // 数字以外が入力された場合は更新しない
+                              }
+                              handleInputChange(e, Object.keys(formData)[12]);
+                            }} // 値を更新する関数
+                            onKeyDown={(e) => handleKeyDown(e, 'field10')}  // Enterで次のフィールド（field〇）に移動
                     fullWidth
                     variant="outlined"
                     label="階数  地下入力"
-                            type="number" // または "text"（数値専用の場合）
+                            type="text" // または "text"（数値専用の場合）
                     />
                      </Paper>
               </Container>
@@ -705,13 +778,23 @@ const handleFileChange = (name, selectedFiles) => {
                   }}
                 >
                   <TextField
-                   // name={key}
-                    //value={values[key] || ""} // 初期値または既存の値
-                    onChange={(e) => handleDateChange(e, key)} // 値を更新する関数
+                            id="field10"  // 次のフィールドに移動するためのID
+                            value={formData[Object.keys(formData)[13]] || ""} // formDataの最初のキーを使って表示
+                            onChange={(e) => {
+                              // 数字のみ入力、マイナス禁止の条件を追加
+                              const inputValue = e.target.value;
+                              const numericValue = inputValue.replace(/[^0-9]/g, ''); // 数字以外を除去
+                              // 数字が入力されている場合にのみ、桁表示を行う
+                              if (numericValue !== inputValue) {
+                                return; // 数字以外が入力された場合は更新しない
+                              }
+                              handleInputChange(e, Object.keys(formData)[13]);
+                            }} // 値を更新する関数
+                            onKeyDown={(e) => handleKeyDown(e, 'field1')}  // Enterで次のフィールド（field〇）に移動
                     fullWidth
                     variant="outlined"
                     label="階数地上入力"
-                            type="number"// または "text" （数値専用の場合）
+                            type="text"// または "text" （数値専用の場合）
                     />
                      </Paper>
               </Container>

@@ -3,7 +3,9 @@ import axios from "axios";
 
 export const Test = () => {
     const handleDownload = async () => {
-        const fileName = encodeURIComponent("A_3階平面図.pdf");
+
+        //取得したファイルのルートでできない・・・URLとしてLaravelでブロックされてしまう
+        const fileName = ("A_3階平面図.pdf");
         const fileURL = `http://127.0.0.1:8000/api/Project_name/downloadpdf/${fileName}`;
 
         try {

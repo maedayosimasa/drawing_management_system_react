@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { useDropzone } from "react-dropzone";
 import axios from 'axios';
 import {Box, TextField, Button, Typography, Paper, List, ListItem,
@@ -7,6 +7,8 @@ import {Box, TextField, Button, Typography, Paper, List, ListItem,
 } from '@mui/material';
 import Grid from "@mui/material/Grid";
 import { Link } from "react-router-dom";
+
+import { ProjectCreateForm } from './Project_create_form';
 
 export const Project_create = () => {
     const [formData, setFormData] = useState({
@@ -17,7 +19,7 @@ export const Project_create = () => {
         construction_period_start: '',
         construction_period_end: '',
         completion_date: '',
-        contract_amount: '',
+        constract_amount: '',
         use: '',
         site_area:'',
         building_area: '',
@@ -25,11 +27,32 @@ export const Project_create = () => {
         strural: '',
         floor_number_underground: '',
         floor_number_ground:'',
+
         finishing_table_name: '',
-        floor_plan_name: '',
+      layout_diagram_name: '',
+      floor_plan_name: '',
+      elevation_name: '',
+      sectional_name: '',
+      design_drawing_all_name: '',
+
+        structural_floor_plan_name: '',
+      structural_elevation_name: '',
+      structural_sectional_name: '',
+      structural_frame_diagram_name: '',
+      structural_diagram_all_name: '',
+
         machinery_equipment_diagram_all_name: '',
+      electrical_equipment_diagram_all_name: '',
+
         bim_drawing_name: '',
+
         meeting_log_name: '',
+      delivery_documents_name: '',
+      bidding_documents_name: '',
+      archived_photo_name: '',
+      contract_name: '',
+      management_documents_name: '',
+
     });
 
     const [files, setFiles] = useState({
@@ -40,7 +63,7 @@ export const Project_create = () => {
         construction_period_start: null,
         construction_period_end: null,
         completion_date: null,
-        contract_amount: null,
+        constract_amount: null,
         use: null,
         site_area:null,
         building_area: null,
@@ -48,11 +71,31 @@ export const Project_create = () => {
         strural: null,
         floor_number_underground: null,
         floor_number_ground:null,
-        finishing_table_file: null,
-        floor_plan_file: null,
-        machinery_equipment_diagram_file: null,
+
+        finishing_table_name: null,
+      layout_diagram_name: null,
+      floor_plan_name: null,
+      elevation_name: null,
+      sectional_name: null,
+      design_drawing_all_name: null,
+
+      structural_floor_plan_name: null,
+      structural_elevation_name: null,
+      sectional_name: null,
+      structural_frame_diagram_name: null,
+      structural_diagram_all_name: null,
+
+        machinery_equipment_diagram_name: null,
+      electrical_equipment_diagram_all_name: null,
+
         bim_drawing_file: null,
-        meeting_log_file: null,
+
+        meeting_log_name: null,
+      delivery_documents_name: null,
+      bidding_documents_name: null,
+      archived_photo_name: null,
+      contract_name: null,
+      management_documents_name: null,
     });
   //console.log(Object.keys(formData)[0]);
 
@@ -165,7 +208,7 @@ const handleFileChange = (name, selectedFiles) => {
             construction_period_start: "",
             construction_period_end: "",
             completion_date: "",
-            contract_amount: "",
+            constract_amount: "",
             use: "",
             site_area:"",
             building_area: "",
@@ -173,11 +216,31 @@ const handleFileChange = (name, selectedFiles) => {
             strural: "",
             floor_number_underground: "",
             floor_number_ground:"",
+
             finishing_table_name: "",
+            layout_diagram_name: "",
             floor_plan_name: "",
+            elevation_name: "",
+            sectional_name: "",
+            design_drawing_all_name: "",
+
+            structural_floor_plan_name: "",
+            structural_elevation_name: "",
+            structural_sectional_name: "",
+            structural_frame_diagram_name: "",
+            structural_diagram_all_name: "",
+
             machinery_equipment_diagram_all_name: "",
+            electrical_equipment_diagram_all_name: "",
+
             bim_drawing_name: "",
+
             meeting_log_name: "",
+            delivery_documents_name: "",
+            bidding_documents_name: "",
+            archived_photo_name: "",
+            contract_name: "",
+            management_documents_name: "",
           });
           setFiles({
             project_name: null,
@@ -186,7 +249,7 @@ const handleFileChange = (name, selectedFiles) => {
             construction_period_start: null,
             construction_period_end: null,
             completion_date: null,
-            contract_amount: null,
+            constract_amount: null,
             use: null,
             site_area:null,
             building_area: null,
@@ -194,11 +257,31 @@ const handleFileChange = (name, selectedFiles) => {
             strural: null,
             floor_number_underground: null,
             floor_number_ground:null,
-            finishing_table_file: null,
-            floor_plan_file: null,
-            machinery_equipment_diagram_file: null,
-            bim_drawing_file: null,
+
+            finishing_table_name: null,
+            layout_diagram_name: null,
+            floor_plan_name: null,
+            elevation_name: null,
+            sectional_name: null,
+            design_drawing_all_name: null,
+
+            structural_floor_plan_name: null,
+            structural_elevation_name: null,
+            structural_sectional_name: null,
+            structural_frame_diagram_name: null,
+            structural_diagram_all_name: null,
+
+            machinery_equipment_diagram_name: null,
+            electrical_equipment_diagram_all_name: null,
+
+            bim_drawing_name: null,
+
             meeting_log_file: null,
+            delivery_documents_name: null,
+            bidding_documents_name: null,
+            archived_photo_name: null,
+            contract_name: null,
+            management_documents_name: null,
           });
         } catch (error) {
             console.error('Error:', error.response || error.message);
@@ -225,7 +308,7 @@ const handleFileChange = (name, selectedFiles) => {
       construction_period_start: "工期 開始年月日",
       construction_period_end: "工期 終了年月日",
       completion_date: "完成年月日",
-      contract_amount: "請負金額",
+      constract_amount: "請負金額",
       use: "用 途",
       site_area:"敷地面積㎡",
       building_area: "建築面積 (㎡)",
@@ -233,14 +316,58 @@ const handleFileChange = (name, selectedFiles) => {
       strural: "構 造 (W,S,RC,SRC,その他)",
       floor_number_underground: "階数  地下   ( 階)",
       floor_number_ground:"階数  地上   ( 階)",
-      finishing_table_name: "仕上げ表Name",
-      floor_plan_name: "平面図Name",
-      machinery_equipment_diagram_all_name: "機械設備設備図Name",
+
+      finishing_table_name: "仕上げ表",
+      layout_diagram_name: "配置図",
+      floor_plan_name: "平面図",
+      elevation_name: "立面図",
+      sectional_name: "断面図",
+      design_drawing_all_name: "意匠図All",
+
+      structural_floor_plan_name: "平面図",
+      structural_elevation_name: "立面図",
+      sectional_name: "断面図",
+      structural_frame_diagram_name: "軸組図",
+      structural_diagram_all_name: "構造図All",
+
+      machinery_equipment_diagram_all_name: "機械設備設備図All",
+      electrical_equipment_diagram_all_name: "電気設備図All",
+
       bim_drawing_name: "BIM図面Name",
+
       meeting_log_name: "打合せ簿Name",
+      delivery_documents_name: "引き渡し書類",
+      bidding_documents_name: "入札書類",
+      archived_photo_name: "記録写真",
+      contract_name: "契約書",
+      management_documents_name: "管理書類",
     };
   
-  
+    
+  const [height, setHeight] = useState(0);
+
+  // 各Paperの参照を作成
+  const architecturePaperRef = useRef(null);
+  const structurePaperRef = useRef(null);
+
+  useEffect(() => {
+    // 建築図のPaper高さを取得し、初期化処理を追加
+    const updateHeight = () => {
+      if (architecturePaperRef.current) {
+        // パディングやマージンを考慮して高さを調整
+        const adjustedHeight = Math.max(architecturePaperRef.current.offsetHeight - 30, 0); // 高さが負にならないように調整
+        setHeight(adjustedHeight);
+      }
+    };
+
+    updateHeight(); // 初回実行
+    window.addEventListener("resize", updateHeight); // ウィンドウサイズ変更時にも更新
+
+    return () => {
+      window.removeEventListener("resize", updateHeight); // クリーンアップ
+    };
+  }, []); // 初回レンダリング時とウィンドウリサイズ時に高さを取得
+
     return (
         <>
           <AppBar position="sticky" sx={{ bgcolor: "#d4af37" , height: "40px" }}>
@@ -307,16 +434,17 @@ const handleFileChange = (name, selectedFiles) => {
   {/* プロジェクト新規作成 */}
   <Grid item xs={3}>
       <Box sx={{ width: "100%", height: "100%" }}>
-    <Paper
-      elevation={12}
-      sx={{
-        p: 4,
-        borderRadius: 8,
-        bgcolor: "#faf1d7",
-        border: "1px solid #d4af37",
-        boxShadow: "0 8px 20px rgba(0, 0, 0, 0.3)",
-      }}
-    >
+                <Paper
+                  ref={architecturePaperRef}
+                  elevation={12}
+                  sx={{
+                    p: 4,
+                    borderRadius: 8,
+                    bgcolor: "#faf1d7",
+                    border: "1px solid #d4af37",
+                    boxShadow: "0 8px 20px rgba(0, 0, 0, 0.3)",
+                  }}
+                >
       <Typography
         variant="h6"
         align="center"
@@ -807,64 +935,6 @@ const handleFileChange = (name, selectedFiles) => {
 </Box>
 
 
-
-
-      {/* <Box component="form" onSubmit={handleSubmit} sx={{ display: "flex", flexDirection: "column", gap: 3 }}>
-        {Object.keys(formData)
-          .slice(0, 13)  // 1〜14個目のキー（インデックス0〜13）
-        //  .filter((_, index) => ![3, 4, 5, 6, 10].includes(index)) // インデックス3, 4, 5, 6, 10を除外
-          .map((key) => ( */}
-
-
-
-            
-            {/* <div key={key}>
-              <Typography variant="h8" gutterBottom>
-                {fieldLabels[key] || key}
-              </Typography>
-              <Container maxWidth="sm">
-                <Paper
-                  elevation={12}
-                  sx={{
-                    p: 1,
-                    borderRadius: 2,
-                    bgcolor: "#ffffff",
-                    border: "1px solid rgb(245, 244, 242)",
-                    boxShadow: "0 8px 20px rgba(0, 0, 0, 0.3)",
-                  }}
-                >
-                  <TextField
-                    name={key}
-                    //value={values[key] || ""} // 初期値または既存の値
-                    onChange={(e) => handleDateChange(e, key)} // 値を更新する関数
-                    fullWidth
-                    variant="outlined"
-                    label="入力してください"
-                    type="text" // または "number"（数値専用の場合）
-                    /> */}
-                  {/* カレンダー入力 */}
-                   {/* <TextField
-                    name={key}
-                   label="Choose a Date" // ラベルを設定
-                   type="date" // カレンダー入力フォーム
-                   value={files} // 状態と連動
-                   onChange={handleDateChange} // 日付変更時の処理
-                   fullWidth // フル幅に設定
-                   InputLabelProps={{
-                   shrink: true, // ラベルが入力欄に重ならないよう設定
-                  }}
-                  /> */}
-                  {/* <DropzoneField
-                    name={key}
-                    onFileChange={handleFileChange}
-                    selectedFiles={files[key] || []}
-                  /> */}
-{/*                    
-                      </Paper>
-              </Container>
-            </div> */}
-          {/* ))} */}
-      {/* </Box> */}
     </Paper>
     </Box>
   </Grid>
@@ -874,16 +944,18 @@ const handleFileChange = (name, selectedFiles) => {
   {/* 建築図新規作成 */}
   <Grid item xs={12} sm={6} md={4}>
      <Box sx={{ width: "100%", minHeight: 100 }}>
-    <Paper
-      elevation={12}
-      sx={{
-        p: 4,
-        borderRadius: 8,
-        bgcolor: "#faf1d7",
-        border: "1px solid #d4af37",
-        boxShadow: "0 8px 20px rgba(0, 0, 0, 0.3)",
-      }}
-    >
+                    <Paper
+                      ref={structurePaperRef}
+                      elevation={12}
+                      sx={{
+                        p: 4,
+                        borderRadius: 8,
+                        bgcolor: "#faf1d7",
+                        border: "1px solid #d4af37",
+                        boxShadow: "0 8px 20px rgba(0, 0, 0, 0.3)",
+                        height: `${height}px`, // 調整後の高さを適用
+                      }}
+                    >
       <Typography
         variant="h6"
         align="center"
@@ -900,7 +972,7 @@ const handleFileChange = (name, selectedFiles) => {
       </Typography>
       <Box component="form" onSubmit={handleSubmit} sx={{ display: "flex", flexDirection: "column", gap: 3 }}>
         {Object.keys(formData)
-          .slice(14, 15)  // 14〜15個目のキー（インデックス14〜15）
+          .slice(14, 20)  // 14〜20個目のキー（インデックス13〜19）
           .map((key) => (
             <div key={key}>
               <Typography variant="h8" gutterBottom>
@@ -934,16 +1006,18 @@ const handleFileChange = (name, selectedFiles) => {
    {/* 構造図新規作成 */}
   <Grid item xs={12} sm={6} md={4}>
     <Box sx={{ width: "100%", minHeight: 100 }}>
-    <Paper
-      elevation={12}
-      sx={{
-        p: 4,
-        borderRadius: 8,
-        bgcolor: "#faf1d7",
-        border: "1px solid #d4af37",
-        boxShadow: "0 8px 20px rgba(0, 0, 0, 0.3)",
-      }}
-    >
+                    <Paper
+                      ref={structurePaperRef}
+                      elevation={12}
+                      sx={{
+                        p: 4,
+                        borderRadius: 8,
+                        bgcolor: "#faf1d7",
+                        border: "1px solid #d4af37",
+                        boxShadow: "0 8px 20px rgba(0, 0, 0, 0.3)",
+                        height: `${height}px`, // 調整後の高さを適用
+                      }}
+                    >
       <Typography
         variant="h6"
         align="center"
@@ -960,7 +1034,7 @@ const handleFileChange = (name, selectedFiles) => {
       </Typography>
       <Box component="form" onSubmit={handleSubmit} sx={{ display: "flex", flexDirection: "column", gap: 3 }}>
         {Object.keys(formData)
-          .slice(15, 16)  // 16〜17個目のキー（インデックス15〜16）
+          .slice(20, 25)  // 16〜17個目のキー（インデックス15〜16）
           .map((key) => (
             <div key={key}>
               <Typography variant="h8" gutterBottom>
@@ -993,16 +1067,18 @@ const handleFileChange = (name, selectedFiles) => {
     {/* 機械設備電気設備図新規作成 */}
   <Grid item xs={12} sm={6} md={4}>
     <Box sx={{ width: "100%",minHeight: 100}}>
-    <Paper
-      elevation={12}
-      sx={{
-        p: 4,
-        borderRadius: 8,
-        bgcolor: "#faf1d7",
-        border: "1px solid #d4af37",
-        boxShadow: "0 8px 20px rgba(0, 0, 0, 0.3)",
-      }}
-    >
+                    <Paper
+                      ref={structurePaperRef}
+                      elevation={12}
+                      sx={{
+                        p: 4,
+                        borderRadius: 8,
+                        bgcolor: "#faf1d7",
+                        border: "1px solid #d4af37",
+                        boxShadow: "0 8px 20px rgba(0, 0, 0, 0.3)",
+                        height: `${height}px`, // 調整後の高さを適用
+                      }}
+                    >
       <Typography
         variant="h6"
         align="center"
@@ -1019,7 +1095,7 @@ const handleFileChange = (name, selectedFiles) => {
       </Typography>
       <Box component="form" onSubmit={handleSubmit} sx={{ display: "flex", flexDirection: "column", gap: 3 }}>
         {Object.keys(formData)
-          .slice(16, 17)  // 17〜18個目のキー（インデックス16〜17）
+          .slice(25, 27)  // 17〜18個目のキー（インデックス16〜17）
           .map((key) => (
             <div key={key}>
               <Typography variant="h8" gutterBottom>
@@ -1052,16 +1128,18 @@ const handleFileChange = (name, selectedFiles) => {
    {/* BIM図新規作成 */}
   <Grid item xs={12} sm={6} md={4}>
     <Box sx={{ width: "100%", minHeight: 100 }}>
-    <Paper
-      elevation={12}
-      sx={{
-        p: 4,
-        borderRadius: 8,
-        bgcolor: "#faf1d7",
-        border: "1px solid #d4af37",
-        boxShadow: "0 8px 20px rgba(0, 0, 0, 0.3)",
-      }}
-    >
+                    <Paper
+                      ref={structurePaperRef}
+                      elevation={12}
+                      sx={{
+                        p: 4,
+                        borderRadius: 8,
+                        bgcolor: "#faf1d7",
+                        border: "1px solid #d4af37",
+                        boxShadow: "0 8px 20px rgba(0, 0, 0, 0.3)",
+                        height: `${height}px`, // 調整後の高さを適用
+                      }}
+                    >
       <Typography
         variant="h6"
         align="center"
@@ -1078,7 +1156,7 @@ const handleFileChange = (name, selectedFiles) => {
       </Typography>
       <Box component="form" onSubmit={handleSubmit} sx={{ display: "flex", flexDirection: "column", gap: 3 }}>
         {Object.keys(formData)
-          .slice(17, 18)  // 18〜19個目のキー（インデックス17〜18）
+          .slice(27, 28)  // 18〜19個目のキー（インデックス17〜18）
           .map((key) => (
             <div key={key}>
               <Typography variant="h8" gutterBottom>
@@ -1111,16 +1189,18 @@ const handleFileChange = (name, selectedFiles) => {
  {/* 打合せ簿図新規作成 */}
   <Grid item xs={12} sm={6} md={4}>
     <Box sx={{ width: "100%",minHeight: 100 }}>
-    <Paper
-      elevation={12}
-      sx={{
-        p: 4,
-        borderRadius: 8,
-        bgcolor: "#faf1d7",
-        border: "1px solid #d4af37",
-        boxShadow: "0 8px 20px rgba(0, 0, 0, 0.3)",
-      }}
-    >
+                    <Paper
+                      ref={structurePaperRef}
+                      elevation={12}
+                      sx={{
+                        p: 4,
+                        borderRadius: 8,
+                        bgcolor: "#faf1d7",
+                        border: "1px solid #d4af37",
+                        boxShadow: "0 8px 20px rgba(0, 0, 0, 0.3)",
+                        height: `${height}px`, // 調整後の高さを適用
+                      }}
+                    >
       <Typography
         variant="h6"
         align="center"
@@ -1137,7 +1217,7 @@ const handleFileChange = (name, selectedFiles) => {
       </Typography>
       <Box component="form" onSubmit={handleSubmit} sx={{ display: "flex", flexDirection: "column", gap: 3 }}>
         {Object.keys(formData)
-          .slice(18, 19)  // 17〜18個目のキー（インデックス18〜19）
+          .slice(28, 35)  // 17〜18個目のキー（インデックス18〜19）
           .map((key) => (
             <div key={key}>
               <Typography variant="h8" gutterBottom>
@@ -1165,14 +1245,15 @@ const handleFileChange = (name, selectedFiles) => {
           ))}
       </Box>
     </Paper>
-    </Box>
+                  </Box>
+                  {/* <ProjectCreateForm /> */}
   </Grid>
 </Grid>
 
 </Grid>
    
 
-  </Grid>
+          </Grid>
 </Container>
 
 
@@ -1229,5 +1310,6 @@ const DropzoneField = ({ name, onFileChange, selectedFiles }) => {
         </List>
       )}
     </Box>
+
   );
 };

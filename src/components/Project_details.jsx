@@ -138,7 +138,7 @@ import { Link } from 'react-router-dom';
           <Divider sx={{ marginY: 2 }} />
           <Typography variant="body1" component="span" color="#7f6b4e" style={dataRowStyle}><div style={labelStyle}>図面ID</div> <div style={contentStyle}>:　{win.project.drawing?.structural_diagram?.drawing_id ?? 'No data'}</div></Typography>
           <Divider sx={{ marginY: 2 }} />
-          <Typography variant="body1" component="span" color="#7f6b4e" style={dataRowStyle}><div style={labelStyle}>平面図Name</div> <div style={contentStyle}>:　{win.project.drawing?.structural_diagram?.floor_plan_name ?? 'No data'}</div></Typography>
+          <Typography variant="body1" component="span" color="#7f6b4e" style={dataRowStyle}><div style={labelStyle}>平面図Name</div> <div style={contentStyle}>:　{win.project.drawing?.structural_diagram?.structural_floor_plan_name ?? 'No data'}</div></Typography>
           <Divider sx={{ marginY: 2 }} />
           <Typography variant="body1" component="span" color="#7f6b4e" style={dataRowStyle}><div style={labelStyle}>図面ID</div> <div style={contentStyle}>:　{win.project.drawing?.equipment_diagram?.drawing_id ?? 'No data'}</div></Typography>
           <Divider sx={{ marginY: 2 }} />

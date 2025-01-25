@@ -103,7 +103,7 @@ export const Project_select = () => {
                                         図面ID: {project_name.drawing?.structural_diagram?.drawing_id ?? 'no_data'}
                                     </Typography>
                                     <Typography variant="body2" sx={{ color: '#7f6b4e' }}>
-                                        平面図Name: {project_name.drawing?.structural_diagram?.floor_plan_name ?? 'エラー'}
+                                        平面図Name: {project_name.drawing?.structural_diagram?.structural_floor_plan_name ?? 'エラー'}
                                     </Typography>
                                     <Typography variant="body2" sx={{ color: '#7f6b4e' }}>
                                         図面ID: {project_name.drawing?.equipment_diagram?.drawing_id ?? 'no_data'}

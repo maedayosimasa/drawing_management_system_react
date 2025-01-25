@@ -163,7 +163,7 @@ export const Project_download = ({ filteredData }) => {
         ],
         afterChange: (current) => {
             const fileName = images[current][1].finishing_table_name || images[current][1].
-            floor_plan_name || images[current][1].machinery_equipment_diagram_all_name || images[current][1].
+            structural_floor_plan_name || images[current][1].machinery_equipment_diagram_all_name || images[current][1].
             bim_drawing_name || images[current][1].meeting_log_name;
             setCurrentFileName(fileName);
             //setCurrentFileName(images[current]);
@@ -402,9 +402,9 @@ export const Project_download = ({ filteredData }) => {
                                             finishing_table_name,
                                             finishing_table_view_path,
                                             finishing_table_pdf_path,
-                                            floor_plan_name,
-                                            floor_plan_view_path,
-                                            floor_plan_pdf_path,
+                                            structural_floor_plan_name,
+                                            structural_floor_plan_view_path,
+                                            structural_floor_plan_pdf_path,
                                             machinery_equipment_diagram_all_name,
                                             machinery_equipment_diagram_all_view_path,
                                             machinery_equipment_diagram_all_pdf_path,
@@ -419,21 +419,21 @@ export const Project_download = ({ filteredData }) => {
                                         // 必要な値を選択  ＊＊順序注意＊＊
                                         const currentFileName =
                                             finishing_table_name ||
-                                            floor_plan_name ||
+                                            structural_floor_plan_name ||
                                             machinery_equipment_diagram_all_name ||
                                             bim_drawing_name ||
                                             meeting_log_name;
 
                                         const thmbnal =
                                             finishing_table_view_path ||
-                                            floor_plan_view_path ||
+                                            structural_floor_plan_view_path ||
                                             machinery_equipment_diagram_all_view_path ||
                                             bim_drawing_view_path ||
                                             meeting_log_view_path;
 
                                         const pdf_path =
                                             finishing_table_pdf_path ||
-                                            floor_plan_pdf_path ||
+                                            structural_floor_plan_pdf_path ||
                                             machinery_equipment_diagram_all_pdf_path ||
                                             bim_drawing_pdf_path ||
                                             meeting_log_pdf_path;
@@ -568,9 +568,9 @@ export const Project_download = ({ filteredData }) => {
                                             finishing_table_name,
                                             finishing_table_view_path,
                                             finishing_table_pdf_path,
-                                            floor_plan_name,
-                                            floor_plan_view_path,
-                                            floor_plan_pdf_path,
+                                            structural_floor_plan_name,
+                                            structural_floor_plan_view_path,
+                                            structural_floor_plan_pdf_path,
                                             machinery_equipment_diagram_all_name,
                                             machinery_equipment_diagram_all_view_path,
                                             machinery_equipment_diagram_all_pdf_path,
@@ -585,21 +585,21 @@ export const Project_download = ({ filteredData }) => {
                                         // 必要な値を選択  ＊＊順序注意＊＊
                                         const currentFileName =
                                             finishing_table_name ||
-                                            floor_plan_name ||
+                                            structural_floor_plan_name ||
                                             machinery_equipment_diagram_all_name ||
                                             bim_drawing_name ||
                                             meeting_log_name;
 
                                         const thmbnal =
                                             finishing_table_view_path ||
-                                            floor_plan_view_path ||
+                                            structural_floor_plan_view_path ||
                                             machinery_equipment_diagram_all_view_path ||
                                             bim_drawing_view_path ||
                                             meeting_log_view_path;
 
                                         const pdf_path =
                                             finishing_table_pdf_path ||
-                                            floor_plan_pdf_path ||
+                                            structural_floor_plan_pdf_path ||
                                             machinery_equipment_diagram_all_pdf_path ||
                                             bim_drawing_pdf_path ||
                                             meeting_log_pdf_path;

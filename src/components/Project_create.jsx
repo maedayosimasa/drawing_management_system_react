@@ -8,7 +8,7 @@ import {Box, TextField, Button, Typography, Paper, List, ListItem,
 import Grid from "@mui/material/Grid";
 import { Link } from "react-router-dom";
 
-import { ProjectCreateForm } from './Project_create_form';
+//import { ProjectCreateForm } from './Project_create_form';
 
 export const Project_create = () => {
     const [formData, setFormData] = useState({
@@ -81,14 +81,14 @@ export const Project_create = () => {
 
       structural_floor_plan_name: null,
       structural_elevation_name: null,
-      sectional_name: null,
+      structural_sectional_name: null,
       structural_frame_diagram_name: null,
       structural_diagram_all_name: null,
 
         machinery_equipment_diagram_name: null,
       electrical_equipment_diagram_all_name: null,
 
-        bim_drawing_file: null,
+        bim_drawing_name: null,
 
         meeting_log_name: null,
       delivery_documents_name: null,
@@ -326,7 +326,7 @@ const handleFileChange = (name, selectedFiles) => {
 
       structural_floor_plan_name: "平面図",
       structural_elevation_name: "立面図",
-      sectional_name: "断面図",
+      structural_sectional_name: "断面図",
       structural_frame_diagram_name: "軸組図",
       structural_diagram_all_name: "構造図All",
 
@@ -355,7 +355,7 @@ const handleFileChange = (name, selectedFiles) => {
     const updateHeight = () => {
       if (architecturePaperRef.current) {
         // パディングやマージンを考慮して高さを調整
-        const adjustedHeight = Math.max(architecturePaperRef.current.offsetHeight - 30, 0); // 高さが負にならないように調整
+        const adjustedHeight = Math.max(architecturePaperRef.current.offsetHeight - 60, 0); // 高さが負にならないように調整
         setHeight(adjustedHeight);
       }
     };
@@ -434,17 +434,16 @@ const handleFileChange = (name, selectedFiles) => {
   {/* プロジェクト新規作成 */}
   <Grid item xs={3}>
       <Box sx={{ width: "100%", height: "100%" }}>
-                <Paper
-                  ref={architecturePaperRef}
-                  elevation={12}
-                  sx={{
-                    p: 4,
-                    borderRadius: 8,
-                    bgcolor: "#faf1d7",
-                    border: "1px solid #d4af37",
-                    boxShadow: "0 8px 20px rgba(0, 0, 0, 0.3)",
-                  }}
-                >
+            <Paper
+      elevation={12}
+      sx={{
+        p: 4,
+        borderRadius: 8,
+        bgcolor: "#faf1d7",
+        border: "1px solid #d4af37",
+        boxShadow: "0 8px 20px rgba(0, 0, 0, 0.3)",
+      }}
+    >
       <Typography
         variant="h6"
         align="center"
@@ -944,18 +943,17 @@ const handleFileChange = (name, selectedFiles) => {
   {/* 建築図新規作成 */}
   <Grid item xs={12} sm={6} md={4}>
      <Box sx={{ width: "100%", minHeight: 100 }}>
-                    <Paper
-                      ref={structurePaperRef}
-                      elevation={12}
-                      sx={{
-                        p: 4,
-                        borderRadius: 8,
-                        bgcolor: "#faf1d7",
-                        border: "1px solid #d4af37",
-                        boxShadow: "0 8px 20px rgba(0, 0, 0, 0.3)",
-                        height: `${height}px`, // 調整後の高さを適用
-                      }}
-                    >
+                  <Paper
+            ref={architecturePaperRef}
+            elevation={12}
+            sx={{
+              p: 4,
+              borderRadius: 8,
+              bgcolor: "#faf1d7",
+              border: "1px solid #d4af37",
+              boxShadow: "0 8px 20px rgba(0, 0, 0, 0.3)",
+            }}
+          >
       <Typography
         variant="h6"
         align="center"

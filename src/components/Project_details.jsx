@@ -51,7 +51,8 @@ import { Link } from 'react-router-dom';
 
     export const Project_detail = () => {
 
-      const url = 'http://127.0.0.1:8000/api/Project_name/index';
+      // const url = '${process.env.REACT_APP_API_URL}/api/Project_name/index';
+      const url = 'http://35.76.48.0/api/Project_name/index';
       const [projectNames, setProjectNames] = useState([]);
       const [windows, setWindows] = useState([]);
 

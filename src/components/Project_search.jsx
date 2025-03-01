@@ -62,8 +62,10 @@ export const Project_search = () => {
     const [projectNames, setProjectNames] = useState([]);
     const [selectedProjects, setSelectedProjects] = useState([]);
     const navigate = useNavigate(); // ルートの移動用
-    const searchUrl = 'http://127.0.0.1:8000/api/Project_name/search';
-    const submitUrl = 'http://127.0.0.1:8000/api/Project_name/select';
+    // const searchUrl = '${process.env.REACT_APP_API_URL}/api/Project_name/search';
+    // const submitUrl = '${process.env.REACT_APP_API_URL}/api/Project_name/select';
+     const searchUrl = 'http://35.76.48.0/api/Project_name/search';
+    const submitUrl = 'http://35.76.48.0/api/Project_name/select';
 
 
     const handleSearch = async (event) => {

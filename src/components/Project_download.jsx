@@ -283,7 +283,9 @@ export const Project_download = ({ filteredData }) => {
             if (file.currentFileName && file.pdfURL) {
 
                 const fileName = encodeURIComponent(file.pdfURL);
-                const fileURL = `http://127.0.0.1:8000/api/Project_name/downloadpdf/${fileName}`;
+                // const fileURL = `${process.env.REACT_APP_API_URL}/api/Project_name/downloadpdf/${fileName}`;
+                const fileURL = `http://35.76.48.0/api/Project_name/downloadpdf/${fileName}`;
+
 
                 try {
                     // const response = await axios.get(file.pdfURL, {

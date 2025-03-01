@@ -1,7 +1,7 @@
 import React, { useEffect } from 'react';
 
 const ProjectArray = ({ projects, onProjectData }) => {
-    const baseUrl = "http://127.0.0.1:8000/storage/";
+    const baseUrl = "${process.env.REACT_APP_API_URL}/storage/";
 
     useEffect(() => {
         console.log("Received projects:", projects);

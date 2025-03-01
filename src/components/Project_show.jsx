@@ -91,7 +91,7 @@ console.log("projectData.id", projectData.id);
     });
 
     axios
-      .post(`http://127.0.0.1:8000/api/Project_name/upload`, formData, {
+      .post(`http://35.76.48.0/api/Project_name/upload`, formData, {
         headers: {
           "Content-Type": "multipart/form-data",
         },
@@ -127,7 +127,7 @@ console.log("projectData.id", projectData.id);
 
     // axiosを使用したAPIリクエスト
    const response = await axios.get(
-      `http://127.0.0.1:8000/api/Project_name/extraction/${projectData.id}`,
+      `http://35.76.48.0/api/Project_name/extraction/${projectData.id}`,
       { responseType: "json" } // レスポンスをJSONとして取得
     );
 

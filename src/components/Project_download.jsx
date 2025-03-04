@@ -283,7 +283,7 @@ export const Project_download = ({ filteredData }) => {
             if (file.currentFileName && file.pdfURL) {
 
                 const fileName = encodeURIComponent(file.pdfURL);
-                const fileURL = `http://127.0.0.1:8000/api/Project_name/downloadpdf/${fileName}`;
+                const fileURL = `https://35.76.48.0/api/Project_name/downloadpdf/${fileName}`;
 
                 try {
                     // const response = await axios.get(file.pdfURL, {
@@ -449,7 +449,7 @@ export const Project_download = ({ filteredData }) => {
                                         // console.log("thmbnal:", thmbnal);
                                         // console.log("index:", index);
 
-                                        const baseUrl = "http://127.0.0.1:8000/storage/";
+                         const baseUrl = "https://35.76.48.0/storage/";
                                         const imageURI = `${baseUrl}${thmbnal}`;
                                        const pdfURL = `${currentFileName}`;
 
@@ -615,7 +615,7 @@ export const Project_download = ({ filteredData }) => {
                                         // console.log("thmbnal:", thmbnal);
                                         // console.log("index:", index);
 
-                                           const baseUrl = "http://127.0.0.1:8000/storage/";
+                               const baseUrl = "https://35.76.48.0/storage/";
                                         const imageURI = `${baseUrl}${thmbnal}`;
                                         const pdfURL = `${currentFileName}`;
 

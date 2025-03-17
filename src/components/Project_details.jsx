@@ -52,7 +52,7 @@ import { Link } from 'react-router-dom';
     export const Project_detail = () => {
 
       // const url = '${process.env.REACT_APP_API_URL}/api/Project_name/index';
-      const url = 'http://35.76.48.0/api/Project_name/index';
+      const url = `${import.meta.env.VITE_API_URL}/api/Project_name/index`;
       const [projectNames, setProjectNames] = useState([]);
       const [windows, setWindows] = useState([]);
 

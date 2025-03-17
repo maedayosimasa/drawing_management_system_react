@@ -91,7 +91,7 @@ console.log("projectData.id", projectData.id);
     });
 
     axios
-      .post(`http://35.76.48.0/api/Project_name/upload`, formData, {
+      .post(`${import.meta.env.VITE_API_URL}/api/Project_name/upload`, formData, {
         headers: {
           "Content-Type": "multipart/form-data",
         },
@@ -127,7 +127,7 @@ console.log("projectData.id", projectData.id);
 
     // axiosを使用したAPIリクエスト
    const response = await axios.get(
-      `http://35.76.48.0/api/Project_name/extraction/${projectData.id}`,
+      `${import.meta.env.VITE_API_URL}/api/Project_name/extraction/${projectData.id}`,
       { responseType: "json" } // レスポンスをJSONとして取得
     );
 

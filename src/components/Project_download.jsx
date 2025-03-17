@@ -284,7 +284,7 @@ export const Project_download = ({ filteredData }) => {
 
                 const fileName = encodeURIComponent(file.pdfURL);
                 // const fileURL = `${process.env.REACT_APP_API_URL}/api/Project_name/downloadpdf/${fileName}`;
-                const fileURL = `http://35.76.48.0/api/Project_name/downloadpdf/${fileName}`;
+                const fileURL = `${import.meta.env.VITE_API_URL}/api/Project_name/downloadpdf/${fileName}`;
 
 
                 try {

@@ -189,7 +189,7 @@ const handleFileChange = (name, selectedFiles) => {
     }
 
         console.log('data:', data); 
-        const url = '${process.env.REACT_APP_API_URL}/api/Project_name/upload';
+        const url = `${import.meta.env.VITE_API_URL}/api/Project_name/upload`;
         try {
             const response = await axios.post(url, data, {
                 headers: {

@@ -64,8 +64,8 @@ export const Project_search = () => {
     const navigate = useNavigate(); // ルートの移動用
     // const searchUrl = '${process.env.REACT_APP_API_URL}/api/Project_name/search';
     // const submitUrl = '${process.env.REACT_APP_API_URL}/api/Project_name/select';
-     const searchUrl = 'http://35.76.48.0/api/Project_name/search';
-    const submitUrl = 'http://35.76.48.0/api/Project_name/select';
+     const searchUrl = `${import.meta.env.VITE_API_URL}/api/Project_name/search`;
+    const submitUrl = `${import.meta.env.VITE_API_URL}/api/Project_name/select`;
 
 
     const handleSearch = async (event) => {

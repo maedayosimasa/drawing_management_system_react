@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { Button, Card, CardContent, Typography, Container, Grid, Box , AppBar, Toolbar, Link as MuiLink} from '@mui/material';
+import { Button, Card, CardContent, Typography, Container, Grid, Box, AppBar, Toolbar, Link as MuiLink } from '@mui/material';
 import axios from 'axios';
 import { Link } from "react-router-dom";
 import { useLocation } from 'react-router-dom';
@@ -10,16 +10,16 @@ export const Project_select = () => {
     const [projects, setProjects] = useState([]);
     const navigate = useNavigate();
 
-      const location = useLocation();
-    const project_name = location.state?.project_name ||[]; // stateからproject_nameを取り出す
+    const location = useLocation();
+    const project_name = location.state?.project_name || []; // stateからproject_nameを取り出す
 
     useEffect(() => {
         setProjects(project_name);// projectsにproject_nameを設定
     }, [project_name]); // project_nameが変わるたびに実行される
 
 
-  
-      //console.log(project_name);
+
+    //console.log(project_name);
     // プロジェクトの編集データをAPIに送信
     const sendProjectEditData = async (projectId) => {
         const payload = { id: projectId, message: '編集リクエストを送信しました。react select' };
@@ -31,7 +31,7 @@ export const Project_select = () => {
             //alert('編集データが正常に送信されました。react select');
 
             // 必要に応じてリダイレクトや他の操作を実装
-           // window.location.href = `/project_name/${projectId}/show`;
+            // window.location.href = `/project_name/${projectId}/show`;
             console.log(response.data.redirect)
             // リダイレクト情報がある場合はページ移動
             if (response.data.redirect) {
@@ -46,25 +46,25 @@ export const Project_select = () => {
 
     return (
         <>
-         <AppBar position="sticky" sx={{ bgcolor: "#d4af37", height: "40px" }}>
-                <Toolbar sx={{ display: "flex", justifyContent: "center" , height: "40px"}}>
-                  {/* <MuiLink component={Link} to="/Project_select" sx={{ color: "#fff", margin: "0 20px" }}>
+            <AppBar position="sticky" sx={{ bgcolor: "#d4af37", height: "40px" }}>
+                <Toolbar sx={{ display: "flex", justifyContent: "center", height: "40px" }}>
+                    {/* <MuiLink component={Link} to="/Project_select" sx={{ color: "#fff", margin: "0 20px" }}>
                     選 択
                   </MuiLink> */}
-                  <MuiLink component={Link} to="/Project_create" sx={{ color: "#fff", margin: "0 30px", mt: 1, mb: 3}}>
-                    新規入力
-                  </MuiLink>
-                  <MuiLink component={Link} to="/Project_search" sx={{ color: "#fff",margin: "0 30px", mt: 1, mb: 3 }}>
-                    検 索
-                  </MuiLink>
-                  <MuiLink component={Link} to="/Project_download" sx={{ color: "#fff", margin: "0 30px", mt: 1, mb: 3 }}>
-                    download
-                  </MuiLink>
-                  <MuiLink component={Link} to="/" sx={{ color: "#fff",margin: "0 30px", mt: 1, mb: 3 }}>
-                    一 覧 表
-                  </MuiLink>
+                    <MuiLink component={Link} to="/Project_create" sx={{ color: "#fff", margin: "0 30px", mt: 1, mb: 3 }}>
+                        新規入力
+                    </MuiLink>
+                    <MuiLink component={Link} to="/Project_search" sx={{ color: "#fff", margin: "0 30px", mt: 1, mb: 3 }}>
+                        検 索
+                    </MuiLink>
+                    <MuiLink component={Link} to="/Project_download" sx={{ color: "#fff", margin: "0 30px", mt: 1, mb: 3 }}>
+                        download
+                    </MuiLink>
+                    <MuiLink component={Link} to="/" sx={{ color: "#fff", margin: "0 30px", mt: 1, mb: 3 }}>
+                        一 覧 表
+                    </MuiLink>
                 </Toolbar>
-              </AppBar>
+            </AppBar>
 
             <Container maxWidth="lg" sx={{ paddingTop: 5 }}>
                 <Typography variant="h2" align="center" gutterBottom sx={{ fontWeight: 'bold', color: '#b38b5d' }}>

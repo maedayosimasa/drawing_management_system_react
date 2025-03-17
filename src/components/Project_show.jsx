@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react";
 import axios from "axios";
 import { useDropzone } from "react-dropzone";
-import { Container, Button, Typography, Box, List, ListItem, ListItemText, Paper, AppBar, Toolbar, Link as MuiLink } from "@mui/material"; 
+import { Container, Button, Typography, Box, List, ListItem, ListItemText, Paper, AppBar, Toolbar, Link as MuiLink } from "@mui/material";
 import { Link } from "react-router-dom";
 import { useLocation } from 'react-router-dom';
 import { useNavigate } from 'react-router-dom';
@@ -22,13 +22,13 @@ export const Project_show = () => {
   const [error, setError] = useState(null);
   const location = useLocation();
   const navigate = useNavigate();
-  
+
   const project_name = location.state?.project_name;
 
   useEffect(() => {
     if (project_name && typeof project_name === "object") {
       setProjectData({
-         id: project_name.id || "",
+        id: project_name.id || "",
         project_name: project_name.project_name || "",
         finishing_table_name: project_name.drawing?.design_drawing?.finishing_table_name || "",
         structural_floor_plan_name: project_name.drawing?.structural_diagram?.structural_floor_plan_name || "",
@@ -54,12 +54,12 @@ export const Project_show = () => {
   });
 
   const handleFileChange = (name, selectedFiles) => {
-        setFiles((prevFiles) => ({
+    setFiles((prevFiles) => ({
       ...prevFiles,
       [name]: selectedFiles,
     }));
   };
- console.log(setFiles);
+  console.log(setFiles);
 
   const handleSubmit = (e) => {
     e.preventDefault();
@@ -76,7 +76,7 @@ export const Project_show = () => {
 
     // ファイルを送信するデータに変換
     const formData = new FormData();
-console.log("projectData.id", projectData.id);
+    console.log("projectData.id", projectData.id);
     // project_name.id を formData に追加
     if (projectData.id) {
       formData.append("id", projectData.id); // idを追加
@@ -116,14 +116,14 @@ console.log("projectData.id", projectData.id);
 
 
   const downloadFile = async () => {
-  try {
-    console.log("projectData.id:", projectData.id);
+    try {
+      console.log("projectData.id:", projectData.id);
 
-    // プロジェクトIDの存在チェック
-    if (!projectData.id) {
-      alert("プロジェクトIDが存在しません。");
-      return;
-    }
+      // プロジェクトIDの存在チェック
+      if (!projectData.id) {
+        alert("プロジェクトIDが存在しません。");
+        return;
+      }
 
     // axiosを使用したAPIリクエスト
    const response = await axios.get(
@@ -131,31 +131,31 @@ console.log("projectData.id", projectData.id);
       { responseType: "json" } // レスポンスをJSONとして取得
     );
 
-    // Blobを作成し、リンクを生成してダウンロード
-    // const blob = new Blob([response.data], { type: "application/pdf" });
-    // const link = document.createElement("a");
-    // link.href = URL.createObjectURL(blob);
-    // link.download = "project_file.pdf"; // ダウンロードするファイル名
-    // link.click();
+      // Blobを作成し、リンクを生成してダウンロード
+      // const blob = new Blob([response.data], { type: "application/pdf" });
+      // const link = document.createElement("a");
+      // link.href = URL.createObjectURL(blob);
+      // link.download = "project_file.pdf"; // ダウンロードするファイル名
+      // link.click();
 
-     // レスポンスの内容をログに出力して確認
-    console.log("Response Data:", response.data);
- // リダイレクト情報がある場合はページ移動
-    if (response.data && response.data.redirect) {
+      // レスポンスの内容をログに出力して確認
+      console.log("Response Data:", response.data);
+      // リダイレクト情報がある場合はページ移動
+      if (response.data && response.data.redirect) {
         console.log("リダイレクト先:", response.data.redirect);
 
         // リダイレクト先に遷移
         navigate(`/${response.data.redirect}`, {
-            state: { filteredData: response.data.filteredData },
+          state: { filteredData: response.data.filteredData },
         });
-    } else {
-      console.log("リダイレクト情報がありません。");
+      } else {
+        console.log("リダイレクト情報がありません。");
+      }
+    } catch (error) {
+      console.error("ダウンロードエラー:", error);
+      alert("ダウンロードに失敗しました。");
     }
-  } catch (error) {
-    console.error("ダウンロードエラー:", error);
-    alert("ダウンロードに失敗しました。");
-  }
-};
+  };
 
 
 
@@ -280,7 +280,7 @@ console.log("projectData.id", projectData.id);
             >
               {uploading ? "アップロード中..." : "アップロード"}
             </Button>
-              <Button
+            <Button
               variant="outlined"
               fullWidth
               sx={{
@@ -350,6 +350,6 @@ const DropzoneField = ({ name, onFileChange, selectedFiles }) => {
         </List>
       )}
     </Box>
-    
+
   );
 };

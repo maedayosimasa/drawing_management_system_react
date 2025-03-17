@@ -6,7 +6,7 @@ export const Test = () => {
 
         //取得したファイルのルートでできない・・・URLとしてLaravelでブロックされてしまう
         const fileName = ("A_3階平面図.pdf");
-        const fileURL = `http://127.0.0.1:8000/api/Project_name/downloadpdf/${fileName}`;
+        const fileURL = `https://35.76.48.0/api/Project_name/downloadpdf/${fileName}`;
 
         try {
             console.log("ダウンロードを開始します...");
@@ -42,7 +42,7 @@ export const Test = () => {
             <button onClick={handleDownload}>ファイルをダウンロード</button>
             <br />
             <a
-                href="http://127.0.0.1:8000/storage/uploads/A_3%E9%9A%8E%E5%B9%B3%E9%9D%A2%E5%9B%B3.pdf"
+                href="https://35.76.48.0/storage/uploads/A_3%E9%9A%8E%E5%B9%B3%E9%9D%A2%E5%9B%B3.pdf"
                 download="テスト.pdf"
             >
                 PDFはこちらからダウンロード

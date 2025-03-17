@@ -1,7 +1,7 @@
 import React, { useEffect } from 'react';
 
 const ProjectArray = ({ projects, onProjectData }) => {
-    const baseUrl = "${process.env.REACT_APP_API_URL}/storage/";
+    const baseUrl = "${import.meta.env.VITE_API_URL}/storage/";
 
     useEffect(() => {
         console.log("Received projects:", projects);

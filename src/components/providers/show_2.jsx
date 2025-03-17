@@ -68,7 +68,7 @@ const handleFileChange = (name, selectedFiles) => {
         e.preventDefault();
         setUploading(true); // アップロードを開始
         axios
-            .post(`http://127.0.0.1:8000/api/Project_name/upload`, projectData)
+          .post(`https://35.76.48.0/api/Project_name/upload`, projectData)
             .then((response) => {
                 alert("更新が成功しました！");
             })

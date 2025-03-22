@@ -25,7 +25,8 @@ export const Project_select = () => {
         const payload = { id: projectId, message: '編集リクエストを送信しました。react select' };
         try {
            // console.log(projectId);
-            const response = await axios.get(`${process.env.REACT_APP_API_URL}/api/Project_name/show/${projectId}`, { params: payload });
+           console.log('API URLの確認select:', import.meta.env.VITE_API_URL);
+            const response = await axios.get(`${import.meta.env.VITE_API_URL}/api/Project_name/show/${projectId}`, { params: payload });
 
             console.log('編集リクエスト成功react select:', response.data);
             //alert('編集データが正常に送信されました。react select');

@@ -189,6 +189,8 @@ const handleFileChange = (name, selectedFiles) => {
     }
 
         console.log('data:', data); 
+        console.log('API URLの確認:', import.meta.env.VITE_API_URL);
+
         const url = `${import.meta.env.VITE_API_URL}/api/Project_name/upload`;
         try {
             const response = await axios.post(url, data, {

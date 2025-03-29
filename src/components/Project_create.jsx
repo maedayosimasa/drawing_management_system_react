@@ -190,6 +190,10 @@ const handleFileChange = (name, selectedFiles) => {
 
         console.log('data:', data); 
         console.log('API URLの確認:', import.meta.env.VITE_API_URL);
+        console.log(import.meta.env);
+     const apiUrl = import.meta.env.VITE_API_URL;
+    console.log(apiUrl);  // http://127.0.0.1:8000 が表示されるはず
+
 
         const url = `${import.meta.env.VITE_API_URL}/api/Project_name/upload`;
         try {
@@ -369,6 +373,35 @@ const handleFileChange = (name, selectedFiles) => {
       window.removeEventListener("resize", updateHeight); // クリーンアップ
     };
   }, []); // 初回レンダリング時とウィンドウリサイズ時に高さを取得
+  //AI入力
+    const [file, setFile] = useState(null); // 単一のファイルを保持
+ const handleFileChangeAI = async (selectedFiles) => {
+    setFile(selectedFiles[0]); // ファイルを更新
+
+    if (selectedFiles.length > 0) {
+      const formData = new FormData();
+      formData.append("file", selectedFiles[0]);
+
+      try {
+        const response = await fetch(
+          "https://r9s9q31w51.execute-api.ap-northeast-1.amazonaws.com/default/draw_react",
+          {
+            method: "POST",
+            body: formData,
+          }
+        );
+
+        if (!response.ok) {
+          throw new Error("API request failed");
+        }
+
+        const result = await response.json();
+        setFile(result); // 結果をファイルに反映
+      } catch (error) {
+        console.error("Error uploading file:", error);
+      }
+    }
+  };
 
     return (
         <>
@@ -397,37 +430,91 @@ const handleFileChange = (name, selectedFiles) => {
   <Paper
     elevation={12}  
     sx={{
-      position: "sticky", // AppBarの直後に固定されるように設定
-      top: "40px", // AppBarの高さに応じた位置を設定
-      zIndex: 1000, // AppBarのzIndexより小さめに設定（AppBarが1200の場合）
+      position: "sticky",
+      top: "40px",
+      zIndex: 1000,
       p: 2,
       borderRadius: 8,
       bgcolor: "#faf1d7",
-      border: "1px solidrgb(180, 156, 80)",
+      border: "1px solid rgb(180, 156, 80)",
       boxShadow: "0 8px 20px rgba(0, 0, 0, 0.3)",
       marginBottom: 2,
-      display: "flex", justifyContent: "center", width: "100%"
+      display: "flex", 
+      justifyContent: "center",
+      width: "100%"
     }}
   >
-            <Box sx={{ display: "flex", flexDirection: "column", gap: 3 }}>
-    <Button
-     type="button"
-                onClick={handleSubmit} // 発火点をButtonに限定
-      variant="contained"
-      sx={{
-        bgcolor: "#e6b422",
-        "&:hover": { bgcolor: "#b8860b" },
-        color: "#ffffff",
-        fontWeight: "bold",
-        borderRadius: 3,
-        boxShadow: "0 4px 10px rgba(0, 0, 0, 0.3)",
-         width: "100%", // ボタンの幅を40%に設定,
-      }}
-      disabled={uploading}
-    >
-      {uploading ? "アップロード中..." : "アップロード"}
-    </Button>
-            </Box>
+    <Box sx={{ display: "flex", flexDirection: "column", gap: 3, width: "100%", maxWidth: 400 }}>
+      <Button
+        type="button"
+        onClick={handleSubmit}
+        variant="contained"
+        sx={{
+          bgcolor: "#e6b422",
+          "&:hover": { bgcolor: "#b8860b" },
+          color: "#ffffff",
+          fontWeight: "bold",
+          borderRadius: 3,
+          boxShadow: "0 4px 10px rgba(0, 0, 0, 0.3)",
+          width: "100%",
+        }}
+        disabled={uploading}
+      >
+        {uploading ? "アップロード中..." : "アップロード"}
+      </Button>
+    </Box>
+  </Paper>
+  
+  {/* AIテキストデータ入力部分 */}
+  <Paper
+    elevation={6}  
+    sx={{
+      p: 1,
+      borderRadius: 6,
+      bgcolor: "#eee8aa",
+      border: "1px solid rgb(245, 244, 242)",
+      boxShadow: "0 8px 20px rgba(0, 0, 0, 0.3)",
+      marginTop: 2,
+      display: "flex", 
+      justifyContent: "center",
+      width: "100%"
+    }}
+  >
+    {/* <Box sx={{ width: "100%", maxWidth: 1300 }}>
+      <TextField
+        variant="outlined"
+        placeholder="テキストデータ AI を入力 "
+        fullWidth
+        multiline
+        rows={1}
+        onChange={(e) => setTextData(e.target.value)}
+        sx={{
+          bgcolor: "#ffffff",
+          borderRadius: 3,
+          boxShadow: "0 2px 5px rgba(0, 0, 0, 0.2)",
+        }}
+      />
+    </Box> */}
+       <div style={{display: 'flex', alignItems: 'center', width: '95%' }}>
+          <span style={{
+             marginRight: '20px',
+             fontWeight: "bold",
+             color: "#6b4f29",
+               fontFamily: '"Times New Roman", serif', 
+              textShadow: "1px 1px 4px rgba(0, 0, 0, 0.3)" ,
+              
+             }}>プロジェクト概要 テキストファイル AI解析</span>
+            <div style={{ flexGrow: 1 }}> {/* この div で幅を制御 */}
+      <DropzoneField
+        name="file"
+        onFileChange={handleFileChangeAI}
+        selectedFiles={file ? [file] : []} // 1つのファイルを選択
+          placeholderText="プロジェクト概要のテキストをドラックアンドドロップするか、クリックして選択してください。AIが解析します"
+          placeholderFontSize="1.2rem" // ここでフォントサイズを変更
+         // style={{ width: "80%" }} // 幅を倍に設定
+      />
+    </div>
+     </div>
   </Paper>
 
   {/* 並列表示のフォーム部分 */}
@@ -1261,7 +1348,7 @@ const handleFileChange = (name, selectedFiles) => {
     );
 };
 
-const DropzoneField = ({ name, onFileChange, selectedFiles }) => {
+const DropzoneField = ({ name, onFileChange, selectedFiles, placeholderText, placeholderFontSize}) => {
   const { getRootProps, getInputProps, isDragActive } = useDropzone({
     accept: { "application/pdf": [".pdf"] },
     onDrop: (acceptedFiles) => {
@@ -1294,10 +1381,10 @@ const DropzoneField = ({ name, onFileChange, selectedFiles }) => {
           sx={{
             color: "#b8860b",
             opacity: 0.6,
-            fontSize: "0.7rem",
+             fontSize: placeholderFontSize || "0.7rem", // ここでフォントサイズを変更
           }}
         >
-          PDFファイルをドラッグ＆ドロップするか、クリックして選択してください
+         {placeholderText || "PDFファイルをドラッグ＆ドロップするか、クリックして選択してください"}
         </Typography>
       ) : (
         <List sx={{ margin: 0, padding: 0 }}>

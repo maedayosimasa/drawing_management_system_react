@@ -31,7 +31,7 @@ export const App = () => {
           marginBottom: 0, // タイトル下のスペースを最小に
         }}
       >
-        図面管理システム
+        図面管理システム AI搭載版
       </Typography>
       <BrowserRouter>
         <Routes>

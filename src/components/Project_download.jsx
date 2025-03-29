@@ -450,11 +450,11 @@ export const Project_download = ({ filteredData }) => {
                                         // console.log("currentFileName:", currentFileName);
                                         // console.log("thmbnal:", thmbnal);
                                         // console.log("index:", index);
-
-                        //  const baseUrl = "http://127.0.0.1:8000/storage/";
+                                        //const baseUrl = "http://127.0.0.1:8000/storage/";
+                          const baseUrl = `${import.meta.env.VITE_API_URL}/storage/`;
                                     //    const imageURI = `${baseUrl}${thmbnal}`;
                                     //    const pdfURL = `${currentFileName}`;
-                                       const baseUrl = "https://35.76.48.0/storage/"; 
+                               //        const baseUrl = "https://35.76.48.0/storage/"; 
                                         const imageURI = `${baseUrl}${thmbnal.replace(/^\/+/, '')}`;  // 不要な先頭スラッシュを削除
                                         const pdfURL = `${currentFileName}`;
                                         console.log("imageURI:", imageURI);
@@ -619,10 +619,11 @@ export const Project_download = ({ filteredData }) => {
                                         // console.log("thmbnal:", thmbnal);
                                         // console.log("index:", index);
 
-                            //    const baseUrl = "http://127.0.0.1:8000/storage/";
+                                //const baseUrl = "http://127.0.0.1:8000/storage/";
+                               const baseUrl = `${import.meta.env.VITE_API_URL}/storage/`;
                             //             const imageURI = `${baseUrl}${thmbnal}`;
                             //             const pdfURL = `${currentFileName}`;
-                                        const baseUrl = "https://35.76.48.0/storage/"; 
+                               //         const baseUrl = "https://35.76.48.0/storage/"; 
                                         const imageURI = `${baseUrl}${thmbnal.replace(/^\/+/, '')}`;  // 不要な先頭スラッシュを削除
                                         const pdfURL = `${currentFileName}`;
 

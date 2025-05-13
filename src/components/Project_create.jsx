@@ -373,35 +373,64 @@ const handleFileChange = (name, selectedFiles) => {
       window.removeEventListener("resize", updateHeight); // クリーンアップ
     };
   }, []); // 初回レンダリング時とウィンドウリサイズ時に高さを取得
+
   //AI入力
-    const [file, setFile] = useState(null); // 単一のファイルを保持
- const handleFileChangeAI = async (selectedFiles) => {
-    setFile(selectedFiles[0]); // ファイルを更新
 
-    if (selectedFiles.length > 0) {
-      const formData = new FormData();
-      formData.append("file", selectedFiles[0]);
+const [file, setFile] = useState(null);
+const [uploadStatus, setUploadStatus] = useState("");
 
-      try {
-        const response = await fetch(
-          "https://r9s9q31w51.execute-api.ap-northeast-1.amazonaws.com/default/draw_react",
-          {
-            method: "POST",
-            body: formData,
-          }
-        );
+// ファイル選択後に呼ばれる処理
+const handleFileChangeAI = async (e) => {
+  const selectedFiles = e.target.files;
+  if (!selectedFiles || selectedFiles.length === 0) {
+    console.error("No file selected.");
+    return;
+  }
 
-        if (!response.ok) {
-          throw new Error("API request failed");
+  const selectedFile = selectedFiles[0];
+  setFile(selectedFile);
+
+  const reader = new FileReader();
+
+  reader.onload = async () => {
+    try {
+      const text = reader.result; // プレーンテキスト
+      console.log("読み込んだテキスト:", text);
+
+      // プレーンテキストのまま Lambda に送信（JSON化しない）
+      const response = await axios.post(
+        "https://e3lzn0b3sl.execute-api.ap-northeast-1.amazonaws.com/default/draw_react",
+        { rawText: text }, // JSONの中にrawTextとして入れる
+        {
+          headers: {
+            "Content-Type": "application/json",
+          },
         }
+      );
 
-        const result = await response.json();
-        setFile(result); // 結果をファイルに反映
-      } catch (error) {
-        console.error("Error uploading file:", error);
-      }
+     // console.log("Server response:", response.data);
+      console.log("Updating formData", response.data.result);
+         // ↓ ここでformDataにresponse.dataを代入（上書き or マージ）
+    setFormData(prevData => ({
+      ...prevData,
+      ...response.data.result, // ← .resultの中身だけをマージ
+    }));
+      setUploadStatus("Upload successful!");
+    } catch (error) {
+      console.error("Error sending text:", error);
+      setUploadStatus("Upload failed. Please try again.");
     }
   };
+
+  reader.onerror = (error) => {
+    console.error("Error reading file:", error);
+    setUploadStatus("File read error.");
+  };
+
+  reader.readAsText(selectedFile); // テキストとして読み込む
+};
+
+
 
     return (
         <>
@@ -480,21 +509,7 @@ const handleFileChange = (name, selectedFiles) => {
       width: "100%"
     }}
   >
-    {/* <Box sx={{ width: "100%", maxWidth: 1300 }}>
-      <TextField
-        variant="outlined"
-        placeholder="テキストデータ AI を入力 "
-        fullWidth
-        multiline
-        rows={1}
-        onChange={(e) => setTextData(e.target.value)}
-        sx={{
-          bgcolor: "#ffffff",
-          borderRadius: 3,
-          boxShadow: "0 2px 5px rgba(0, 0, 0, 0.2)",
-        }}
-      />
-    </Box> */}
+
        <div style={{display: 'flex', alignItems: 'center', width: '95%' }}>
           <span style={{
              marginRight: '20px',
@@ -505,14 +520,22 @@ const handleFileChange = (name, selectedFiles) => {
               
              }}>プロジェクト概要 テキストファイル AI解析</span>
             <div style={{ flexGrow: 1 }}> {/* この div で幅を制御 */}
-      <DropzoneField
+      {/* <DropzoneField
         name="file"
         onFileChange={handleFileChangeAI}
         selectedFiles={file ? [file] : []} // 1つのファイルを選択
           placeholderText="プロジェクト概要のテキストをドラックアンドドロップするか、クリックして選択してください。AIが解析します"
           placeholderFontSize="1.2rem" // ここでフォントサイズを変更
-         // style={{ width: "80%" }} // 幅を倍に設定
-      />
+          style={{ width: "80%" }} // 幅を倍に設定
+      /> */}
+          <input 
+  type="file"
+  accept=".txt"
+  onChange={(e) => handleFileChangeAI(e)}
+  style={{ width: '80%' }}
+/>
+
+      
     </div>
      </div>
   </Paper>

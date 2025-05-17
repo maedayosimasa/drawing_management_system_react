@@ -381,20 +381,31 @@ const [uploadStatus, setUploadStatus] = useState("");
 
 // ファイル選択後に呼ばれる処理
 const handleFileChangeAI = async (e) => {
-  const selectedFiles = e.target.files;
-  if (!selectedFiles || selectedFiles.length === 0) {
-    console.error("No file selected.");
+  console.log("onFileChange で受け取った引数:", e); // デバッグ用ログ
+  let selectedFile;
+
+  if (e?.target?.files) {
+    // 通常の<input type="file" />から呼び出された場合
+    if (e.target.files.length === 0) {
+      console.warn("No file selected.");
+      return;
+    }
+    selectedFile = e.target.files[0];
+  } else if (Array.isArray(e) && e[0] instanceof File) {
+    // Dropzone からファイルが直接配列で渡された場合
+    selectedFile = e[0];
+  } else {
+    console.error("No valid file provided.");
     return;
   }
 
-  const selectedFile = selectedFiles[0];
   setFile(selectedFile);
 
   const reader = new FileReader();
 
   reader.onload = async () => {
     try {
-      const text = reader.result; // プレーンテキスト
+      const text = reader.result;
       console.log("読み込んだテキスト:", text);
 
       // プレーンテキストのまま Lambda に送信（JSON化しない）
@@ -520,20 +531,20 @@ const handleFileChangeAI = async (e) => {
               
              }}>プロジェクト概要 テキストファイル AI解析</span>
             <div style={{ flexGrow: 1 }}> {/* この div で幅を制御 */}
-      {/* <DropzoneField
-        name="file"
-        onFileChange={handleFileChangeAI}
-        selectedFiles={file ? [file] : []} // 1つのファイルを選択
-          placeholderText="プロジェクト概要のテキストをドラックアンドドロップするか、クリックして選択してください。AIが解析します"
-          placeholderFontSize="1.2rem" // ここでフォントサイズを変更
-          style={{ width: "80%" }} // 幅を倍に設定
-      /> */}
-          <input 
+            <DropzoneTextField
+  onFileChange={handleFileChangeAI}
+  selectedFiles={file ? [file] : []}
+  placeholderText="プロジェクト概要のテキストをドラッグ＆ドロップするか、クリックして選択してください。AIが解析します"
+  placeholderFontSize="1.2rem"
+  style={{ width: "80%" }}
+/>
+
+          {/* <input 
   type="file"
   accept=".txt"
   onChange={(e) => handleFileChangeAI(e)}
   style={{ width: '80%' }}
-/>
+/> */}
 
       
     </div>
@@ -1423,3 +1434,59 @@ const DropzoneField = ({ name, onFileChange, selectedFiles, placeholderText, pla
 
   );
 };
+//AI text入力部ドロップダウン
+const DropzoneTextField = ({ onFileChange, selectedFiles, placeholderText, placeholderFontSize, style }) => {
+  const { getRootProps, getInputProps, isDragActive } = useDropzone({
+    accept: { 'text/plain': ['.txt'] },
+    multiple: false,
+    onDrop: (acceptedFiles) => {
+      const txtFile = acceptedFiles.find(file => file.name.toLowerCase().endsWith('.txt'));
+      if (txtFile) {
+        onFileChange([txtFile]); // ← handleFileChangeAIが受け取れる形式
+      } else {
+        console.warn("No valid .txt file provided.");
+      }
+    }
+  });
+
+  return (
+    <Box
+      {...getRootProps()}
+      sx={{
+        border: "2px dashed #4682b4",
+        borderRadius: "8px",
+        padding: "8px",
+        textAlign: "center",
+        backgroundColor: isDragActive ? "#e6f7ff" : "#f9f9f9",
+        color: "#4682b4",
+        cursor: "pointer",
+        "&:hover": { backgroundColor: "#e0f3ff" },
+        minHeight: "24px",
+        ...style,
+      }}
+    >
+      <input {...getInputProps()} />
+      {selectedFiles.length === 0 ? (
+        <Typography
+          variant="body2"
+          sx={{
+            color: "#4682b4",
+            opacity: 0.6,
+            fontSize: placeholderFontSize || "1.2rem",
+          }}
+        >
+          {placeholderText || ".txtファイルをドロップまたはクリックして選択"}
+        </Typography>
+      ) : (
+        <List sx={{ margin: 0, padding: 0 }}>
+          {selectedFiles.map((file, index) => (
+            <ListItem key={index} sx={{ padding: "4px 0" }}>
+              <ListItemText primary={file.name} />
+            </ListItem>
+          ))}
+        </List>
+      )}
+    </Box>
+  );
+};
+
